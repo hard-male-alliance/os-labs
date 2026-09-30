@@ -1,0 +1,1186 @@
+{
+  "source": "http://8.135.34.58/lab2026/_book/",
+  "fetched_on": "2026-09-30",
+  "pages": [
+    {
+      "title": "欢迎来到ucore step-by-step的世界",
+      "source": "http://8.135.34.58/lab2026/_book/",
+      "file": "index.md",
+      "sha256": "8a566a940e75060694a26445291ce6407e35178d0ab8d42550e6f002a1dfaa6b",
+      "code_blocks": 0,
+      "images": 0
+    },
+    {
+      "title": "lab0: 预备起",
+      "source": "http://8.135.34.58/lab2026/_book/lab0/intro.html",
+      "file": "lab0/intro.md",
+      "sha256": "27e40206c2c4fb8659b8ed023165d634ac6a3958242db367fd3b5562c66cd40e",
+      "code_blocks": 0,
+      "images": 0
+    },
+    {
+      "title": "溯源: ucore的历史",
+      "source": "http://8.135.34.58/lab2026/_book/lab0/1_history.html",
+      "file": "lab0/1_history.md",
+      "sha256": "ff0e1933e88bc4cdc7b5d584a8c5102e01edc57f566392192cd292108f2041c1",
+      "code_blocks": 0,
+      "images": 0
+    },
+    {
+      "title": "概览: 指导书的结构",
+      "source": "http://8.135.34.58/lab2026/_book/lab0/2_overview.html",
+      "file": "lab0/2_overview.md",
+      "sha256": "4819b577d9041dfd7401020074a9c3e447f266eaa7b79bf52a6ee421f475860d",
+      "code_blocks": 0,
+      "images": 0
+    },
+    {
+      "title": "预备：Linux安装与熟悉",
+      "source": "http://8.135.34.58/lab2026/_book/lab0/0_Linux.html",
+      "file": "lab0/0_Linux.md",
+      "sha256": "4886efc7d9514363bbb21b1dab2ddcda8bb0ace239a0129b50881ae4c6e29103",
+      "code_blocks": 33,
+      "images": 0
+    },
+    {
+      "title": "起步：常用软件熟悉",
+      "source": "http://8.135.34.58/lab2026/_book/lab0/softwares.html",
+      "file": "lab0/softwares.md",
+      "sha256": "5f88015fbb9a8a1f4c50eecea3d86f700450b4b6f2a5102a68923a58f3efd592",
+      "code_blocks": 6,
+      "images": 0
+    },
+    {
+      "title": "开搞：搭建实验环境",
+      "source": "http://8.135.34.58/lab2026/_book/lab0/3_startdash.html",
+      "file": "lab0/3_startdash.md",
+      "sha256": "c8f7e425ffc8f0df10a7916d584e1f9fc81b86ac90c6fb3f577e94a62b4b6036",
+      "code_blocks": 10,
+      "images": 0
+    },
+    {
+      "title": "lab0.5: AI驱动的操作系统实验",
+      "source": "http://8.135.34.58/lab2026/_book/lab0.5/intro.html",
+      "file": "lab0.5/intro.md",
+      "sha256": "6de18f4109cd5c5e738765a06c9da243b8ea2498c457fb8b21bc99b0a50e1379",
+      "code_blocks": 0,
+      "images": 0
+    },
+    {
+      "title": "环境准备：让 AI 参与到 OS 开发中",
+      "source": "http://8.135.34.58/lab2026/_book/lab0.5/0_environment_setup.html",
+      "file": "lab0.5/0_environment_setup.md",
+      "sha256": "e594812f7aaf10c67e8b7e39d662b52564269197f958a984d95b104d329ff4c2",
+      "code_blocks": 10,
+      "images": 1
+    },
+    {
+      "title": "范式转变：从传统编程到AI协作",
+      "source": "http://8.135.34.58/lab2026/_book/lab0.5/1_paradigm_shift.html",
+      "file": "lab0.5/1_paradigm_shift.md",
+      "sha256": "7829528079473923702a02eabf179897b39f15e72dea0c183678967e2a5fbaa4",
+      "code_blocks": 0,
+      "images": 0
+    },
+    {
+      "title": "提示词工程：写给AI的需求规格",
+      "source": "http://8.135.34.58/lab2026/_book/lab0.5/2_prompt_engineering.html",
+      "file": "lab0.5/2_prompt_engineering.md",
+      "sha256": "23703f6c48de9ea08c381a78741042d51fde271405153e5814c7ccf8798f74ef",
+      "code_blocks": 3,
+      "images": 0
+    },
+    {
+      "title": "本实验的标准提示词结构",
+      "source": "http://8.135.34.58/lab2026/_book/lab0.5/3_prompt_structure.html",
+      "file": "lab0.5/3_prompt_structure.md",
+      "sha256": "a0420c95c615d14445164379305824b4967f5c7304a245232464296b4b9f5a66",
+      "code_blocks": 4,
+      "images": 0
+    },
+    {
+      "title": "实践指南：如何与AI一起开发操作系统",
+      "source": "http://8.135.34.58/lab2026/_book/lab0.5/4_practice_guide.html",
+      "file": "lab0.5/4_practice_guide.md",
+      "sha256": "96158589440ba9b865f4fbe573735d45eb48f1e4e9ad70ea05ed63b89940b6c0",
+      "code_blocks": 0,
+      "images": 0
+    },
+    {
+      "title": "lab1: 比麻雀更小的麻雀（最小可执行内核）",
+      "source": "http://8.135.34.58/lab2026/_book/lab1/lab1.html",
+      "file": "lab1/lab1.md",
+      "sha256": "56f846468f3b69e51d2af0a3796e207e20b4da7421e749d0c2b4c792a9ecf394",
+      "code_blocks": 0,
+      "images": 0
+    },
+    {
+      "title": "实验目的",
+      "source": "http://8.135.34.58/lab2026/_book/lab1/lab1_1_goals.html",
+      "file": "lab1/lab1_1_goals.md",
+      "sha256": "91332b1e6d7b1c63797ac8ab84784b02982e3ac2ad000f7618ab9fee1af4742d",
+      "code_blocks": 0,
+      "images": 0
+    },
+    {
+      "title": "实验内容",
+      "source": "http://8.135.34.58/lab2026/_book/lab1/lab1_2_labs.html",
+      "file": "lab1/lab1_2_labs.md",
+      "sha256": "e338fe21790837443659a9da7908e2cd8205e2aaeef5452b5f701b2b81fedd92",
+      "code_blocks": 0,
+      "images": 0
+    },
+    {
+      "title": "练习",
+      "source": "http://8.135.34.58/lab2026/_book/lab1/lab1_2_1_exercise.html",
+      "file": "lab1/lab1_2_1_exercise.md",
+      "sha256": "70fe407070387d7ab4101cf4d00985ad865a3f9d55c426fff2b51025ff8bf131",
+      "code_blocks": 0,
+      "images": 0
+    },
+    {
+      "title": "项目组成和执行流",
+      "source": "http://8.135.34.58/lab2026/_book/lab1/lab1_2_2_file.html",
+      "file": "lab1/lab1_2_2_file.md",
+      "sha256": "ddfd310733282d0fe41a5b693d1685713093a3ee969ea3313a7d11826776334a",
+      "code_blocks": 2,
+      "images": 0
+    },
+    {
+      "title": "从机器启动到操作系统运行的过程",
+      "source": "http://8.135.34.58/lab2026/_book/lab1/lab1_3_booting.html",
+      "file": "lab1/lab1_3_booting.md",
+      "sha256": "dcaf214dbffb21dc5da6cc880bfe048124e085beec1b2fca41aa75bc151e7f39",
+      "code_blocks": 0,
+      "images": 0
+    },
+    {
+      "title": "OpenSBI, bin, elf",
+      "source": "http://8.135.34.58/lab2026/_book/lab1/lab1_3_1_layout.html",
+      "file": "lab1/lab1_3_1_layout.md",
+      "sha256": "d0d7be65363a0d748dd89cfbed9233308659e266cc318b70f84b6d648d84f729",
+      "code_blocks": 0,
+      "images": 0
+    },
+    {
+      "title": "内存布局，链接脚本，入口点",
+      "source": "http://8.135.34.58/lab2026/_book/lab1/lab1_3_2_linkerscript.html",
+      "file": "lab1/lab1_3_2_linkerscript.md",
+      "sha256": "d5aa7393749c93ce55fa6a0585e0fbed0bbd1838ea7b6e3cbcf471640c1b6d48",
+      "code_blocks": 3,
+      "images": 1
+    },
+    {
+      "title": "从SBI到stdio",
+      "source": "http://8.135.34.58/lab2026/_book/lab1/lab1_3_3_sbi_io.html",
+      "file": "lab1/lab1_3_3_sbi_io.md",
+      "sha256": "9fbd831d0059d53904b756e1dc4a1e79d0b6879e0a8222536f02ba8e185a04cf",
+      "code_blocks": 5,
+      "images": 0
+    },
+    {
+      "title": "Just make it",
+      "source": "http://8.135.34.58/lab2026/_book/lab1/lab1_3_4_makeit.html",
+      "file": "lab1/lab1_3_4_makeit.md",
+      "sha256": "b6a3ec4521a148e024729d4835d55fc5fe13c80f77105bb5ce031d58ec78de24",
+      "code_blocks": 3,
+      "images": 0
+    },
+    {
+      "title": "GDB调试工具使用体验",
+      "source": "http://8.135.34.58/lab2026/_book/lab1/lab1_4_gdb.html",
+      "file": "lab1/lab1_4_gdb.md",
+      "sha256": "221b2618df256a7840f918221933199e093ea89723f23ab8e37dd5b868d57dff",
+      "code_blocks": 5,
+      "images": 0
+    },
+    {
+      "title": "实验报告要求",
+      "source": "http://8.135.34.58/lab2026/_book/lab1/lab1_5_requirement.html",
+      "file": "lab1/lab1_5_requirement.md",
+      "sha256": "6ed7545895f55fa1889def03fb262cee4fc2f2b992e69f63a081754e790e9f68",
+      "code_blocks": 0,
+      "images": 0
+    },
+    {
+      "title": "lab2: 物理内存和页表",
+      "source": "http://8.135.34.58/lab2026/_book/lab2/lab2.html",
+      "file": "lab2/lab2.md",
+      "sha256": "644b161984fc2eaacac3f2dd4b94beff95f6a76a550dbcddb75d80100b42f24b",
+      "code_blocks": 0,
+      "images": 0
+    },
+    {
+      "title": "实验目的",
+      "source": "http://8.135.34.58/lab2026/_book/lab2/lab2_1_goal.html",
+      "file": "lab2/lab2_1_goal.md",
+      "sha256": "d1f4e0fe2c55f4d20ee27f0294c7a3423fc299d77ee5e861659a6db8e8552899",
+      "code_blocks": 0,
+      "images": 0
+    },
+    {
+      "title": "实验内容",
+      "source": "http://8.135.34.58/lab2026/_book/lab2/lab2_2_contents.html",
+      "file": "lab2/lab2_2_contents.md",
+      "sha256": "aebb011905416d4cb64a35191a193f9b6aaac260474f2f5dffddb9af4fc663ca",
+      "code_blocks": 0,
+      "images": 0
+    },
+    {
+      "title": "练习",
+      "source": "http://8.135.34.58/lab2026/_book/lab2/lab2_2_1_exercise.html",
+      "file": "lab2/lab2_2_1_exercise.md",
+      "sha256": "cffebbb8f51de6ca932dc94fc1c55b7cd9851b49a0d3ff38bac47788c6084b87",
+      "code_blocks": 1,
+      "images": 0
+    },
+    {
+      "title": "项目组成",
+      "source": "http://8.135.34.58/lab2026/_book/lab2/lab2_2_2_files.html",
+      "file": "lab2/lab2_2_2_files.md",
+      "sha256": "b28985ee2ea765c10492d49b1455d9b3100736a461d3fe57c88ab1087318bd0c",
+      "code_blocks": 3,
+      "images": 0
+    },
+    {
+      "title": "物理内存管理",
+      "source": "http://8.135.34.58/lab2026/_book/lab2/lab2_3_pmpt.html",
+      "file": "lab2/lab2_3_pmpt.md",
+      "sha256": "bf4019453224592686eccf4ed366b82ad893226db7a33512e67e81a8104c8813",
+      "code_blocks": 0,
+      "images": 0
+    },
+    {
+      "title": "基本原理概述",
+      "source": "http://8.135.34.58/lab2026/_book/lab2/lab2_3_1_principles.html",
+      "file": "lab2/lab2_3_1_principles.md",
+      "sha256": "bbc428f6300e49c806a287e35440b81366ca44f24b053fb95368e0718296c20e",
+      "code_blocks": 0,
+      "images": 0
+    },
+    {
+      "title": "以页为单位管理物理内存",
+      "source": "http://8.135.34.58/lab2026/_book/lab2/lab2_3_2_phymem_page.html",
+      "file": "lab2/lab2_3_2_phymem_page.md",
+      "sha256": "5ec47418c80727654548839737424781db9dde175cc07869e8f105698ca7541f",
+      "code_blocks": 0,
+      "images": 0
+    },
+    {
+      "title": "建立快表以加快访问效率",
+      "source": "http://8.135.34.58/lab2026/_book/lab2/lab2_3_3_phymem_tlb.html",
+      "file": "lab2/lab2_3_3_phymem_tlb.md",
+      "sha256": "ca24eb4b2bc8bce7f5fa676d1ef9e311b8bfa3bafd436359ed6d01349a0aacaa",
+      "code_blocks": 0,
+      "images": 0
+    },
+    {
+      "title": "分页机制的设计思路",
+      "source": "http://8.135.34.58/lab2026/_book/lab2/lab2_3_4_page.html",
+      "file": "lab2/lab2_3_4_page.md",
+      "sha256": "5014045bc99159b09bec43ff44f2f39f96e1fc66b1feb72ddd3200c3cdcdaa8d",
+      "code_blocks": 0,
+      "images": 0
+    },
+    {
+      "title": "建立段页式管理中需要考虑的关键问题",
+      "source": "http://8.135.34.58/lab2026/_book/lab2/lab2_3_4_1_key_problems_in_seg_page.html",
+      "file": "lab2/lab2_3_4_1_key_problems_in_seg_page.md",
+      "sha256": "c8dbfefb2ca7b757f00027332c5ae0ec569c9dad6406261d58e7fd2815a400fe",
+      "code_blocks": 0,
+      "images": 0
+    },
+    {
+      "title": "实现分页机制",
+      "source": "http://8.135.34.58/lab2026/_book/lab2/lab2_3_4_2_kernel_initialization.html",
+      "file": "lab2/lab2_3_4_2_kernel_initialization.md",
+      "sha256": "2d05005f8d24e554e25d19c97c1e1be361dbc478ae17b1323263be38e5422a8e",
+      "code_blocks": 3,
+      "images": 0
+    },
+    {
+      "title": "物理内存管理的设计思路",
+      "source": "http://8.135.34.58/lab2026/_book/lab2/lab2_3_5_pmpt.html",
+      "file": "lab2/lab2_3_5_pmpt.md",
+      "sha256": "59534a35ee91c350dc7eecea2a14d0464a7a9669b0fa2fe92bba4a1adbbda588",
+      "code_blocks": 0,
+      "images": 0
+    },
+    {
+      "title": "物理内存管理的实现",
+      "source": "http://8.135.34.58/lab2026/_book/lab2/lab2_3_5_1_pmm_init.html",
+      "file": "lab2/lab2_3_5_1_pmm_init.md",
+      "sha256": "87fffdc5f5b08cea83d0c939a7ad766b016b308cd465b0cbbbc522c778cf3e09",
+      "code_blocks": 4,
+      "images": 0
+    },
+    {
+      "title": "物理内存探测",
+      "source": "http://8.135.34.58/lab2026/_book/lab2/lab2_3_5_2_search_phymem_layout.html",
+      "file": "lab2/lab2_3_5_2_search_phymem_layout.md",
+      "sha256": "252c7df2283b4f18d1e7aca025be1c4c588bcf9cb98f018780f32ef050a71a5b",
+      "code_blocks": 8,
+      "images": 0
+    },
+    {
+      "title": "页面分配算法",
+      "source": "http://8.135.34.58/lab2026/_book/lab2/lab2_3_5_3_phymem_allocation.html",
+      "file": "lab2/lab2_3_5_3_phymem_allocation.md",
+      "sha256": "36d2d8295ae3598e2348f5a510a67bc996c4bd47abee638aeb5fe62660e142f4",
+      "code_blocks": 2,
+      "images": 0
+    },
+    {
+      "title": "分支任务：gdb 调试页表查询过程",
+      "source": "http://8.135.34.58/lab2026/_book/lab2/lab2_4_qemu_mmu_debug.html",
+      "file": "lab2/lab2_4_qemu_mmu_debug.md",
+      "sha256": "52301e8bab6af5cad08b6c00d9491b58c964f3c17bf384e49cfacda5a7cc5257",
+      "code_blocks": 8,
+      "images": 0
+    },
+    {
+      "title": "实验报告要求",
+      "source": "http://8.135.34.58/lab2026/_book/lab2/lab2_5_labs_requirement.html",
+      "file": "lab2/lab2_5_labs_requirement.md",
+      "sha256": "0b92059cab0c2aa005f9eb89318a940f72ab7ef685dcf6bba44689d1910a1286",
+      "code_blocks": 0,
+      "images": 0
+    },
+    {
+      "title": "lab3: 断,都可以断",
+      "source": "http://8.135.34.58/lab2026/_book/lab3/lab3.html",
+      "file": "lab3/lab3.md",
+      "sha256": "8df1030bbf362a6fd91ea60ebf0efb1a5bea3057f748a17ca2b53930d4a8d9c4",
+      "code_blocks": 0,
+      "images": 0
+    },
+    {
+      "title": "实验目的",
+      "source": "http://8.135.34.58/lab2026/_book/lab3/lab3_1_goals.html",
+      "file": "lab3/lab3_1_goals.md",
+      "sha256": "dc01e8ee3c1adad8400d0b6f83ba62ebb97d15d5e6d4e80ab9adbb4417543134",
+      "code_blocks": 0,
+      "images": 0
+    },
+    {
+      "title": "实验内容",
+      "source": "http://8.135.34.58/lab2026/_book/lab3/lab3_2_labs.html",
+      "file": "lab3/lab3_2_labs.md",
+      "sha256": "e7b0a0f8a39fad3600d49d94538a0908f8cd3563f4aeb7a75c699a1673597ded",
+      "code_blocks": 0,
+      "images": 0
+    },
+    {
+      "title": "练习",
+      "source": "http://8.135.34.58/lab2026/_book/lab3/lab3_2_1_exercise.html",
+      "file": "lab3/lab3_2_1_exercise.md",
+      "sha256": "a81e75ca6a8c2e2e2d385dce86402d5b0cd589249c3b72c09e3f50851e8bd912",
+      "code_blocks": 3,
+      "images": 0
+    },
+    {
+      "title": "项目组成和执行流",
+      "source": "http://8.135.34.58/lab2026/_book/lab3/lab3_2_2_files.html",
+      "file": "lab3/lab3_2_2_files.md",
+      "sha256": "39b9c74dcf8bc2bff8c06f7b84c813ebf31703b596e6aef3a8d4ef3d18248b7e",
+      "code_blocks": 1,
+      "images": 0
+    },
+    {
+      "title": "中断与中断处理流程",
+      "source": "http://8.135.34.58/lab2026/_book/lab3/lab3_3_interrupt.html",
+      "file": "lab3/lab3_3_interrupt.md",
+      "sha256": "fc924db6eddbcc19c7fb8df968f85e01bedd1047d73c4eedc5d8907e0b614588",
+      "code_blocks": 0,
+      "images": 0
+    },
+    {
+      "title": "riscv64 中断介绍",
+      "source": "http://8.135.34.58/lab2026/_book/lab3/lab3_3_1_introduce.html",
+      "file": "lab3/lab3_3_1_introduce.md",
+      "sha256": "351196d941c770a2fbd98d94b31a896805de450f7e2d53c719ecaef91b7deb19",
+      "code_blocks": 0,
+      "images": 0
+    },
+    {
+      "title": "掉进兔子洞(中断入口点)",
+      "source": "http://8.135.34.58/lab2026/_book/lab3/lab3_3_2_trapentry.html",
+      "file": "lab3/lab3_3_2_trapentry.md",
+      "sha256": "1ec829d4cd72a2078a383114f833b34dbde6a151ba47551d362395cb75157405",
+      "code_blocks": 3,
+      "images": 0
+    },
+    {
+      "title": "中断处理程序",
+      "source": "http://8.135.34.58/lab2026/_book/lab3/lab3_3_3_trap.html",
+      "file": "lab3/lab3_3_3_trap.md",
+      "sha256": "2d2f578bb11a4ee8cd2f59b74aaeb1573e72bc22ff3d74ce104b9fe200831910",
+      "code_blocks": 2,
+      "images": 2
+    },
+    {
+      "title": "滴答滴答（时钟中断）",
+      "source": "http://8.135.34.58/lab2026/_book/lab3/lab3_3_4_clock.html",
+      "file": "lab3/lab3_3_4_clock.md",
+      "sha256": "af20bcdab5769f808eff296f0b4c9c7ac13064b6775fc73fe323f7857e140f46",
+      "code_blocks": 2,
+      "images": 0
+    },
+    {
+      "title": "断亦有断(中断的关闭和开启)",
+      "source": "http://8.135.34.58/lab2026/_book/lab3/lab3_3_5_atomic.html",
+      "file": "lab3/lab3_3_5_atomic.md",
+      "sha256": "afbf7766a53f996c6229825e6f7f3b4f33b10b708c3ed6ebd4a60e4da20a6175",
+      "code_blocks": 2,
+      "images": 0
+    },
+    {
+      "title": "实验报告要求",
+      "source": "http://8.135.34.58/lab2026/_book/lab3/lab3_4_lab_requirement.html",
+      "file": "lab3/lab3_4_lab_requirement.md",
+      "sha256": "8e6770f78dbdb15b2866468456a9f5fd97b80dbbd4008621d1058140b31d7251",
+      "code_blocks": 0,
+      "images": 0
+    },
+    {
+      "title": "lab4: 进程管理",
+      "source": "http://8.135.34.58/lab2026/_book/lab4/lab4.html",
+      "file": "lab4/lab4.md",
+      "sha256": "ca91d08f96080a9b20b17f233d0b67b1e5bd0a5cec46a48e132dec2606f3c8be",
+      "code_blocks": 0,
+      "images": 0
+    },
+    {
+      "title": "实验目的",
+      "source": "http://8.135.34.58/lab2026/_book/lab4/lab4_1_goals.html",
+      "file": "lab4/lab4_1_goals.md",
+      "sha256": "d0be2602d491e4dd68ed9bef4bfbf7373f37d33ba55ae244cf5ba9c217dedc48",
+      "code_blocks": 0,
+      "images": 0
+    },
+    {
+      "title": "实验内容",
+      "source": "http://8.135.34.58/lab2026/_book/lab4/lab4_2_labs.html",
+      "file": "lab4/lab4_2_labs.md",
+      "sha256": "859cebb348ba7de7af329c6306b31f30bac33c4925423e3eff4a829997f74247",
+      "code_blocks": 0,
+      "images": 0
+    },
+    {
+      "title": "练习",
+      "source": "http://8.135.34.58/lab2026/_book/lab4/lab4_2_1_exercises.html",
+      "file": "lab4/lab4_2_1_exercises.md",
+      "sha256": "42a684c2815e6a3d1c43cc0c0613c478ef54b2ad594bfb4007b4597f59356938",
+      "code_blocks": 3,
+      "images": 0
+    },
+    {
+      "title": "项目组成",
+      "source": "http://8.135.34.58/lab2026/_book/lab4/lab4_2_2_files.html",
+      "file": "lab4/lab4_2_2_files.md",
+      "sha256": "6af91d9a419269a862fe4b9c0c4afc99763ad5e45d89e09128fd2d9181116ca9",
+      "code_blocks": 1,
+      "images": 0
+    },
+    {
+      "title": "虚拟内存管理",
+      "source": "http://8.135.34.58/lab2026/_book/lab4/lab4_3_vmm.html",
+      "file": "lab4/lab4_3_vmm.md",
+      "sha256": "d341636df5b924cf2785af4c7917a2204cad271a5b93bbfa77ab5692b1ed8c5d",
+      "code_blocks": 0,
+      "images": 0
+    },
+    {
+      "title": "基本原理概述",
+      "source": "http://8.135.34.58/lab2026/_book/lab4/lab4_3_1_vmm_principles.html",
+      "file": "lab4/lab4_3_1_vmm_principles.md",
+      "sha256": "5215358fc876b687ae530be51ee82ad64649c5464c4db10730f23df7215f0935",
+      "code_blocks": 0,
+      "images": 0
+    },
+    {
+      "title": "页表项设计思路",
+      "source": "http://8.135.34.58/lab2026/_book/lab4/lab4_3_2_page_table_entry.html",
+      "file": "lab4/lab4_3_2_page_table_entry.md",
+      "sha256": "ad86c55a19dcb59839e046a88d49ddb25f0f0c597687df5d2f323605ab8d6a8e",
+      "code_blocks": 1,
+      "images": 0
+    },
+    {
+      "title": "使用多级页表实现虚拟存储",
+      "source": "http://8.135.34.58/lab2026/_book/lab4/lab4_3_3_multilevel_page_tables.html",
+      "file": "lab4/lab4_3_3_multilevel_page_tables.md",
+      "sha256": "1fe8c352664f1781899fe0b7ee2ce66ab090d95856fa1aafe01ea3e213cbd437",
+      "code_blocks": 1,
+      "images": 0
+    },
+    {
+      "title": "内核线程管理",
+      "source": "http://8.135.34.58/lab2026/_book/lab4/lab4_4_kernel_thread_management.html",
+      "file": "lab4/lab4_4_kernel_thread_management.md",
+      "sha256": "198efe84a37dd29436ced73672e22a0cf348f4e8facf54af1ce948026148dd27",
+      "code_blocks": 0,
+      "images": 0
+    },
+    {
+      "title": "设计关键数据结构",
+      "source": "http://8.135.34.58/lab2026/_book/lab4/lab4_4_1_pcb.html",
+      "file": "lab4/lab4_4_1_pcb.md",
+      "sha256": "d9174160862be7d6b9450437ae9d9ca2299ed7f27e14f997e9be6be0f7596ded",
+      "code_blocks": 1,
+      "images": 0
+    },
+    {
+      "title": "创建并执行内核线程",
+      "source": "http://8.135.34.58/lab2026/_book/lab4/lab4_4_2_create_exec_kernel_thread.html",
+      "file": "lab4/lab4_4_2_create_exec_kernel_thread.md",
+      "sha256": "3615f79bce13788a10964445f9ddcc133393aa8b30d4a74314a3984da6821645",
+      "code_blocks": 0,
+      "images": 0
+    },
+    {
+      "title": "创建第 0 个内核线程 idleproc",
+      "source": "http://8.135.34.58/lab2026/_book/lab4/lab4_4_2_1_create_kthread_idleproc.html",
+      "file": "lab4/lab4_4_2_1_create_kthread_idleproc.md",
+      "sha256": "23f8f7f431b9320a4b55d4b6cb829b6b7613889d72e8f442619cf427a4a6db3f",
+      "code_blocks": 0,
+      "images": 0
+    },
+    {
+      "title": "创建第 1 个内核线程 initproc",
+      "source": "http://8.135.34.58/lab2026/_book/lab4/lab4_4_2_2_create_kthread_initproc.html",
+      "file": "lab4/lab4_4_2_2_create_kthread_initproc.md",
+      "sha256": "2f548224e2144d1a4baed538094ebaa279e728ba5f331709ef900be118e855b8",
+      "code_blocks": 0,
+      "images": 0
+    },
+    {
+      "title": "调度并执行内核线程 initproc",
+      "source": "http://8.135.34.58/lab2026/_book/lab4/lab4_4_2_3_sched_run_kthread.html",
+      "file": "lab4/lab4_4_2_3_sched_run_kthread.md",
+      "sha256": "388cd2446a069280782cf68d03ec4c2bf26bdbb43604fc2db854fb1f374bf1a2",
+      "code_blocks": 2,
+      "images": 1
+    },
+    {
+      "title": "实验报告要求",
+      "source": "http://8.135.34.58/lab2026/_book/lab4/lab4_5_labs_requirement.html",
+      "file": "lab4/lab4_5_labs_requirement.md",
+      "sha256": "fd01cce9d6c6fc1d76fab3fafa0e2c80b5168bbb0265bec13684ba15564259f0",
+      "code_blocks": 0,
+      "images": 0
+    },
+    {
+      "title": "lab5: 用户程序",
+      "source": "http://8.135.34.58/lab2026/_book/lab5/lab5.html",
+      "file": "lab5/lab5.md",
+      "sha256": "e8caefbb806dee4208c39b7153c99a97c801448bc68183ad55682f81105fe0f0",
+      "code_blocks": 0,
+      "images": 0
+    },
+    {
+      "title": "实验目的",
+      "source": "http://8.135.34.58/lab2026/_book/lab5/lab5_1_goals.html",
+      "file": "lab5/lab5_1_goals.md",
+      "sha256": "79f1aa3a99e3f7ac0ca6397547381fa22879e2034bbdfd06968b39f324db03b8",
+      "code_blocks": 0,
+      "images": 0
+    },
+    {
+      "title": "实验内容",
+      "source": "http://8.135.34.58/lab2026/_book/lab5/lab5_2_labs.html",
+      "file": "lab5/lab5_2_labs.md",
+      "sha256": "c01874ca24467ed0bef9df164001cbd5256fca90c0f210d20ae764204281fab5",
+      "code_blocks": 0,
+      "images": 0
+    },
+    {
+      "title": "练习",
+      "source": "http://8.135.34.58/lab2026/_book/lab5/lab5_2_1_exercises.html",
+      "file": "lab5/lab5_2_1_exercises.md",
+      "sha256": "5e9edbcbfd6137b57c43eca7952eec3af0560f16aab5e87e5096f87cb605fb3e",
+      "code_blocks": 4,
+      "images": 0
+    },
+    {
+      "title": "项目组成",
+      "source": "http://8.135.34.58/lab2026/_book/lab5/lab5_2_2_files.html",
+      "file": "lab5/lab5_2_2_files.md",
+      "sha256": "77be6515e768ba99ff9e823b6a8b43795a5e6c20c86ee55b6a586ad54e31b3fa",
+      "code_blocks": 1,
+      "images": 0
+    },
+    {
+      "title": "用户进程管理",
+      "source": "http://8.135.34.58/lab2026/_book/lab5/lab5_3_user_process.html",
+      "file": "lab5/lab5_3_user_process.md",
+      "sha256": "23e766a78844be64bc687841c4baec47f68b8d2863998ee315fa06af3ce7ac67",
+      "code_blocks": 0,
+      "images": 0
+    },
+    {
+      "title": "实验流程概述",
+      "source": "http://8.135.34.58/lab2026/_book/lab5/lab5_3_1_lab_steps.html",
+      "file": "lab5/lab5_3_1_lab_steps.md",
+      "sha256": "4c9b5cff2afb3761069a6f7c1fa52baf86c99c9e2dfc99ac985117fc97444242",
+      "code_blocks": 0,
+      "images": 0
+    },
+    {
+      "title": "用户进程",
+      "source": "http://8.135.34.58/lab2026/_book/lab5/lab5_3_2_create_user_process.html",
+      "file": "lab5/lab5_3_2_create_user_process.md",
+      "sha256": "8dc82632a8c318848742888852c0d6395833434c62db57c73c4a1a573d4b44a8",
+      "code_blocks": 5,
+      "images": 0
+    },
+    {
+      "title": "系统调用实现",
+      "source": "http://8.135.34.58/lab2026/_book/lab5/lab5_3_3_syscall.html",
+      "file": "lab5/lab5_3_3_syscall.md",
+      "sha256": "d526437361eefb81d75050ec1f5956fc4eaf529f85019ef8a7e999338a467e92",
+      "code_blocks": 2,
+      "images": 0
+    },
+    {
+      "title": "第一次进入用户态",
+      "source": "http://8.135.34.58/lab2026/_book/lab5/lab5_3_4_first_user.html",
+      "file": "lab5/lab5_3_4_first_user.md",
+      "sha256": "8f6410fc1d63e9099d0d7b1183a88a902c4efa758bd51b55a229470ce4b3a90e",
+      "code_blocks": 1,
+      "images": 0
+    },
+    {
+      "title": "中断处理",
+      "source": "http://8.135.34.58/lab2026/_book/lab5/lab5_3_5_trap_process.html",
+      "file": "lab5/lab5_3_5_trap_process.md",
+      "sha256": "7d6dd34640cc0df7a9bd74c4c5e237e19c16d70036e1ecbaa8b1ce715be2609d",
+      "code_blocks": 1,
+      "images": 0
+    },
+    {
+      "title": "进程退出",
+      "source": "http://8.135.34.58/lab2026/_book/lab5/lab5_3_6_process_exit.html",
+      "file": "lab5/lab5_3_6_process_exit.md",
+      "sha256": "d72ce92080823e649ef5e623eeaf6409bab8b6b5335ab122853ce5fcc9330e8e",
+      "code_blocks": 0,
+      "images": 0
+    },
+    {
+      "title": "分支任务：gdb 调试系统调用以及返回",
+      "source": "http://8.135.34.58/lab2026/_book/lab5/lab5_4_gdb_ecall.html",
+      "file": "lab5/lab5_4_gdb_ecall.md",
+      "sha256": "36b817788854c829ae0c92be67943d54ed20840bb959be2f5e7df1865e5dd8b8",
+      "code_blocks": 4,
+      "images": 0
+    },
+    {
+      "title": "实验报告要求",
+      "source": "http://8.135.34.58/lab2026/_book/lab5/lab5_5_lab_requirement.html",
+      "file": "lab5/lab5_5_lab_requirement.md",
+      "sha256": "68910256b8fd6d37a302f0c78110b6b5c4bd8a0ba5671f6d5ebf1e8295f3fba8",
+      "code_blocks": 0,
+      "images": 0
+    },
+    {
+      "title": "lab6: 进程调度",
+      "source": "http://8.135.34.58/lab2026/_book/lab6/lab6.html",
+      "file": "lab6/lab6.md",
+      "sha256": "27117c4a71f5a4772c807acb1c424c607f887eef13f6abdb9b7bfbcb21ed74d2",
+      "code_blocks": 0,
+      "images": 0
+    },
+    {
+      "title": "实验目的",
+      "source": "http://8.135.34.58/lab2026/_book/lab6/lab6_1_goals.html",
+      "file": "lab6/lab6_1_goals.md",
+      "sha256": "269d1e41cf4d3f1db4ba29c6c6aa25a8c7513175aec3465f57f338a270babe37",
+      "code_blocks": 0,
+      "images": 0
+    },
+    {
+      "title": "实验内容",
+      "source": "http://8.135.34.58/lab2026/_book/lab6/lab6_2_lab_content.html",
+      "file": "lab6/lab6_2_lab_content.md",
+      "sha256": "2d9afebcf96c6ae3917b9e49a9ee1f8152ead950d989870cb39263e36888b934",
+      "code_blocks": 0,
+      "images": 0
+    },
+    {
+      "title": "练习",
+      "source": "http://8.135.34.58/lab2026/_book/lab6/lab6_2_1_exercises.html",
+      "file": "lab6/lab6_2_1_exercises.md",
+      "sha256": "a916a4c4acfa544af16bc38d92a47c1790bec6b52eee6403d67e73a117c25f15",
+      "code_blocks": 4,
+      "images": 0
+    },
+    {
+      "title": "项目组成",
+      "source": "http://8.135.34.58/lab2026/_book/lab6/lab6_2_2_structure.html",
+      "file": "lab6/lab6_2_2_structure.md",
+      "sha256": "58941d74b814bad010c8c327daaa48211d65d4d4b5d914cadd6be63145542f17",
+      "code_blocks": 1,
+      "images": 0
+    },
+    {
+      "title": "调度框架和调度算法设计与实现",
+      "source": "http://8.135.34.58/lab2026/_book/lab6/lab6_3_schedule_design.html",
+      "file": "lab6/lab6_3_schedule_design.md",
+      "sha256": "050ac7a123d6fe319b741fdd3b34391ed7550d3e023c6a1eb9845930c5c66f74",
+      "code_blocks": 0,
+      "images": 0
+    },
+    {
+      "title": "进程状态",
+      "source": "http://8.135.34.58/lab2026/_book/lab6/lab6_3_1_intro.html",
+      "file": "lab6/lab6_3_1_intro.md",
+      "sha256": "561b45558a70514705b413b2bb2499c6ae84b33d9669fe191df8920dbd446c46",
+      "code_blocks": 0,
+      "images": 0
+    },
+    {
+      "title": "深入理解进程切换",
+      "source": "http://8.135.34.58/lab2026/_book/lab6/lab6_3_2_switch.html",
+      "file": "lab6/lab6_3_2_switch.md",
+      "sha256": "1dacbf1dd9ac536b28b4f4cb8c5ada8ddc061078a219180100b6427fb357f521",
+      "code_blocks": 0,
+      "images": 0
+    },
+    {
+      "title": "调度算法框架",
+      "source": "http://8.135.34.58/lab2026/_book/lab6/lab6_3_3_schedule.html",
+      "file": "lab6/lab6_3_3_schedule.md",
+      "sha256": "2f92cdc1b328b4bfffcf15b3ba2be12987df1f80aefefdfb733669a68ba2c601",
+      "code_blocks": 3,
+      "images": 0
+    },
+    {
+      "title": "RR调度算法实现",
+      "source": "http://8.135.34.58/lab2026/_book/lab6/lab6_3_4_RR.html",
+      "file": "lab6/lab6_3_4_RR.md",
+      "sha256": "8386bf4949011cc842fa9276b131d006a34ec838ec7a68a0c748180cbf13d029",
+      "code_blocks": 0,
+      "images": 0
+    },
+    {
+      "title": "stride调度算法",
+      "source": "http://8.135.34.58/lab2026/_book/lab6/lab6_3_5_stride.html",
+      "file": "lab6/lab6_3_5_stride.md",
+      "sha256": "c00caf0b3737b6b0782ae6a1ca9e06fb1c1d9943a92afb2b0b03fdc6cc276168",
+      "code_blocks": 0,
+      "images": 0
+    },
+    {
+      "title": "基本思路",
+      "source": "http://8.135.34.58/lab2026/_book/lab6/lab6_3_5_1_base_method.html",
+      "file": "lab6/lab6_3_5_1_base_method.md",
+      "sha256": "7ac5b6beacc11af8b7ff17ad40b8722c5d081d0126f93bc0b01f0faac3462fe5",
+      "code_blocks": 0,
+      "images": 2
+    },
+    {
+      "title": "使用优先队列实现 Stride Scheduling",
+      "source": "http://8.135.34.58/lab2026/_book/lab6/lab6_3_5_2_priority_queue.html",
+      "file": "lab6/lab6_3_5_2_priority_queue.md",
+      "sha256": "546380ff829bb3dd5906f0544535e4cec68a99cb121b8099a39f810990276f70",
+      "code_blocks": 1,
+      "images": 0
+    },
+    {
+      "title": "stride调度算法执行 make qemu 的大致输出",
+      "source": "http://8.135.34.58/lab2026/_book/lab6/lab6_3_5_3_execution_result.html",
+      "file": "lab6/lab6_3_5_3_execution_result.md",
+      "sha256": "7599df3ce00a22641ca95671999fd8225a281935f13eff2954aa8e1df338edb8",
+      "code_blocks": 1,
+      "images": 0
+    },
+    {
+      "title": "实验报告要求",
+      "source": "http://8.135.34.58/lab2026/_book/lab6/lab6_5_labs_requirement.html",
+      "file": "lab6/lab6_5_labs_requirement.md",
+      "sha256": "acf7574cc776a051c2c045da84bd8bd46037b802d21ea4a0002b9e6a82a59d09",
+      "code_blocks": 0,
+      "images": 0
+    },
+    {
+      "title": "lab7: 同步互斥",
+      "source": "http://8.135.34.58/lab2026/_book/lab7/lab7.html",
+      "file": "lab7/lab7.md",
+      "sha256": "735162dea959ae731ee9c161a90f94c22fa62863d6427f07ec7701beb7afd627",
+      "code_blocks": 0,
+      "images": 0
+    },
+    {
+      "title": "实验目的",
+      "source": "http://8.135.34.58/lab2026/_book/lab7/lab7_1_goals.html",
+      "file": "lab7/lab7_1_goals.md",
+      "sha256": "0cff689170ec98d92d0dc30c7208734305f87cbc888c68b3aae154bff8e5a0fe",
+      "code_blocks": 0,
+      "images": 0
+    },
+    {
+      "title": "实验内容",
+      "source": "http://8.135.34.58/lab2026/_book/lab7/lab7_2_labs.html",
+      "file": "lab7/lab7_2_labs.md",
+      "sha256": "499f4b2f04bc6d2c4c9e77af63e9fe6a26db13137668349e04e3de00e1a77beb",
+      "code_blocks": 0,
+      "images": 0
+    },
+    {
+      "title": "练习",
+      "source": "http://8.135.34.58/lab2026/_book/lab7/lab7_2_1_exercises.html",
+      "file": "lab7/lab7_2_1_exercises.md",
+      "sha256": "c212c9df557adc9f57a21d982a4618549271327bf8ddc85e0e5c955881f95460",
+      "code_blocks": 3,
+      "images": 0
+    },
+    {
+      "title": "项目组成",
+      "source": "http://8.135.34.58/lab2026/_book/lab7/lab7_2_2_files.html",
+      "file": "lab7/lab7_2_2_files.md",
+      "sha256": "90a0322191366499d2bbea7e2ff1deb216151c586fa6627b7e653b566770987c",
+      "code_blocks": 1,
+      "images": 0
+    },
+    {
+      "title": "同步互斥的一些基本概念",
+      "source": "http://8.135.34.58/lab2026/_book/lab7/lab7_3_concept.html",
+      "file": "lab7/lab7_3_concept.md",
+      "sha256": "6e83d184c457fb88badd7c031e04d5389ee1cbdb1a8848e16ca619750e0fb69a",
+      "code_blocks": 5,
+      "images": 2
+    },
+    {
+      "title": "信号量",
+      "source": "http://8.135.34.58/lab2026/_book/lab7/lab7_4_semaphore.html",
+      "file": "lab7/lab7_4_semaphore.md",
+      "sha256": "3c32a4c26481187472172d0c81565a86d846c75ca5da50489d8075196c30efdf",
+      "code_blocks": 3,
+      "images": 0
+    },
+    {
+      "title": "管程",
+      "source": "http://8.135.34.58/lab2026/_book/lab7/lab7_5_monitor.html",
+      "file": "lab7/lab7_5_monitor.md",
+      "sha256": "e40b36eb2e8601e560bc2599df3ae08c884beeff60d929fddfe486d066721513",
+      "code_blocks": 8,
+      "images": 0
+    },
+    {
+      "title": "实验报告要求",
+      "source": "http://8.135.34.58/lab2026/_book/lab7/lab7_6_lab_requirement.html",
+      "file": "lab7/lab7_6_lab_requirement.md",
+      "sha256": "03ba6181b5378f89923d2965b0c2013ea13a45af0084c13b2a6517e4db7fa2fd",
+      "code_blocks": 0,
+      "images": 0
+    },
+    {
+      "title": "lab8: 文件系统",
+      "source": "http://8.135.34.58/lab2026/_book/lab8/lab8.html",
+      "file": "lab8/lab8.md",
+      "sha256": "f3cb6f1f739b9647ec47918d754c6e6c74db1dcab3c6630604c5946b6f0fcccc",
+      "code_blocks": 0,
+      "images": 0
+    },
+    {
+      "title": "实验目的",
+      "source": "http://8.135.34.58/lab2026/_book/lab8/lab8_1_goals.html",
+      "file": "lab8/lab8_1_goals.md",
+      "sha256": "86d6584061017fb1e920a58cf38d46096b9b67ea4de193290006f3b292d175db",
+      "code_blocks": 0,
+      "images": 0
+    },
+    {
+      "title": "实验内容",
+      "source": "http://8.135.34.58/lab2026/_book/lab8/lab8_2_labs.html",
+      "file": "lab8/lab8_2_labs.md",
+      "sha256": "486e8488a49790dd26dcd54c1cc280b81df734de9ca99401cd0ed9e48877445b",
+      "code_blocks": 0,
+      "images": 0
+    },
+    {
+      "title": "练习",
+      "source": "http://8.135.34.58/lab2026/_book/lab8/lab8_2_1_exercises.html",
+      "file": "lab8/lab8_2_1_exercises.md",
+      "sha256": "76718fbe8d5420877aa4a4a010aa948623acdab3d632b1f7e7c36c6adba3389f",
+      "code_blocks": 5,
+      "images": 0
+    },
+    {
+      "title": "项目组成",
+      "source": "http://8.135.34.58/lab2026/_book/lab8/lab8_2_2_files.html",
+      "file": "lab8/lab8_2_2_files.md",
+      "sha256": "87eaaae3434e7277f59b08c7d6d9066bc6bfb5861673609cf7d4a8df18b15ab4",
+      "code_blocks": 1,
+      "images": 1
+    },
+    {
+      "title": "文件系统",
+      "source": "http://8.135.34.58/lab2026/_book/lab8/lab8_3_FS.html",
+      "file": "lab8/lab8_3_FS.md",
+      "sha256": "ac0a95534ae1cb865159cc24535efffd049e1782d4c2fb7f5123e9896cab6c81",
+      "code_blocks": 0,
+      "images": 0
+    },
+    {
+      "title": "文件系统概述",
+      "source": "http://8.135.34.58/lab2026/_book/lab8/lab8_3_1_fs_introduction.html",
+      "file": "lab8/lab8_3_1_fs_introduction.md",
+      "sha256": "6426df292d65c45eefcd38b5386a3d329784e8e2adc33fd6af13414f838dca82",
+      "code_blocks": 1,
+      "images": 3
+    },
+    {
+      "title": "文件系统抽象层VFS",
+      "source": "http://8.135.34.58/lab2026/_book/lab8/lab8_3_2_vfs.html",
+      "file": "lab8/lab8_3_2_vfs.md",
+      "sha256": "14882652748c4f4f741ba30c1a9eb5e07ac0253e342f3fac076669420a5a9cc1",
+      "code_blocks": 4,
+      "images": 0
+    },
+    {
+      "title": "硬盘文件系统SFS",
+      "source": "http://8.135.34.58/lab2026/_book/lab8/lab8_3_3_sfs.html",
+      "file": "lab8/lab8_3_3_sfs.md",
+      "sha256": "e5c895fcd7a984c7501b2c5b47c9c1629c66745cd0d5ec559fa0102bbdb77983",
+      "code_blocks": 7,
+      "images": 0
+    },
+    {
+      "title": "设备",
+      "source": "http://8.135.34.58/lab2026/_book/lab8/lab8_3_4_device.html",
+      "file": "lab8/lab8_3_4_device.md",
+      "sha256": "a7fd2b2170beee85ac887c77da534526aa8f8067ce396185fc91b55c742fff90",
+      "code_blocks": 9,
+      "images": 0
+    },
+    {
+      "title": "open 系统调用的执行过程",
+      "source": "http://8.135.34.58/lab2026/_book/lab8/lab8_3_5_file_open.html",
+      "file": "lab8/lab8_3_5_file_open.md",
+      "sha256": "cdbfade82dda3743d1cf9147543ef0d6b7838261e32d369bd56bb24ab7996136",
+      "code_blocks": 6,
+      "images": 0
+    },
+    {
+      "title": "read 系统调用的执行过程",
+      "source": "http://8.135.34.58/lab2026/_book/lab8/lab8_3_6_file_read.html",
+      "file": "lab8/lab8_3_6_file_read.md",
+      "sha256": "836fe676923657b1ea604e45ba145031f639fef60d9107c644364ce0546921bc",
+      "code_blocks": 8,
+      "images": 0
+    },
+    {
+      "title": "用户程序加载与终端执行",
+      "source": "http://8.135.34.58/lab2026/_book/lab8/lab8_3_7_execve_shell.html",
+      "file": "lab8/lab8_3_7_execve_shell.md",
+      "sha256": "02e4b0e66292581510814fbc1e9f3061863edc5a38941bea1df1bd1d253003e6",
+      "code_blocks": 5,
+      "images": 0
+    },
+    {
+      "title": "实验报告要求",
+      "source": "http://8.135.34.58/lab2026/_book/lab8/lab8_4_lab_requirement.html",
+      "file": "lab8/lab8_4_lab_requirement.md",
+      "sha256": "3e9fa83e3c8444fa39cd8f66c6e26bf09bb225bf74e7d37c438e284dde458810",
+      "code_blocks": 0,
+      "images": 0
+    },
+    {
+      "title": "lab9: 页面置换与内存映射",
+      "source": "http://8.135.34.58/lab2026/_book/lab9/lab9.html",
+      "file": "lab9/lab9.md",
+      "sha256": "fee9da0f9fffb5c919e2e032d4308610b12c73f4756fcf1723021a31e730e106",
+      "code_blocks": 0,
+      "images": 0
+    },
+    {
+      "title": "实验目的",
+      "source": "http://8.135.34.58/lab2026/_book/lab9/lab9_1_goals.html",
+      "file": "lab9/lab9_1_goals.md",
+      "sha256": "d4c0c19f452b5e841e0035077caf4e05835672b60b9634563f7f259a6eb78e28",
+      "code_blocks": 0,
+      "images": 0
+    },
+    {
+      "title": "实验内容",
+      "source": "http://8.135.34.58/lab2026/_book/lab9/lab9_2_lab_contents.html",
+      "file": "lab9/lab9_2_lab_contents.md",
+      "sha256": "4a3b745ee499fbf054866309d531179e9a0c0efdd6bd3a381e0bb85836f0eac7",
+      "code_blocks": 0,
+      "images": 0
+    },
+    {
+      "title": "练习",
+      "source": "http://8.135.34.58/lab2026/_book/lab9/lab9_2_1_exercises.html",
+      "file": "lab9/lab9_2_1_exercises.md",
+      "sha256": "5b7b8b5f6c459e958b6d202ef38fc66cc71ac388fd870ebe5c8f512d2f4a84ca",
+      "code_blocks": 6,
+      "images": 0
+    },
+    {
+      "title": "项目组成",
+      "source": "http://8.135.34.58/lab2026/_book/lab9/lab9_2_2_filses.html",
+      "file": "lab9/lab9_2_2_filses.md",
+      "sha256": "8ebc9d7eb7a96bee6c4e0471ce61401b890cd925d6621e8c2780b79f0a444f9c",
+      "code_blocks": 1,
+      "images": 0
+    },
+    {
+      "title": "页面置换机制的实现",
+      "source": "http://8.135.34.58/lab2026/_book/lab9/lab9_3_swaping.html",
+      "file": "lab9/lab9_3_swaping.md",
+      "sha256": "8a533250063ba3c9efcf5003220e5966d5079b1a0a7ea4ed4c0700c9b6101302",
+      "code_blocks": 0,
+      "images": 0
+    },
+    {
+      "title": "页面置换后的驱动和存储",
+      "source": "http://8.135.34.58/lab2026/_book/lab9/lab9_3_1_driver_and_storage.html",
+      "file": "lab9/lab9_3_1_driver_and_storage.md",
+      "sha256": "24af80d244113514c22796f04671aa49695c7584720c20984a9edbbbced8cfc0",
+      "code_blocks": 9,
+      "images": 0
+    },
+    {
+      "title": "处理缺页异常",
+      "source": "http://8.135.34.58/lab2026/_book/lab9/lab9_3_2_page_fault_handler.html",
+      "file": "lab9/lab9_3_2_page_fault_handler.md",
+      "sha256": "7d8101f6121393daad07873127d051e9a24855b0bb7f97cccf17f46f90be0e7e",
+      "code_blocks": 4,
+      "images": 0
+    },
+    {
+      "title": "页替换算法和机制实现",
+      "source": "http://8.135.34.58/lab2026/_book/lab9/lab9_3_3_page_swapping.html",
+      "file": "lab9/lab9_3_3_page_swapping.md",
+      "sha256": "807f1b4a1e0b2e0e12826cc14501022d8d58afe4fd1007332bbd367c684272b1",
+      "code_blocks": 6,
+      "images": 0
+    },
+    {
+      "title": "FIFO页面置换算法",
+      "source": "http://8.135.34.58/lab2026/_book/lab9/lab9_3_4_page_swapping_principles.html",
+      "file": "lab9/lab9_3_4_page_swapping_principles.md",
+      "sha256": "fe02a635352b4a79d5c75fce493c2a2119820a357d3ff281fce288cf9aef4fc6",
+      "code_blocks": 6,
+      "images": 0
+    },
+    {
+      "title": "内存映射机制的实现",
+      "source": "http://8.135.34.58/lab2026/_book/lab9/lab9_4_mmap.html",
+      "file": "lab9/lab9_4_mmap.md",
+      "sha256": "96a5558e8f20ece70a6d9e726adb4361b9523ff8e40e5a205c7143f2482b2760",
+      "code_blocks": 3,
+      "images": 0
+    },
+    {
+      "title": "实验报告要求",
+      "source": "http://8.135.34.58/lab2026/_book/lab9/lab9_5_labs_requirement.html",
+      "file": "lab9/lab9_5_labs_requirement.md",
+      "sha256": "6c3b6e03ec7ded50d3f5a6b9d21fe328e5b6a42e83483449e2eeaa867744a3ec",
+      "code_blocks": 0,
+      "images": 0
+    },
+    {
+      "title": "附录",
+      "source": "http://8.135.34.58/lab2026/_book/appendix/intro.html",
+      "file": "appendix/intro.md",
+      "sha256": "cb4dba2524c22d6e74dca3c818c37176c6c8a70340c65491d9ced71b2bdaf8e6",
+      "code_blocks": 0,
+      "images": 0
+    },
+    {
+      "title": "makefile 简介",
+      "source": "http://8.135.34.58/lab2026/_book/appendix/1_makefile.html",
+      "file": "appendix/1_makefile.md",
+      "sha256": "2ffc2603f5f10d041c1bb44361e9118080fa26b3daf22cb8cba0752dcfea3afc",
+      "code_blocks": 29,
+      "images": 0
+    },
+    {
+      "title": "【原理】进程的属性与特征解析",
+      "source": "http://8.135.34.58/lab2026/_book/appendix/4_process_overview.html",
+      "file": "appendix/4_process_overview.md",
+      "sha256": "66088287161b244fc117e66073b55fba7afe942961dccfa3d8740e2a425d1697",
+      "code_blocks": 0,
+      "images": 0
+    },
+    {
+      "title": "【原理】用户进程的特征",
+      "source": "http://8.135.34.58/lab2026/_book/appendix/5_user_process.html",
+      "file": "appendix/5_user_process.md",
+      "sha256": "f623cb14a84ce826bea7d6ca17fa79318120697bb9feec195f336cc55035ce96",
+      "code_blocks": 0,
+      "images": 0
+    }
+  ],
+  "assets": [
+    {
+      "source": "http://8.135.34.58/lab2026/_book/lab0.5/dsh_example.png",
+      "file": "assets/lab0.5/dsh_example.png",
+      "downloaded": true
+    },
+    {
+      "source": "http://8.135.34.58/lab2026/_book/lab1/program_memory_layout.png",
+      "file": "assets/lab1/program_memory_layout.png",
+      "downloaded": true
+    },
+    {
+      "source": "http://8.135.34.58/lab2026/_book/lab3/scause1.jpg",
+      "file": "assets/lab3/scause1.jpg",
+      "downloaded": true
+    },
+    {
+      "source": "http://8.135.34.58/lab2026/_book/lab3/scause2.jpg",
+      "file": "assets/lab3/scause2.jpg",
+      "downloaded": true
+    },
+    {
+      "source": "http://8.135.34.58/lab2026/_book/lab4/find.png",
+      "file": "assets/lab4/find.png",
+      "downloaded": true
+    },
+    {
+      "source": "http://8.135.34.58/lab2026/_book/lab6/image001.png",
+      "file": "assets/lab6/image001.png",
+      "downloaded": true
+    },
+    {
+      "source": "http://8.135.34.58/lab2026/_book/lab6/image002.png",
+      "file": "assets/lab6/image002.png",
+      "downloaded": true
+    },
+    {
+      "source": "http://8.135.34.58/lab2026/_book/lab7/1.png",
+      "file": "assets/lab7/1.png",
+      "downloaded": true
+    },
+    {
+      "source": "http://8.135.34.58/lab2026/_book/lab7/2.png",
+      "file": "assets/lab7/2.png",
+      "downloaded": true
+    },
+    {
+      "source": "http://8.135.34.58/lab2026/_book/lab8/image004.png",
+      "file": "assets/lab8/image004.png",
+      "downloaded": true
+    },
+    {
+      "source": "http://8.135.34.58/lab2026/_book/lab8/onedrive.jpg",
+      "file": "assets/lab8/onedrive.jpg",
+      "downloaded": true
+    },
+    {
+      "source": "http://8.135.34.58/lab2026/_book/lab8/fs1.png",
+      "file": "assets/lab8/fs1.png",
+      "downloaded": true
+    },
+    {
+      "source": "http://8.135.34.58/lab2026/_book/lab8/fs2.png",
+      "file": "assets/lab8/fs2.png",
+      "downloaded": true
+    }
+  ],
+  "failures": []
+}

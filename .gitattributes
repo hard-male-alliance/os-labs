@@ -1,0 +1,2 @@
+# Normalize repository text while leaving binary assets untouched.
+* text=auto eol=lf

@@ -1,0 +1,22 @@
+# Local caches, experiments and generated build/indexing outputs.
+/.cache/
+/.temp/
+/.venv/
+/compile_commands.json
+__pycache__/
+*.pyc
+/cmake-build-*/
+/lab*/obj/
+/lab*/bin/
+/lab*/.qemu.out
+/lab*/.gdb.in
+/code/obj/
+/code/bin/
+/code/.qemu.out
+/code/.gdb.in
+
+# Keep shared project/run configurations, but not personal IDE state.
+/.idea/workspace.xml
+/.idea/editor.xml
+/.idea/shelf/
+/.idea/httpRequests/

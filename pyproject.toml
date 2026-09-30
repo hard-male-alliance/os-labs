@@ -1,0 +1,14 @@
+# Python tooling only; the kernel remains a Makefile-based C/assembly project.
+[project]
+name = "os-labs-tools"
+version = "0.1.0"
+description = "Development and course-documentation tools for the OS labs"
+requires-python = ">=3.12"
+dependencies = [
+    "beautifulsoup4>=4.13,<5",
+    "requests>=2.32,<3",
+]
+
+[tool.uv]
+# These are repository scripts, not an installable Python package.
+package = false

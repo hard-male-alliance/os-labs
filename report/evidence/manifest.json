@@ -1,0 +1,34 @@
+{
+  "captured_at": "2026-10-01T01:48:19.384149+08:00",
+  "branch": "lab1",
+  "baseline_commit": "74d683ded626b3704d5c1abed7ec6f17c590fb57",
+  "kernel_image_sha256": "404d805a3f95bc4a2432e0db04055635ec9d014f51a0fc3a324f1986704fb17a",
+  "checks_passed": 32,
+  "passed": true,
+  "screenshot_method": "Real XTerm window capture on private Xvfb; recorded verbatim output excerpts, not live input.",
+  "files": {
+    "environment.log": "570db4c11dfe7b50932b46246f6bf14928a3a5ddf27ef64ecb7022876a0cd812",
+    "final-suite.log": "26f303e64c2fbd54526fa64892834990c88f600746ca4353dc934b87f29b86d0",
+    "panels/01-build.txt": "2dc95d04d086ba04d20f452baac5b7e807effa4b80c8860001b2a24a03e61055",
+    "panels/02-reset.txt": "12b11a50cd594614971a8a9add43f9d3c71c2b33a4d060c3b35bcea5c49da670",
+    "panels/03-entry.txt": "5854ea4cf93b5e2ab97e2d5432d3b51b859c6f14bb7291eec67a9f8e6c06139f",
+    "panels/04-checks.txt": "3a3407cc94456750f339c8e34e643a2abe2049a2e06fe728c19eb20421504c0d",
+    "panels/05-boot.txt": "f9de1ba82f7bdc3f2067ea6b7189fbd689bfd447f0499da025cb9eaae1581248",
+    "smoke-qemu.log": "aad3c39bc1cb45cf30bc7859b3af95849353207e9845fe1996ada60a43daa753",
+    "verify-build.log": "7cf8278afd548dc64a6b5d5841f93fb2d64bd03766f7458f4ab86ee6f6a52025",
+    "verify-commands.gdb": "2e217181a559cc272c6aab76ad9c6e7c9685887bd8a04c203697fc887e911fb2",
+    "verify-gdb.log": "46566fd2108e26da08f09c66687cbb0dd94182e84913c7e9562ebb94a2265e32",
+    "verify-qemu.log": "fc671dd5de15bc17124ab3ff14bf7eb00e8032713643bf98db1223eacc0ce171",
+    "verify-result.json": "21a040e29dd29b5ab8866f934a7815c03afd837ede099edfcc89a78fa28d5243",
+    "verify-timeout-result.json": "db60b00141a981c2a426212e8d136fe3e691db9f5cf502a0b0c8e099bfc70370",
+    "verify-timeout-test.json": "0200cd8667d458e109f83e9938271a7e848d3a7bb926690be7b2cc31a9e51a16",
+    "verify-tools.json": "b5b0d675fd5cf1fb2527d3dfe545200244c9970c27bf5c3362331241a06d08d6"
+  },
+  "screenshots": {
+    "images/01-build.png": "8f5c9a98f7dbe3d4dce791987be1eeaa52e96e02c5829078bd6083751581169b",
+    "images/02-reset.png": "93663a54ad2c4f3020ae0d50f5ac7c48d5c112014a0091a8b1e5551411f49fb0",
+    "images/03-entry.png": "7d64fb2db3e90ff41bd997930c2377efb55194db2d8a19941474c104a34eae88",
+    "images/04-checks.png": "1ee5c171eaae6b85abecdadf1e1c1ba832a55c09d963025cc20dd31cce9814c7",
+    "images/05-boot.png": "c90089cb2f98cfdc1d2b0949e283dc0b7a83a477ac115b4dadb4331b38b03589"
+  }
+}

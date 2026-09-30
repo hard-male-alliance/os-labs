@@ -1,0 +1,7 @@
+{
+  "passed": true,
+  "before": [],
+  "after": [],
+  "returncode": 1,
+  "stderr": "FAIL: GDB timed out; inspect verify-gdb.log.\n"
+}

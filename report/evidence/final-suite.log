@@ -1,0 +1,94 @@
+$ uv sync --locked
+Resolved 9 packages in 0.61ms
+Checked 8 packages in 0.04ms
+EXIT 0
+
+$ uv lock --check
+Resolved 9 packages in 0.55ms
+EXIT 0
+
+$ make clean
+make -C code clean
+make[1]: Entering directory '/home/moesegfault/os-labs/code'
+rm -f -r obj bin
+make[1]: Leaving directory '/home/moesegfault/os-labs/code'
+EXIT 0
+
+$ make -j2
+make -C code TARGETS
+make[1]: Entering directory '/home/moesegfault/os-labs/code'
++ cc kern/init/init.c
++ cc kern/init/entry.S
++ cc kern/libs/stdio.c
++ cc kern/driver/console.c
++ cc libs/printfmt.c
++ cc libs/readline.c
++ cc libs/sbi.c
++ cc libs/string.c
++ ld bin/kernel
+riscv64-linux-gnu-objcopy bin/kernel --strip-all -O binary bin/ucore.img
+make[1]: Leaving directory '/home/moesegfault/os-labs/code'
+EXIT 0
+
+$ make doctor
+/home/moesegfault/.local/bin/uv run --locked python scripts/check_environment.py code
+cc       /usr/bin/riscv64-linux-gnu-gcc
+ld       /usr/bin/riscv64-linux-gnu-ld
+objcopy  /usr/bin/riscv64-linux-gnu-objcopy
+objdump  /usr/bin/riscv64-linux-gnu-objdump
+qemu     /usr/bin/qemu-system-riscv64
+gdb      /usr/bin/gdb-multiarch
+EXIT 0
+
+$ make compdb
+/home/moesegfault/.local/bin/uv run --locked python scripts/compile_commands.py code
+Wrote 8 compilation commands to /home/moesegfault/os-labs/compile_commands.json
+EXIT 0
+
+$ make smoke
+make -C code TARGETS
+make[1]: Entering directory '/home/moesegfault/os-labs/code'
+make[1]: Nothing to be done for 'TARGETS'.
+make[1]: Leaving directory '/home/moesegfault/os-labs/code'
+/home/moesegfault/.local/bin/uv run --locked python scripts/check_environment.py code --smoke
+cc       /usr/bin/riscv64-linux-gnu-gcc
+ld       /usr/bin/riscv64-linux-gnu-ld
+objcopy  /usr/bin/riscv64-linux-gnu-objcopy
+objdump  /usr/bin/riscv64-linux-gnu-objdump
+qemu     /usr/bin/qemu-system-riscv64
+gdb      /usr/bin/gdb-multiarch
+PASS: kernel boot banner observed; log: /home/moesegfault/os-labs/.cache/code/boot.log
+EXIT 0
+
+$ uv run --locked python .temp/test_verify_lab1.py
+........
+----------------------------------------------------------------------
+Ran 8 tests in 0.065s
+
+OK
+EXIT 0
+
+$ uv run --locked python .temp/test_verify_lab1_timeout.py
+PASS: real QEMU debugger timeout returns 1 and leaks no QEMU
+EXIT 0
+
+$ make verify
+make -C code TARGETS
+make[1]: Entering directory '/home/moesegfault/os-labs/code'
+make[1]: Nothing to be done for 'TARGETS'.
+make[1]: Leaving directory '/home/moesegfault/os-labs/code'
+/home/moesegfault/.local/bin/uv run --locked python scripts/verify_lab1.py code
+PASS: 32 checks; evidence: /home/moesegfault/os-labs/.cache/lab1
+EXIT 0
+
+$ cmp .temp/lab1-baseline/code/bin/ucore.img code/bin/ucore.img
+EXIT 0
+
+$ sha256sum .temp/lab1-baseline/code/bin/ucore.img code/bin/ucore.img
+404d805a3f95bc4a2432e0db04055635ec9d014f51a0fc3a324f1986704fb17a  .temp/lab1-baseline/code/bin/ucore.img
+404d805a3f95bc4a2432e0db04055635ec9d014f51a0fc3a324f1986704fb17a  code/bin/ucore.img
+EXIT 0
+
+$ git diff --check
+EXIT 0
+

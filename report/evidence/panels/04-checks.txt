@@ -1,0 +1,20 @@
+RECORDED OUTPUT REPLAY - real final-run evidence
+
+SOURCE: verify-gdb.log (selected assertion lines after entry)
+
+CHECK BSS_range True {'start': 2149593200, 'end': 2149593200, 'size': 0}
+CHECK reached_0x802004ae True {'pc': 2149581998}
+CHECK BSS_memset_arguments True {'a0': 2149593200, 'a1': 0, 'a2': 0}
+CHECK reached_0x80200026 True {'pc': 2149580838}
+CHECK reached_0x80200026 True {'pc': 2149580838}
+CHECK synthetic_clear_probe True {'size': 64}
+CHECK synthetic_probe_restores_state True {}
+CHECK reached_0x80200056 True {'pc': 2149580886}
+CHECK printf_stack_alignment True {'sp': 2149593072}
+CHECK console_has_ecall True {}
+CHECK reached_0x8020048a True {'pc': 2149581962}
+CHECK legacy_console_SBI True {'extension': 1, 'character': 40, 'privilege': 1}
+CHECK reached_0x80000428 True {'pc': 2147484712}
+CHECK ecall_enters_M True {'privilege': 3, 'mcause': 9, 'mepc': 2149581962, 'pc': 2147484712}
+CHECK reached_0x8020003a True {'pc': 2149580858}
+CHECK printf_returns_S True {'privilege': 1}

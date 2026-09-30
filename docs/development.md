@@ -87,6 +87,7 @@ make                  # Build code/bin/kernel and code/bin/ucore.img.
 make doctor           # Check the selected compiler, binutils, QEMU and GDB.
 make compdb           # Regenerate compile_commands.json from actual Make commands.
 make smoke            # Build and check lab1's boot banner; stop the child QEMU.
+make verify           # Lab1 only: assert reset/firmware/stack/initialization/SBI.
 make qemu             # Boot the kernel interactively.
 make debug            # Start QEMU paused, listening only on 127.0.0.1:1234.
 ```
@@ -255,3 +256,18 @@ Additional references:
 - [CLion CMake presets](https://www.jetbrains.com/help/clion/cmake-presets.html)
 - [Zephyr's production CMake/Ninja build model](https://docs.zephyrproject.org/latest/build/cmake/index.html)
 - [Build Systems a la Carte, ICFP 2018](https://www.microsoft.com/en-us/research/publication/build-systems-la-carte/)
+
+## Lab1 completion verification (2026-10-01)
+
+The `lab1` branch now includes `scripts/verify_lab1.py` and `make verify`.
+This complements, rather than replaces, `make smoke` or an official grader.
+See [verification contracts and actual results](lab1-verification.md),
+[source/requirement audit](lab1-source-notes.md), and
+[the complete report](../report/report.md). The verifier is stdlib-only, uses
+the locked Python launcher and the existing Make recipes, selects a private
+loopback GDB port, applies timeouts, and reaps only its own emulator.
+
+The screenshot utility is optional. It uses a separate Xvfb display and XTerm
+to capture the preserved output panels. Full evidence is committed under
+`report/evidence/`; scratch runs and negative-test fixtures stay in `.cache/`
+and `.temp/`. No host dependencies were installed by these scripts.

@@ -52,6 +52,7 @@ make
 make doctor
 make compdb
 make qemu
+make verify           # Lab1: assert reset, handoff, stack and SBI in GDB.
 ```
 
 The root Makefile dispatches to `code/`; it does not duplicate the course build.
@@ -60,3 +61,21 @@ environments, caches and personal IDE state are not committed.
 
 See [docs/development.md](docs/development.md) for tooling and debugging details
 and [docs/course/SUMMARY.md](docs/course/SUMMARY.md) for the course book.
+
+## Completed Lab1 delivery
+
+On branch `lab1`, see [the completed report](report/report.md),
+[actual prompts](report/prompt.md), [preserved evidence](report/evidence/README.md),
+and the real terminal screenshots in `report/images/`. Personal metadata stays
+as explicit placeholders at the user's request.
+
+`make verify` adds actual guest-state assertions to the original boot smoke
+check; it is not the missing course grader. Current Lab1 has an empty BSS, so
+the separate synthetic memset probe is identified explicitly. Research and
+reproducibility notes are in [source notes](docs/lab1-source-notes.md) and
+[verification notes](docs/lab1-verification.md).
+
+Optional screenshot reproduction requires Xvfb, xterm, xwininfo and ImageMagick:
+`uv run --locked python scripts/capture_lab1.py`. It captures real terminals
+displaying saved output, not invented or live-debugger screenshots. These host
+tools are not needed to build, boot or run `make verify`.

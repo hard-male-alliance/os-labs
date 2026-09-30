@@ -1,0 +1,31 @@
+{
+  "tools": {
+    "cc": "riscv64-linux-gnu-gcc",
+    "gdb": "gdb-multiarch",
+    "qemu": "qemu-system-riscv64",
+    "cflags": "-mcmodel=medany -std=gnu99 -Wno-unused -Werror -fno-builtin -Wall -O2 -nostdinc -fno-stack-protector -ffunction-sections -fdata-sections -g -Ilibs",
+    "kcflags": "-Ikern/debug/ -Ikern/driver/ -Ikern/trap/ -Ikern/libs/ -Ikern/mm/ -Ikern/arch/"
+  },
+  "qemu": [
+    "qemu-system-riscv64",
+    "-machine",
+    "virt",
+    "-nographic",
+    "-bios",
+    "default",
+    "-kernel",
+    "bin/ucore.img",
+    "-gdb",
+    "tcp:127.0.0.1:33007",
+    "-S"
+  ],
+  "gdb": [
+    "gdb-multiarch",
+    "-q",
+    "-nx",
+    "--batch",
+    "-x",
+    "/home/moesegfault/os-labs/.cache/lab1/verify-commands.gdb"
+  ],
+  "stack_expression": "(2 * 4096)"
+}

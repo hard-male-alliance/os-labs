@@ -1,0 +1,30 @@
+RECORDED OUTPUT REPLAY - real final-run evidence
+
+SOURCE: verify-gdb.log (reset, ROM data, six real steps)
+
+The target architecture is set to "riscv:rv64".
+0x0000000000001000 in ?? ()
+CHECK reset_pc True {'pc': 4096}
+CHECK reset_privilege_M True {'privilege': 3}
+=> 0x1000:	auipc	t0,0x0
+   0x1004:	addi	a2,t0,40
+   0x1008:	csrr	a0,mhartid
+   0x100c:	ld	a1,32(t0)
+   0x1010:	ld	t0,24(t0)
+   0x1014:	jr	t0
+0x1018:	0x0000000080000000	0x0000000087e00000
+0x1028:	0x000000004942534f	0x0000000000000002
+CHECK image_loaded_before_firmware True {'bytes': 12400, 'address': 2149580800}
+0x0000000000001004 in ?? ()
+RESET {'index': 0, 'pc': 4096, 'instruction': 'auipc\tt0,0x0', 'opcode': '97020000', 'next_pc': 4100, 'a0': 0, 'a1': 0, 'a2': 0, 't0': 4096}
+0x0000000000001008 in ?? ()
+RESET {'index': 1, 'pc': 4100, 'instruction': 'addi\ta2,t0,40', 'opcode': '13868202', 'next_pc': 4104, 'a0': 0, 'a1': 0, 'a2': 4136, 't0': 4096}
+0x000000000000100c in ?? ()
+RESET {'index': 2, 'pc': 4104, 'instruction': 'csrr\ta0,mhartid', 'opcode': '732540f1', 'next_pc': 4108, 'a0': 0, 'a1': 0, 'a2': 4136, 't0': 4096}
+0x0000000000001010 in ?? ()
+RESET {'index': 3, 'pc': 4108, 'instruction': 'ld\ta1,32(t0)', 'opcode': '83b50202', 'next_pc': 4112, 'a0': 0, 'a1': 2279604224, 'a2': 4136, 't0': 4096}
+0x0000000000001014 in ?? ()
+RESET {'index': 4, 'pc': 4112, 'instruction': 'ld\tt0,24(t0)', 'opcode': '83b28201', 'next_pc': 4116, 'a0': 0, 'a1': 2279604224, 'a2': 4136, 't0': 2147483648}
+0x0000000080000000 in ?? ()
+RESET {'index': 5, 'pc': 4116, 'instruction': 'jr\tt0', 'opcode': '67800200', 'next_pc': 2147483648, 'a0': 0, 'a1': 2279604224, 'a2': 4136, 't0': 2147483648}
+CHECK reset_to_firmware True {'pc': 2147483648}

@@ -1,0 +1,257 @@
+{
+  "checks": [
+    {
+      "name": "reset_pc",
+      "passed": true,
+      "pc": 4096
+    },
+    {
+      "name": "reset_privilege_M",
+      "passed": true,
+      "privilege": 3
+    },
+    {
+      "name": "image_loaded_before_firmware",
+      "passed": true,
+      "bytes": 12400,
+      "address": 2149580800
+    },
+    {
+      "name": "reset_to_firmware",
+      "passed": true,
+      "pc": 2147483648
+    },
+    {
+      "name": "reached_0x80200000",
+      "passed": true,
+      "pc": 2149580800
+    },
+    {
+      "name": "kernel_entry_address",
+      "passed": true,
+      "entry": 2149580800
+    },
+    {
+      "name": "kernel_privilege_S",
+      "passed": true,
+      "privilege": 1
+    },
+    {
+      "name": "bare_translation",
+      "passed": true,
+      "satp": 0
+    },
+    {
+      "name": "entry_instruction_boundary",
+      "passed": true,
+      "instruction": "auipc\tsp,0x3"
+    },
+    {
+      "name": "entry_instruction_boundary",
+      "passed": true,
+      "instruction": "ld\tsp,88(sp)"
+    },
+    {
+      "name": "entry_instruction_boundary",
+      "passed": true,
+      "instruction": "j\t0x8020000a <kern_init>"
+    },
+    {
+      "name": "tail_reaches_C_entry",
+      "passed": true,
+      "pc": 2149580810
+    },
+    {
+      "name": "tail_preserves_ra",
+      "passed": true,
+      "ra": 2147528346
+    },
+    {
+      "name": "stack_pointer",
+      "passed": true,
+      "sp": 2149593088,
+      "top": 2149593088
+    },
+    {
+      "name": "stack_size_alignment",
+      "passed": true,
+      "size": 8192,
+      "expected": 8192,
+      "bottom": 2149584896,
+      "top": 2149593088
+    },
+    {
+      "name": "BSS_range",
+      "passed": true,
+      "start": 2149593200,
+      "end": 2149593200,
+      "size": 0
+    },
+    {
+      "name": "reached_0x802004ae",
+      "passed": true,
+      "pc": 2149581998
+    },
+    {
+      "name": "BSS_memset_arguments",
+      "passed": true,
+      "a0": 2149593200,
+      "a1": 0,
+      "a2": 0
+    },
+    {
+      "name": "reached_0x80200026",
+      "passed": true,
+      "pc": 2149580838
+    },
+    {
+      "name": "reached_0x80200026",
+      "passed": true,
+      "pc": 2149580838
+    },
+    {
+      "name": "synthetic_clear_probe",
+      "passed": true,
+      "size": 64
+    },
+    {
+      "name": "synthetic_probe_restores_state",
+      "passed": true
+    },
+    {
+      "name": "reached_0x80200056",
+      "passed": true,
+      "pc": 2149580886
+    },
+    {
+      "name": "printf_stack_alignment",
+      "passed": true,
+      "sp": 2149593072
+    },
+    {
+      "name": "console_has_ecall",
+      "passed": true
+    },
+    {
+      "name": "reached_0x8020048a",
+      "passed": true,
+      "pc": 2149581962
+    },
+    {
+      "name": "legacy_console_SBI",
+      "passed": true,
+      "extension": 1,
+      "character": 40,
+      "privilege": 1
+    },
+    {
+      "name": "reached_0x80000428",
+      "passed": true,
+      "pc": 2147484712
+    },
+    {
+      "name": "ecall_enters_M",
+      "passed": true,
+      "privilege": 3,
+      "mcause": 9,
+      "mepc": 2149581962,
+      "pc": 2147484712
+    },
+    {
+      "name": "reached_0x8020003a",
+      "passed": true,
+      "pc": 2149580858
+    },
+    {
+      "name": "printf_returns_S",
+      "passed": true,
+      "privilege": 1
+    },
+    {
+      "name": "kernel_boot_banner",
+      "passed": true
+    }
+  ],
+  "reset_steps": [
+    {
+      "index": 0,
+      "pc": 4096,
+      "instruction": "auipc\tt0,0x0",
+      "opcode": "97020000",
+      "next_pc": 4100,
+      "a0": 0,
+      "a1": 0,
+      "a2": 0,
+      "t0": 4096
+    },
+    {
+      "index": 1,
+      "pc": 4100,
+      "instruction": "addi\ta2,t0,40",
+      "opcode": "13868202",
+      "next_pc": 4104,
+      "a0": 0,
+      "a1": 0,
+      "a2": 4136,
+      "t0": 4096
+    },
+    {
+      "index": 2,
+      "pc": 4104,
+      "instruction": "csrr\ta0,mhartid",
+      "opcode": "732540f1",
+      "next_pc": 4108,
+      "a0": 0,
+      "a1": 0,
+      "a2": 4136,
+      "t0": 4096
+    },
+    {
+      "index": 3,
+      "pc": 4108,
+      "instruction": "ld\ta1,32(t0)",
+      "opcode": "83b50202",
+      "next_pc": 4112,
+      "a0": 0,
+      "a1": 2279604224,
+      "a2": 4136,
+      "t0": 4096
+    },
+    {
+      "index": 4,
+      "pc": 4112,
+      "instruction": "ld\tt0,24(t0)",
+      "opcode": "83b28201",
+      "next_pc": 4116,
+      "a0": 0,
+      "a1": 2279604224,
+      "a2": 4136,
+      "t0": 2147483648
+    },
+    {
+      "index": 5,
+      "pc": 4116,
+      "instruction": "jr\tt0",
+      "opcode": "67800200",
+      "next_pc": 2147483648,
+      "a0": 0,
+      "a1": 2279604224,
+      "a2": 4136,
+      "t0": 2147483648
+    }
+  ],
+  "kernel_handoff": {
+    "a0": 0,
+    "a1": 2279604224,
+    "a2": 7,
+    "sp": 2147774128,
+    "ra": 2147528346
+  },
+  "BSS_experiment": "Empty BSS: no real bytes to poison or clear.",
+  "synthetic_clear_probe": {
+    "address": 2149593200,
+    "size": 64,
+    "original_size": 0
+  },
+  "passed": true
+}

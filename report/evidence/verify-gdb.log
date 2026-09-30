@@ -1,0 +1,118 @@
+The target architecture is set to "riscv:rv64".
+0x0000000000001000 in ?? ()
+CHECK reset_pc True {'pc': 4096}
+CHECK reset_privilege_M True {'privilege': 3}
+=> 0x1000:	auipc	t0,0x0
+   0x1004:	addi	a2,t0,40
+   0x1008:	csrr	a0,mhartid
+   0x100c:	ld	a1,32(t0)
+   0x1010:	ld	t0,24(t0)
+   0x1014:	jr	t0
+0x1018:	0x0000000080000000	0x0000000087e00000
+0x1028:	0x000000004942534f	0x0000000000000002
+CHECK image_loaded_before_firmware True {'bytes': 12400, 'address': 2149580800}
+0x0000000000001004 in ?? ()
+RESET {'index': 0, 'pc': 4096, 'instruction': 'auipc\tt0,0x0', 'opcode': '97020000', 'next_pc': 4100, 'a0': 0, 'a1': 0, 'a2': 0, 't0': 4096}
+0x0000000000001008 in ?? ()
+RESET {'index': 1, 'pc': 4100, 'instruction': 'addi\ta2,t0,40', 'opcode': '13868202', 'next_pc': 4104, 'a0': 0, 'a1': 0, 'a2': 4136, 't0': 4096}
+0x000000000000100c in ?? ()
+RESET {'index': 2, 'pc': 4104, 'instruction': 'csrr\ta0,mhartid', 'opcode': '732540f1', 'next_pc': 4108, 'a0': 0, 'a1': 0, 'a2': 4136, 't0': 4096}
+0x0000000000001010 in ?? ()
+RESET {'index': 3, 'pc': 4108, 'instruction': 'ld\ta1,32(t0)', 'opcode': '83b50202', 'next_pc': 4112, 'a0': 0, 'a1': 2279604224, 'a2': 4136, 't0': 4096}
+0x0000000000001014 in ?? ()
+RESET {'index': 4, 'pc': 4112, 'instruction': 'ld\tt0,24(t0)', 'opcode': '83b28201', 'next_pc': 4116, 'a0': 0, 'a1': 2279604224, 'a2': 4136, 't0': 2147483648}
+0x0000000080000000 in ?? ()
+RESET {'index': 5, 'pc': 4116, 'instruction': 'jr\tt0', 'opcode': '67800200', 'next_pc': 2147483648, 'a0': 0, 'a1': 2279604224, 'a2': 4136, 't0': 2147483648}
+CHECK reset_to_firmware True {'pc': 2147483648}
+Temporary breakpoint 1 at 0x80200000: file kern/init/entry.S, line 9.
+
+Temporary breakpoint 1, kern_entry () at kern/init/entry.S:9
+9	    la sp, bootstacktop
+CHECK reached_0x80200000 True {'pc': 2149580800}
+CHECK kernel_entry_address True {'entry': 2149580800}
+CHECK kernel_privilege_S True {'privilege': 1}
+CHECK bare_translation True {'satp': 0}
+pc             0x80200000	0x80200000 <kern_entry>
+sp             0x80046eb0	0x80046eb0
+ra             0x8000ae9a	0x8000ae9a
+a0             0x0	0
+a1             0x87e00000	2279604224
+a2             0x7	7
+satp           0x0	0
+priv           0x1	prv:1 [Supervisor]
+Dump of assembler code for function kern_entry:
+=> 0x0000000080200000 <+0>:	auipc	sp,0x3
+   0x0000000080200004 <+4>:	ld	sp,88(sp) # 0x80203058
+   0x0000000080200008 <+8>:	j	0x8020000a <kern_init>
+End of assembler dump.
+
+CHECK entry_instruction_boundary True {'instruction': 'auipc\tsp,0x3'}
+0x0000000080200004 in kern_entry () at kern/init/entry.S:9
+9	    la sp, bootstacktop
+CHECK entry_instruction_boundary True {'instruction': 'ld\tsp,88(sp)'}
+kern_entry () at kern/init/entry.S:13
+13	    tail kern_init
+CHECK entry_instruction_boundary True {'instruction': 'j\t0x8020000a <kern_init>'}
+kern_init () at kern/init/init.c:17
+17	    memset(edata, 0, end - edata);
+CHECK tail_reaches_C_entry True {'pc': 2149580810}
+CHECK tail_preserves_ra True {'ra': 2147528346}
+CHECK stack_pointer True {'sp': 2149593088, 'top': 2149593088}
+CHECK stack_size_alignment True {'size': 8192, 'expected': 8192, 'bottom': 2149584896, 'top': 2149593088}
+CHECK BSS_range True {'start': 2149593200, 'end': 2149593200, 'size': 0}
+Temporary breakpoint 2 at 0x802004ae: file libs/string.c, line 275.
+
+Temporary breakpoint 2, memset (s=0x80203070, c=c@entry=0 '\000', n=18446744073709551615) at libs/string.c:275
+275	    while (n -- > 0) {
+CHECK reached_0x802004ae True {'pc': 2149581998}
+CHECK BSS_memset_arguments True {'a0': 2149593200, 'a1': 0, 'a2': 0}
+Temporary breakpoint 3 at 0x80200026: file kern/init/init.c, line 20.
+
+Temporary breakpoint 3, kern_init () at kern/init/init.c:20
+20	    cprintf("%s\n\n", message);
+CHECK reached_0x80200026 True {'pc': 2149580838}
+Temporary breakpoint 4 at 0x80200026: file kern/init/init.c, line 20.
+
+Temporary breakpoint 4, kern_init () at kern/init/init.c:20
+20	    cprintf("%s\n\n", message);
+CHECK reached_0x80200026 True {'pc': 2149580838}
+CHECK synthetic_clear_probe True {'size': 64}
+CHECK synthetic_probe_restores_state True {}
+Temporary breakpoint 5 at 0x80200056: file kern/libs/stdio.c, line 40.
+
+Temporary breakpoint 5, cprintf (fmt=fmt@entry=0x802004e0 "%s\n\n") at kern/libs/stdio.c:40
+40	    va_start(ap, fmt);
+CHECK reached_0x80200056 True {'pc': 2149580886}
+CHECK printf_stack_alignment True {'sp': 2149593072}
+Dump of assembler code for function sbi_console_putchar:
+   0x0000000080200478 <+0>:	li	a5,0
+   0x000000008020047a <+2>:	auipc	a4,0x3
+   0x000000008020047e <+6>:	ld	a4,-1090(a4) # 0x80203038 <SBI_CONSOLE_PUTCHAR>
+   0x0000000080200482 <+10>:	mv	a7,a4
+   0x0000000080200484 <+12>:	mv	a0,a0
+   0x0000000080200486 <+14>:	mv	a1,a5
+   0x0000000080200488 <+16>:	mv	a2,a5
+   0x000000008020048a <+18>:	ecall
+   0x000000008020048e <+22>:	mv	a5,a0
+   0x0000000080200490 <+24>:	ret
+End of assembler dump.
+
+CHECK console_has_ecall True {}
+Temporary breakpoint 6 at 0x8020048a: file libs/sbi.c, line 18.
+
+Temporary breakpoint 6, 0x000000008020048a in sbi_call (arg2=0, arg1=0, arg0=<optimized out>, sbi_type=1) at libs/sbi.c:18
+18	    __asm__ volatile (
+CHECK reached_0x8020048a True {'pc': 2149581962}
+CHECK legacy_console_SBI True {'extension': 1, 'character': 40, 'privilege': 1}
+Temporary breakpoint 7 at 0x80000428
+
+Temporary breakpoint 7, 0x0000000080000428 in ?? ()
+CHECK reached_0x80000428 True {'pc': 2147484712}
+CHECK ecall_enters_M True {'privilege': 3, 'mcause': 9, 'mepc': 2149581962, 'pc': 2147484712}
+Temporary breakpoint 8 at 0x8020003a: file kern/init/init.c, line 21.
+
+Temporary breakpoint 8, kern_init () at kern/init/init.c:21
+21	    while (1)
+CHECK reached_0x8020003a True {'pc': 2149580858}
+CHECK printf_returns_S True {'privilege': 1}
+[Inferior 1 (process 1) detached]

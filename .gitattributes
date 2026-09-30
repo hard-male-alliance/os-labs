@@ -1,2 +1,5 @@
 # Normalize repository text while leaving binary assets untouched.
 * text=auto eol=lf
+
+# Preserve raw test output bytes, line endings and legitimate terminal blank lines.
+report/evidence/** -text whitespace=-blank-at-eof

@@ -21,6 +21,8 @@ instructor grader, a formal proof, or a transcript of manually typed commands.
 - `verify-timeout-test.json`, `verify-timeout-result.json`: deliberately failed
   stalled-debugger test; expected exit 1 and no leaked QEMU, not a normal pass.
 - `environment.log`: real tool versions.
+- `clean-checkout.log`: clean Git export creates its own environment, builds,
+  boots, passes 32 assertions, matches the image and reproduces all screenshots.
 - `panels/*.txt`: verbatim excerpts displayed for the screenshots. Source labels
   and separators were added, but no result values or assertion text were edited.
 - `manifest.json`: capture time, baseline revision, image digest and SHA-256 of
@@ -79,3 +81,7 @@ The initial raw image and final raw image have identical SHA-256:
 `404d805a3f95bc4a2432e0db04055635ec9d014f51a0fc3a324f1986704fb17a`.
 This does not assert identical ELF debug information or universal hardware
 correctness. `code/tools/grade.sh` is absent; no course grade was fabricated.
+
+Git treats this evidence directory as byte-preserved (-text), so default text
+normalization cannot silently invalidate raw serial-output hashes. A clean
+Git export independently confirmed all original evidence/image hashes.

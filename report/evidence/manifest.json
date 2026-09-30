@@ -22,7 +22,8 @@
     "verify-result.json": "21a040e29dd29b5ab8866f934a7815c03afd837ede099edfcc89a78fa28d5243",
     "verify-timeout-result.json": "db60b00141a981c2a426212e8d136fe3e691db9f5cf502a0b0c8e099bfc70370",
     "verify-timeout-test.json": "0200cd8667d458e109f83e9938271a7e848d3a7bb926690be7b2cc31a9e51a16",
-    "verify-tools.json": "b5b0d675fd5cf1fb2527d3dfe545200244c9970c27bf5c3362331241a06d08d6"
+    "verify-tools.json": "b5b0d675fd5cf1fb2527d3dfe545200244c9970c27bf5c3362331241a06d08d6",
+    "clean-checkout.log": "f44f363735edaaac790f509b8b680132a902059d88d294475d44e915185aa056"
   },
   "screenshots": {
     "images/01-build.png": "8f5c9a98f7dbe3d4dce791987be1eeaa52e96e02c5829078bd6083751581169b",
@@ -30,5 +31,6 @@
     "images/03-entry.png": "7d64fb2db3e90ff41bd997930c2377efb55194db2d8a19941474c104a34eae88",
     "images/04-checks.png": "1ee5c171eaae6b85abecdadf1e1c1ba832a55c09d963025cc20dd31cce9814c7",
     "images/05-boot.png": "c90089cb2f98cfdc1d2b0949e283dc0b7a83a477ac115b4dadb4331b38b03589"
-  }
+  },
+  "clean_export_verified_commit": "4b9da2bd159a72f61285728c48ae32c9b1a7c6f9"
 }

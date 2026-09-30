@@ -112,3 +112,31 @@ check and independent ImageMagick decode both pass.
 stated bounds; no blocking defect found. Remote Git submission remains for the
 owner to verify after commit/push. No official grader or comprehensive OS
 correctness is claimed.
+
+## Delivery-owner clean-export acceptance
+
+After commit `4b9da2bd159a72f61285728c48ae32c9b1a7c6f9`, the owner exported
+`git archive HEAD` into `.temp/lab1-clean-delivery/`, initially without `.cache`,
+`.temp` or `.venv`. All published evidence and screenshot digests matched the
+manifest in this Git export. In that separate root, `uv sync --locked` created
+its own environment (ignoring the inherited parent VIRTUAL_ENV), and `make -j2`,
+`make doctor`, `make compdb`, `make smoke` and `make verify` succeeded. The fresh
+verifier again passed 32 assertions and its raw image matched the primary
+checkout byte-for-byte. The optional capture utility successfully reproduced
+all five screenshots using only the committed panels. Full command output is
+preserved in `report/evidence/clean-checkout.log`.
+
+This confirms the build/verification and screenshot fallback do not depend on
+uncommitted root caches or local test fixtures. Local fixture-only unit tests
+are not asserted to exist in a new clone. Screenshot PNG metadata may vary
+when regenerated; digest verification applies to the original saved artifacts.
+
+### Git evidence byte contract
+
+The repository's default `text=auto eol=lf` must not normalize serial output
+or change evidence digests. `report/evidence/** -text` preserves exact bytes,
+including CRLF or NUL in raw emulator output. Legitimate terminal trailing
+blank lines are exempt only in this evidence directory from blank-at-EOF lint;
+production source keeps normal whitespace checks. Successful digest checks
+on the clean Git export validate this delivery contract rather than merely
+checking the working-tree copies.

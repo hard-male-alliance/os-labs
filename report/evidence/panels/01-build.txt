@@ -1,0 +1,30 @@
+RECORDED OUTPUT REPLAY - real final-run evidence
+
+SOURCE: final-suite.log (clean build and environment checks)
+
+$ make -j2
+make -C code TARGETS
+make[1]: Entering directory '/home/moesegfault/os-labs/code'
++ cc kern/init/init.c
++ cc kern/init/entry.S
++ cc kern/libs/stdio.c
++ cc kern/driver/console.c
++ cc libs/printfmt.c
++ cc libs/readline.c
++ cc libs/sbi.c
++ cc libs/string.c
++ ld bin/kernel
+riscv64-linux-gnu-objcopy bin/kernel --strip-all -O binary bin/ucore.img
+make[1]: Leaving directory '/home/moesegfault/os-labs/code'
+EXIT 0
+
+$ make doctor
+/home/moesegfault/.local/bin/uv run --locked python scripts/check_environment.py code
+cc       /usr/bin/riscv64-linux-gnu-gcc
+ld       /usr/bin/riscv64-linux-gnu-ld
+objcopy  /usr/bin/riscv64-linux-gnu-objcopy
+objdump  /usr/bin/riscv64-linux-gnu-objdump
+qemu     /usr/bin/qemu-system-riscv64
+gdb      /usr/bin/gdb-multiarch
+EXIT 0
+

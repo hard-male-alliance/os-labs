@@ -1,0 +1,9 @@
+<component name="ProjectRunConfigurationManager">
+  <!-- Start with Run before attaching Lab1 Remote Debug; the guest starts paused. -->
+  <configuration default="false" name="Lab1 QEMU GDB Server" type="MAKEFILE_TARGET_RUN_CONFIGURATION" factoryName="Makefile">
+    <makefile filename="$PROJECT_DIR$/code/Makefile" target="debug" workingDirectory="$PROJECT_DIR$/code" arguments="">
+      <envs />
+    </makefile>
+    <method v="2" />
+  </configuration>
+</component>

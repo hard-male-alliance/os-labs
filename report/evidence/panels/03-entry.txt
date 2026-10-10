@@ -1,0 +1,39 @@
+RECORDED OUTPUT REPLAY - real final-run evidence
+
+SOURCE: verify-gdb.log (firmware handoff and stack/tail)
+
+Temporary breakpoint 1 at 0x80200000: file kern/init/entry.S, line 9.
+
+Temporary breakpoint 1, kern_entry () at kern/init/entry.S:9
+9	    la sp, bootstacktop
+CHECK reached_0x80200000 True {'pc': 2149580800}
+CHECK kernel_entry_address True {'entry': 2149580800}
+CHECK kernel_privilege_S True {'privilege': 1}
+CHECK bare_translation True {'satp': 0}
+pc             0x80200000	0x80200000 <kern_entry>
+sp             0x80046eb0	0x80046eb0
+ra             0x8000ae9a	0x8000ae9a
+a0             0x0	0
+a1             0x87e00000	2279604224
+a2             0x7	7
+satp           0x0	0
+priv           0x1	prv:1 [Supervisor]
+Dump of assembler code for function kern_entry:
+=> 0x0000000080200000 <+0>:	auipc	sp,0x3
+   0x0000000080200004 <+4>:	ld	sp,88(sp) # 0x80203058
+   0x0000000080200008 <+8>:	j	0x8020000a <kern_init>
+End of assembler dump.
+
+CHECK entry_instruction_boundary True {'instruction': 'auipc\tsp,0x3'}
+0x0000000080200004 in kern_entry () at kern/init/entry.S:9
+9	    la sp, bootstacktop
+CHECK entry_instruction_boundary True {'instruction': 'ld\tsp,88(sp)'}
+kern_entry () at kern/init/entry.S:13
+13	    tail kern_init
+CHECK entry_instruction_boundary True {'instruction': 'j\t0x8020000a <kern_init>'}
+kern_init () at kern/init/init.c:17
+17	    memset(edata, 0, end - edata);
+CHECK tail_reaches_C_entry True {'pc': 2149580810}
+CHECK tail_preserves_ra True {'ra': 2147528346}
+CHECK stack_pointer True {'sp': 2149593088, 'top': 2149593088}
+CHECK stack_size_alignment True {'size': 8192, 'expected': 8192, 'bottom': 2149584896, 'top': 2149593088}

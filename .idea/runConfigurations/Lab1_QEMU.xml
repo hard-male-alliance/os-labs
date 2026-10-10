@@ -1,0 +1,9 @@
+<component name="ProjectRunConfigurationManager">
+  <!-- Use Run; Debug would attach to the host emulator rather than the guest. -->
+  <configuration default="false" name="Lab1 QEMU" type="MAKEFILE_TARGET_RUN_CONFIGURATION" factoryName="Makefile">
+    <makefile filename="$PROJECT_DIR$/code/Makefile" target="qemu" workingDirectory="$PROJECT_DIR$/code" arguments="">
+      <envs />
+    </makefile>
+    <method v="2" />
+  </configuration>
+</component>

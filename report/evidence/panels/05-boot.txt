@@ -1,0 +1,48 @@
+RECORDED OUTPUT REPLAY - real final-run evidence
+
+SOURCE: verify-qemu.log (verbatim selected platform/handoff/banner lines)
+
+OpenSBI v1.3
+Platform Name             : riscv-virtio,qemu
+Platform HART Count       : 1
+Firmware Base             : 0x80000000
+Domain0 Next Address      : 0x0000000080200000
+Domain0 Next Arg1         : 0x0000000087e00000
+Domain0 Next Mode         : S-mode
+(THU.CST) os is loading ...
+qemu-system-riscv64: terminating on signal 15 from pid 59507 (/home/moesegfault/os-labs/.venv/bin/python)
+
+SOURCE: final-suite.log (unit tests, negative test, verify and compatibility)
+
+$ uv run --locked python .temp/test_verify_lab1.py
+........
+----------------------------------------------------------------------
+Ran 8 tests in 0.065s
+
+OK
+EXIT 0
+
+$ uv run --locked python .temp/test_verify_lab1_timeout.py
+PASS: real QEMU debugger timeout returns 1 and leaks no QEMU
+EXIT 0
+
+$ make verify
+make -C code TARGETS
+make[1]: Entering directory '/home/moesegfault/os-labs/code'
+make[1]: Nothing to be done for 'TARGETS'.
+make[1]: Leaving directory '/home/moesegfault/os-labs/code'
+/home/moesegfault/.local/bin/uv run --locked python scripts/verify_lab1.py code
+PASS: 32 checks; evidence: /home/moesegfault/os-labs/.cache/lab1
+EXIT 0
+
+$ cmp .temp/lab1-baseline/code/bin/ucore.img code/bin/ucore.img
+EXIT 0
+
+$ sha256sum .temp/lab1-baseline/code/bin/ucore.img code/bin/ucore.img
+404d805a3f95bc4a2432e0db04055635ec9d014f51a0fc3a324f1986704fb17a  .temp/lab1-baseline/code/bin/ucore.img
+404d805a3f95bc4a2432e0db04055635ec9d014f51a0fc3a324f1986704fb17a  code/bin/ucore.img
+EXIT 0
+
+$ git diff --check
+EXIT 0
+

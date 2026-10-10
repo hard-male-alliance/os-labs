@@ -6,7 +6,7 @@ UV ?= uv
 PYTHON ?= $(UV) run --locked python
 
 .DEFAULT_GOAL := all
-.PHONY: all clean qemu debug gdb compdb doctor smoke
+.PHONY: all clean qemu debug gdb compdb doctor smoke verify
 
 all clean qemu debug gdb:
 	$(MAKE) -C $(LAB) $(if $(filter all,$@),TARGETS,$@)
@@ -21,3 +21,7 @@ doctor:
 # The lab1 kernel intentionally loops forever; the smoke check stops only its QEMU.
 smoke: all
 	$(PYTHON) scripts/check_environment.py $(LAB) --smoke
+
+# Check the lab1 reset, firmware handoff, stack, BSS and SBI contracts in GDB.
+verify: all
+	$(PYTHON) scripts/verify_lab1.py $(LAB)

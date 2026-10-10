@@ -1,0 +1,9 @@
+<component name="ProjectRunConfigurationManager">
+  <!-- Run the real course build, not a host CMake substitute. -->
+  <configuration default="false" name="Lab1 Build" type="MAKEFILE_TARGET_RUN_CONFIGURATION" factoryName="Makefile">
+    <makefile filename="$PROJECT_DIR$/code/Makefile" target="TARGETS" workingDirectory="$PROJECT_DIR$/code" arguments="-j4">
+      <envs />
+    </makefile>
+    <method v="2" />
+  </configuration>
+</component>

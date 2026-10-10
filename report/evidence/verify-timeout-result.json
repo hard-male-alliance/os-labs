@@ -1,0 +1,4 @@
+{
+  "passed": false,
+  "error": "GDB timed out; inspect verify-gdb.log."
+}

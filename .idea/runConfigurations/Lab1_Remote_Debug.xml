@@ -1,0 +1,7 @@
+<component name="ProjectRunConfigurationManager">
+  <!-- Bundled CLion GDB supports riscv:rv64 on this installation. -->
+  <configuration default="false" name="Lab1 Remote Debug" type="CLion_Remote" version="1" remoteCommand="127.0.0.1:1234" symbolFile="$PROJECT_DIR$/code/bin/kernel" sysroot="">
+    <debugger kind="GDB" isBundled="true" />
+    <method v="2" />
+  </configuration>
+</component>

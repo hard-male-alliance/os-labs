@@ -60,3 +60,25 @@ environments, caches and personal IDE state are not committed.
 
 See [docs/development.md](docs/development.md) for tooling and debugging details
 and [docs/course/SUMMARY.md](docs/course/SUMMARY.md) for the course book.
+
+## Lab2 workspace
+
+This branch contains the teaching skeleton from `lab2.zip` under `code/`.
+The source exercises are intentionally unfinished: `page_init()` and the
+Best-Fit allocator must be implemented before the kernel can build or boot.
+See [Lab2 integration notes](docs/lab2-integration.md) for the exact baseline
+and [the exercises](docs/course/lab2/lab2_2_1_exercise.md) for the requirements.
+
+```sh
+make doctor           # Check the selected cross toolchain, QEMU and GDB.
+make compdb           # Generate the Lab2 compilation database (13 entries).
+make                  # Expected to fail until the source exercises are done.
+make qemu             # Boot after implementation.
+make debug            # Start paused; attach using make gdb in another terminal.
+make grade            # Inject and run supplied tests in .temp/lab2-grade/.
+```
+
+CLion configurations are named `Lab2 Build`, `Lab2 QEMU`,
+`Lab2 QEMU GDB Server`, and `Lab2 Remote Debug`. Reload the Makefile project
+after switching branches. Run the GDB server before attaching Remote Debug.
+The report in `report/report.md` is an uncompleted template, not a result.

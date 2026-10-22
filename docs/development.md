@@ -86,7 +86,7 @@ Run from the repository root:
 make                  # Build code/bin/kernel and code/bin/ucore.img.
 make doctor           # Check the selected compiler, binutils, QEMU and GDB.
 make compdb           # Regenerate compile_commands.json from actual Make commands.
-make smoke            # Build and check lab1's boot banner; stop the child QEMU.
+make smoke            # Build and check the boot banner; stop the child QEMU.
 make qemu             # Boot the kernel interactively.
 make debug            # Start QEMU paused, listening only on 127.0.0.1:1234.
 ```
@@ -106,8 +106,9 @@ when using a different port.
 
 For another experiment, create its `labx` branch from the milestone and put
 its source in `code/`; see the root README. `LAB` is an optional source-directory
-override, not a branch selector. `make smoke` currently defines an expectation
-only for lab1. The distributed lab1 tree references `tools/grade.sh` but does not
+override, not a branch selector. `make smoke` only checks the shared boot banner; it does not validate
+Lab2 memory initialization or allocation. See [Lab2 integration](lab2-integration.md)
+for the unfinished skeleton and supplied grader. The distributed lab1 tree references `tools/grade.sh` but does not
 contain it, so `make grade` is not available. The smoke check is not a substitute
 for the course grader or functional correctness tests.
 

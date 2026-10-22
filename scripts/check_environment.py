@@ -1,4 +1,4 @@
-"""Check course tools and optionally verify lab1's boot message in QEMU.
+"""Check course tools and optionally verify the kernel boot message in QEMU.
 
 Usage: uv run --locked python scripts/check_environment.py code [--smoke]
 No packages are installed, and no privileged commands are run.

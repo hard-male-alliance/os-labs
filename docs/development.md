@@ -256,3 +256,33 @@ Additional references:
 - [CLion CMake presets](https://www.jetbrains.com/help/clion/cmake-presets.html)
 - [Zephyr's production CMake/Ninja build model](https://docs.zephyrproject.org/latest/build/cmake/index.html)
 - [Build Systems a la Carte, ICFP 2018](https://www.microsoft.com/en-us/research/publication/build-systems-la-carte/)
+
+## Current Lab2 workflow
+
+The Lab2 branch now implements physical-memory initialization, Best-Fit, Buddy
+and simplified SLUB. `make` builds the kernel; `make qemu` executes boot-time
+checks and then intentionally loops. `make grade` runs the supplied page-init
+and Best-Fit tests in `.temp/lab2-grade/`, without injecting into the submitted
+source tree. `make verify` exercises four RAM sizes plus a private localhost
+GDB session. `make property` builds a host-side bitmap oracle against the
+production Best-Fit implementation. See [verification](lab2-verification.md)
+for results and reproduction, and [the test plan](lab2-test-plan.md) for coverage.
+
+A stable `allocator_checks_done` guest breakpoint occurs after all test-owned
+pages and objects have been released. The boot entry temporarily identity-maps
+the physical instruction stream while enabling Sv39, jumps to its linked high
+address, removes the temporary leaf and flushes translations before entering C.
+The high kernel mapping and course ELF/raw-image paths are preserved.
+
+The course-supplied `basic_check`, `best_fit_check` and `tools/test_lab2.*` remain
+unchanged. Buddy rounds requests to powers of two, with frees using the original
+requested page count; the active course-facing allocator remains exact-size
+Best-Fit. SLUB returns empty slabs immediately, making page reclamation explicit.
+No concurrent allocation support is claimed; this stage boots one hart only.
+
+Pre-MMU addresses in `entry.S` use `lla`, explicitly PC-relative, rather than
+`la`, whose expansion follows PIC mode. The tested Linux-GNU compiler defaults
+to PIC: `la` otherwise loads a linked high pointer through the GOT before
+paging exists. A clean-source export caught this issue; both ELF and Linux-GNU
+toolchains now pass the real guest journey. See the
+[RISC-V assembler pseudoinstruction reference](https://github.com/riscv-non-isa/riscv-asm-manual/blob/main/src/asm-manual.adoc).

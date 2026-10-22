@@ -34,7 +34,7 @@ static void check_alloc_page(void);
 
 // init_pmm_manager - initialize a pmm_manager instance
 static void init_pmm_manager(void) {
-    pmm_manager = &default_pmm_manager;
+    pmm_manager = &best_fit_pmm_manager;
     cprintf("memory management: %s\n", pmm_manager->name);
     pmm_manager->init();
 }
@@ -62,6 +62,53 @@ size_t nr_free_pages(void) {
 }
 
 //lab2 function1 YOUR CODE
+static void page_init(void) {
+    extern char end[];
+    uint64_t mem_base = get_memory_base();
+    uint64_t mem_size = get_memory_size();
+
+    va_pa_offset = PHYSICAL_MEMORY_OFFSET;
+    if (mem_base == 0 || mem_size == 0 || mem_size > (uint64_t)-1 - mem_base) {
+        panic("invalid physical memory range from DTB");
+    }
+    uint64_t mem_end = mem_base + mem_size;
+    if (mem_base > KERNEL_BEGIN_PADDR || mem_end <= KERNEL_BEGIN_PADDR) {
+        panic("DTB memory does not contain the kernel");
+    }
+    cprintf("physical memory map:\n");
+    cprintf("  memory: [0x%016lx, 0x%016lx)\n", mem_base, mem_end);
+
+    // The boot mapping is fixed; DTB describes RAM, not our mapping capacity.
+    uintptr_t managed_end = ROUNDDOWN((mem_end < PHYSICAL_MEMORY_END ? mem_end : PHYSICAL_MEMORY_END), PGSIZE);
+    uintptr_t kernel_end = PADDR(end);
+    if (kernel_end < KERNEL_BEGIN_PADDR || kernel_end > managed_end) {
+        panic("kernel lies outside manageable physical memory");
+    }
+    uintptr_t descriptors_pa = ROUNDUP(kernel_end, PGSIZE);
+    npage = PPN(managed_end);
+    if (npage <= nbase) {
+        panic("no manageable physical pages");
+    }
+    size_t descriptors_size = (npage - nbase) * sizeof(struct Page);
+    if (descriptors_pa > managed_end || descriptors_size > managed_end - descriptors_pa) {
+        panic("physical memory cannot hold page descriptors");
+    }
+    pages = (struct Page *)(descriptors_pa + va_pa_offset);
+    for (size_t i = 0; i < npage - nbase; i++) {
+        pages[i].flags = 0;
+        pages[i].property = 0;
+        set_page_ref(&pages[i], 0);
+        list_init(&pages[i].page_link);
+        SetPageReserved(&pages[i]);
+    }
+
+    uintptr_t free_start = ROUNDUP(descriptors_pa + descriptors_size, PGSIZE);
+    cprintf("  managed: [0x%016lx, 0x%016lx), free starts at 0x%016lx\n",
+            (uintptr_t)DRAM_BASE, managed_end, free_start);
+    if (free_start < managed_end) {
+        init_memmap(pa2page(free_start), (managed_end - free_start) / PGSIZE);
+    }
+}
 
 /* pmm_init - initialize the physical memory management */
 void pmm_init(void) {

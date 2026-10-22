@@ -1,0 +1,12 @@
+Lab2 allocator checks: recorded real QEMU output
+
+memory management: best_fit_pmm_manager
+  memory: [0x0000000080000000, 0x0000000088000000)
+  managed: [0x0000000080000000, 0x0000000088000000), free starts at 0x000000008034b000
+check_alloc_page() succeeded!
+slub_check() succeeded!
+allocator checks: best-fit shadow traces passed
+buddy_check() succeeded!
+allocator checks: buddy rounding, shadow traces and coalescing passed
+allocator checks: slub boundaries, payloads, nonalias and reclamation passed
+allocator checks: all passed

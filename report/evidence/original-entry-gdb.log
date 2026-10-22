@@ -1,0 +1,15 @@
+0x0000000000001000 in ?? ()
+Hardware assisted breakpoint 1 at 0x80200034
+
+Breakpoint 1, 0x0000000080200034 in ?? ()
+=> 0x80200034:	csrw	satp,t0
+$1 = 0x0
+0x0000000080200038 in ?? ()
+$2 = 0x80200038
+pc             0x80200038	0x80200038
+scause         0x0	0
+sepc           0x0	0
+stval          0x0	0
+satp           0x8000000000080207	-9223372036854251001
+[Inferior 1 (process 1) detached]
+Cannot access memory at address 0x80200038

@@ -1,0 +1,10 @@
+Lab2 RAM matrix: recorded real QEMU output
+
+RAM  32 MiB: PASS; managed end 0x82000000
+RAM  64 MiB: PASS; managed end 0x84000000
+RAM 128 MiB: PASS; managed end 0x88000000
+RAM 256 MiB: PASS; managed end 0x88000000
+
+Kernel image SHA-256: 3b5e1a1e44a12cf3aa5b8756d1969dea908c17fee72df49a6f02330d023da10d
+Each guest: raw ucore.img via QEMU -kernel, default OpenSBI.
+256 MiB RAM is deliberately capped at PHYSICAL_MEMORY_END (128 MiB).

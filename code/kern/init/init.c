@@ -1,3 +1,5 @@
+#include <allocator_checks.h>
+#include <slub.h>
 #include <console.h>
 #include <defs.h>
 #include <pmm.h>
@@ -6,6 +8,11 @@
 #include <dtb.h>
 
 int kern_init(void) __attribute__((noreturn));
+
+// A stable guest breakpoint after all allocator ownership has been restored.
+void __attribute__((noinline)) allocator_checks_done(void) {
+    asm volatile("" ::: "memory");
+}
 void grade_backtrace(void);
 void print_kerninfo(void);
 
@@ -38,6 +45,10 @@ int kern_init(void) {
 
     // grade_backtrace();
     pmm_init();  // init physical memory management
+    slub_init();
+    slub_check();
+    allocator_checks();
+    allocator_checks_done();
 
     /* do nothing */
     while (1)

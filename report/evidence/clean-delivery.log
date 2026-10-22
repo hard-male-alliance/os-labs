@@ -1,0 +1,43 @@
+make: Entering directory '/home/moesegfault/os-labs/.temp/lab2-clean-delivery'
+make -C code TARGETS
+make[1]: Entering directory '/home/moesegfault/os-labs/.temp/lab2-clean-delivery/code'
++ cc kern/init/entry.S
++ ld bin/kernel
+riscv64-linux-gnu-objcopy bin/kernel --strip-all -O binary bin/ucore.img
+make[1]: Leaving directory '/home/moesegfault/os-labs/.temp/lab2-clean-delivery/code'
+make: Leaving directory '/home/moesegfault/os-labs/.temp/lab2-clean-delivery'
+make: Entering directory '/home/moesegfault/os-labs/.temp/lab2-clean-delivery'
+python3 scripts/verify_lab2.py code
+RAM 32 MiB: PASS
+RAM 64 MiB: PASS
+RAM 128 MiB: PASS
+RAM 256 MiB: PASS
+PASS: RAM matrix and 17 real guest GDB assertions; evidence: /home/moesegfault/os-labs/.temp/lab2-clean-delivery/.cache/lab2
+make: Leaving directory '/home/moesegfault/os-labs/.temp/lab2-clean-delivery'
+make: Entering directory '/home/moesegfault/os-labs/.temp/lab2-clean-delivery'
+make -C code grade
+make[1]: Entering directory '/home/moesegfault/os-labs/.temp/lab2-clean-delivery/code'
+lab2 injection complete
++ cc kern/init/entry.S
++ cc kern/init/init.c
++ cc kern/libs/stdio.c
++ cc kern/debug/panic.c
++ cc kern/driver/console.c
++ cc kern/driver/dtb.c
++ cc kern/mm/allocator_checks.c
++ cc kern/mm/best_fit_pmm.c
++ cc kern/mm/buddy_pmm.c
++ cc kern/mm/default_pmm.c
++ cc kern/mm/pmm.c
++ cc kern/mm/slub.c
++ cc kern/test/test_lab2.c
++ cc libs/printfmt.c
++ cc libs/readline.c
++ cc libs/sbi.c
++ cc libs/string.c
++ ld bin/kernel
+  -check page init:                          OK
+  -check best fit:                           OK
+Total Score: 20/20
+make[1]: Leaving directory '/home/moesegfault/os-labs/.temp/lab2-clean-delivery/code'
+make: Leaving directory '/home/moesegfault/os-labs/.temp/lab2-clean-delivery'

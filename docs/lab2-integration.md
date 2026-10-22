@@ -1,4 +1,9 @@
-# Lab2 integration baseline
+# Lab2 integration baseline (historical)
+
+This note records the initial import, before exercise implementation. For the
+completed branch and current results, see [verification](lab2-verification.md)
+and [the report](../report/report.md). Original-source byte-identity statements
+below apply to the import commit, not the later implementation.
 
 ## Input and scope
 

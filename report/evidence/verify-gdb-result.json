@@ -1,0 +1,98 @@
+{
+  "checks": [
+    {
+      "name": "reached_kern_init",
+      "passed": true,
+      "pc": 18446744072637907182
+    },
+    {
+      "name": "high_virtual_C_entry",
+      "passed": true,
+      "pc": 18446744072637907182
+    },
+    {
+      "name": "Sv39_at_entry",
+      "passed": true,
+      "satp": 9223372036855300616
+    },
+    {
+      "name": "entry_stack",
+      "passed": true,
+      "sp": 18446744072637939712,
+      "bottom": 18446744072637931520,
+      "top": 18446744072637939712
+    },
+    {
+      "name": "reached_allocator_checks_done",
+      "passed": true,
+      "pc": 18446744072637907040
+    },
+    {
+      "name": "supervisor_mode",
+      "passed": true,
+      "privilege": 1
+    },
+    {
+      "name": "Sv39_after_checks",
+      "passed": true,
+      "satp": 9223372036855300616
+    },
+    {
+      "name": "identity_mapping_removed",
+      "passed": true,
+      "root_2": 0
+    },
+    {
+      "name": "high_mapping_preserved",
+      "passed": true,
+      "root_511": 536871119,
+      "expected": 536871119
+    },
+    {
+      "name": "satp_root_matches",
+      "passed": true,
+      "satp": 9223372036855300616,
+      "root_physical": 2149613568
+    },
+    {
+      "name": "physical_virtual_offset",
+      "passed": true,
+      "offset": 18446744070488326144
+    },
+    {
+      "name": "managed_page_bound",
+      "passed": true,
+      "npage": 557056
+    },
+    {
+      "name": "best_fit_selected",
+      "passed": true,
+      "manager": "best_fit_pmm_manager"
+    },
+    {
+      "name": "free_pages_restored",
+      "passed": true,
+      "free": 31925,
+      "expected": 31925
+    },
+    {
+      "name": "free_list_bounded",
+      "passed": true,
+      "blocks": 0
+    },
+    {
+      "name": "free_block_invariants",
+      "passed": true,
+      "address": 18446744072637985720,
+      "pages": 31925
+    },
+    {
+      "name": "free_list_accounting",
+      "passed": true,
+      "total": 31925,
+      "free": 31925,
+      "blocks": 1
+    }
+  ],
+  "passed": true
+}

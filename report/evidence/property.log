@@ -1,0 +1,6 @@
+mkdir -p .cache/lab2
+cc -std=gnu99 -O2 -g -Wall -Werror -Wno-unused \
+	-fno-builtin -nostdinc -Icode/libs -Icode/kern/mm -Icode/kern/debug \
+	tests/best_fit_property.c -o .cache/lab2/best-fit-property
+.cache/lab2/best-fit-property
+Best-Fit: framework checks and 50000 model-checked operations PASS

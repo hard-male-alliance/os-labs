@@ -1,0 +1,19 @@
+Lab2 GDB assertions: recorded real debugger output
+
+CHECK reached_kern_init True {'pc': 18446744072637907182}
+CHECK high_virtual_C_entry True {'pc': 18446744072637907182}
+CHECK Sv39_at_entry True {'satp': 9223372036855300616}
+CHECK entry_stack True {'sp': 18446744072637939712, 'bottom': 18446744072637931520, 'top': 18446744072637939712}
+CHECK reached_allocator_checks_done True {'pc': 18446744072637907040}
+CHECK supervisor_mode True {'privilege': 1}
+CHECK Sv39_after_checks True {'satp': 9223372036855300616}
+CHECK identity_mapping_removed True {'root_2': 0}
+CHECK high_mapping_preserved True {'root_511': 536871119, 'expected': 536871119}
+CHECK satp_root_matches True {'satp': 9223372036855300616, 'root_physical': 2149613568}
+CHECK physical_virtual_offset True {'offset': 18446744070488326144}
+CHECK managed_page_bound True {'npage': 557056}
+CHECK best_fit_selected True {'manager': 'best_fit_pmm_manager'}
+CHECK free_pages_restored True {'free': 31925, 'expected': 31925}
+CHECK free_list_bounded True {'blocks': 0}
+CHECK free_block_invariants True {'address': 18446744072637985720, 'pages': 31925}
+CHECK free_list_accounting True {'total': 31925, 'free': 31925, 'blocks': 1}

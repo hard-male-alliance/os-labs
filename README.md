@@ -61,24 +61,49 @@ environments, caches and personal IDE state are not committed.
 See [docs/development.md](docs/development.md) for tooling and debugging details
 and [docs/course/SUMMARY.md](docs/course/SUMMARY.md) for the course book.
 
-## Lab2 workspace
+## Lab2: physical memory management
 
-This branch contains the teaching skeleton from `lab2.zip` under `code/`.
-The source exercises are intentionally unfinished: `page_init()` and the
-Best-Fit allocator must be implemented before the kernel can build or boot.
-See [Lab2 integration notes](docs/lab2-integration.md) for the exact baseline
-and [the exercises](docs/course/lab2/lab2_2_1_exercise.md) for the requirements.
+This branch implements the supplied Lab2 exercises: physical page initialization,
+Best-Fit, Buddy System, and a simplified SLUB object allocator. Best-Fit remains
+selected for the course-facing PMM. Buddy is integrated and verified through an
+isolated guest arena; SLUB uses the active PMM without changing its interface.
 
 ```sh
 make doctor           # Check the selected cross toolchain, QEMU and GDB.
-make compdb           # Generate the Lab2 compilation database (13 entries).
-make                  # Expected to fail until the source exercises are done.
-make qemu             # Boot after implementation.
+make                  # Build the RV64 kernel and raw image.
+make compdb           # Generate 16 compilation commands for IDE indexing.
+make qemu             # Boot and execute the supplied and extended self-checks.
 make debug            # Start paused; attach using make gdb in another terminal.
-make grade            # Inject and run supplied tests in .temp/lab2-grade/.
+make grade            # Run the unchanged course tests in a temporary tree.
+make verify           # Four RAM configurations and real guest GDB assertions.
+make property         # 50,000 host-model operations on production Best-Fit code.
 ```
+
+`make grade` checks page initialization and Best-Fit (20/20 in the recorded run),
+not every exercise. Extended guest checks cover Buddy and SLUB, ownership,
+payload preservation, OOM and complete page reclamation. `make verify` needs
+permission to open a private localhost GDB port. The kernel intentionally loops
+after the checks; `Ctrl-a x` exits interactive QEMU.
 
 CLion configurations are named `Lab2 Build`, `Lab2 QEMU`,
 `Lab2 QEMU GDB Server`, and `Lab2 Remote Debug`. Reload the Makefile project
 after switching branches. Run the GDB server before attaching Remote Debug.
-The report in `report/report.md` is an uncompleted template, not a result.
+A live CLion re-import is not implied by CLI validation.
+
+Start with [the report](report/report.md), [actual prompts](report/prompt.md),
+[preserved evidence](report/evidence/README.md), and
+[verification/reproduction notes](docs/lab2-verification.md). The historical
+[import baseline](docs/lab2-integration.md) records the original teaching archive;
+implementation rationale is in the [memory](docs/lab2-memory-notes.md),
+[Buddy](docs/lab2-buddy-notes.md), [SLUB](docs/lab2-slub-notes.md),
+[test plan](docs/lab2-test-plan.md), and [independent review](docs/lab2-review.md)
+notes. Actual student identities and `YOUR CODE` markers remain explicit
+placeholders until the user supplies the course metadata.
+
+The supported platform is single-hart QEMU `virt`, with the supplied trusted
+DTB parser and a 128 MiB managed-memory ceiling. Larger emulated RAM is detected
+but intentionally capped. The simplified SLUB is not Linux's concurrent allocator.
+
+Optional screenshot reproduction requires Xvfb, xterm, xwininfo and ImageMagick:
+`uv run --locked python scripts/capture_lab2.py`. It captures real terminal
+windows displaying saved evidence panels, not invented or live-session images.

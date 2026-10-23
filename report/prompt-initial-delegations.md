@@ -1,29 +1,112 @@
-# Initial Lab2 implementation and test delegations
+# Lab2 初始实现与测试任务（中文整理版）
 
-These are the actual initial module instructions from the coordinator. They
-complement the later four-part review/test prompts in `prompt.md`. Routine
-progress and capacity-retry messages are not implementation specifications.
+以下内容翻译整理自协调代理实际下发的初始任务，与 `prompt.md` 中后续的四段式复审和测试提示词配套阅读。保留原任务的接口、文件范围和行为约束；不是新的历史原文。常规进度沟通和服务容量不足后的重试消息不作为实现规格列入。
 
-## Physical memory and Best-Fit
+## 物理内存初始化与最佳适应分配器
 
 ```text
-Implement Lab2 physical page initialization and Best-Fit. Own ONLY code/kern/mm/pmm.c and best_fit_pmm.c (headers if essential), docs/lab2-memory-notes.md (English durable findings). Read docs/course/lab2 exercise and requirements and supplied tests. Preserve basic_check and best_fit_check byte-for-byte; preserve lab2 comments, leave YOUR CODE student placeholder unless actual student ID known (do not invent). Implement robust page_init bounded by actual DTB and supported mapping (PHYSICAL_MEMORY_END), overflow/alignment/reservation validation; select best_fit manager. Best-Fit sorted address free list, split/coalesce and correct nr_free. Research primary sources for technical uncertain facts; persist concise findings. Do not edit init.c/Makefile or tests. Other agents implementing Buddy/SLUB. Run focused compile/tests when possible, avoid make clean/shared QEMU races. No git commit. Report interfaces and risks.
+完成 Lab2 的物理页初始化和最佳适应分配器。
+
+仅负责 code/kern/mm/pmm.c、best_fit_pmm.c，必要时修改对应头文件；
+将可复用发现记录到 docs/lab2-memory-notes.md，开发记录按项目约定使用英文。
+阅读本地课程练习、要求和附带测试。
+
+保持 basic_check() 和 best_fit_check() 逐字节不变，保留 lab2 注释。
+没有真实学号时保留 YOUR CODE 占位符，不得编造身份信息。
+
+page_init() 必须受设备树实际范围和 PHYSICAL_MEMORY_END 上界约束，
+处理溢出、对齐和保留页校验，并选择最佳适应管理器。
+最佳适应使用地址有序空闲链表，正确拆分、合并并维护 nr_free。
+
+对不确定的技术事实查阅一手资料，沉淀简洁发现。
+不要修改 init.c、Makefile 或测试；其他代理负责伙伴系统和对象分配器。
+条件允许时执行相关编译和测试，避免并行清理构建目录或争用模拟器。
+不要提交版本记录，汇报接口和风险。
 ```
 
-## Buddy implementation
+## 伙伴系统实现
 
 ```text
-Implement standalone Buddy System allocator satisfying Lab2 tasks. Own ONLY new code/kern/mm/buddy_pmm.c, buddy_pmm.h and docs/lab2-buddy-notes.md (English). Integrate via const struct pmm_manager buddy_pmm_manager (parent edits pmm/init/Makefile). Contract: orders power-of-two blocks, alloc_pages(n) rounds up to next power of two and records allocation order; free_pages(base,n) called with ORIGINAL requested n, verifies recorded order, returns full rounded block; document this. use existing struct Page without changing layout; can use ref/property flags carefully under exclusive ownership. init_memmap decomposes arbitrary base ranges into aligned blocks; support <=128 MiB default, declared max order enough supported mapping. No unbounded metadata. buddy.check self-tests or helper minimal; independent test agent writes extended tests. Preserve existing contracts Best-Fit. Parent will temporarily switch pmm_manager to buddy, initialize same free span via exported globals or delegate initialization by test chosen region. Tell parent how to run integration. Research primary Linux buddy/docs relevant, persist mechanism/constraints. Do not edit shared files/tests/Makefile/init.c. No git commit.
+实现满足 Lab2 要求的独立伙伴系统分配器。
+
+仅负责新增 code/kern/mm/buddy_pmm.c、buddy_pmm.h，
+以及 docs/lab2-buddy-notes.md 开发记录；开发记录按项目约定使用英文。
+通过 const struct pmm_manager buddy_pmm_manager 接入，
+由协调代理修改初始化和构建入口。
+
+块容量为二次幂。alloc_pages(n) 向上取整并记录分配阶数；
+free_pages(base,n) 接收原始申请大小，验证记录后归还完整取整块，
+并明确记录这一契约。
+
+使用现有 struct Page，不改变布局；只在独占页面时使用相关字段。
+init_memmap() 将任意起点的区域分解为对齐块，
+覆盖默认不超过 128 MiB 的管理范围，最大阶数必须足够。
+不得使用规模无界的元数据。
+
+可提供简洁自检，独立测试由另一代理编写。
+保留最佳适应分配器的既有契约。协调代理会临时切换管理器，
+使用独占区域完成测试；说明需要的初始化和集成方式。
+
+查阅 Linux 伙伴分配器及相关一手文档，记录机制和限制。
+不要修改共享文件、测试、Makefile 或 init.c，不要提交版本记录。
 ```
 
-## SLUB implementation
+## 对象分配器实现
 
 ```text
-Implement simplified educational SLUB allocator Lab2. Own ONLY new code/kern/mm/slub.c, slub.h and docs/lab2-slub-notes.md English. Parent integrates boot/tests. Public API void slub_init(void), void *kmalloc(size_t), void kfree(void *), void slub_check(void) optional. Backed by current global alloc_pages/free_pages (Best-Fit by default), virtual address page2pa + va_pa_offset; support size classes e.g 16..2048 and direct page allocations for larger objects, 0 returns NULL, overflow returns NULL, alignment at least 16, full empty slabs returned to PMM. Keep ownership/metadata robust, avoid changing Page layout; can store self-describing headers in page and object metadata and use Page ref/property ONLY if contract safe (coordinate with buddy). Single hart no concurrency needed explicitly. Prefer simple slab size-class partial lists; do not overengineer production Linux clone. Research official Linux SLUB docs and relevant primary academic paper if useful, persist tradeoffs. No edit shared files/Makefile/init.c/tests. No git commit. Report actual API.
+实现 Lab2 教学用的简化 SLUB 对象分配器。
+
+仅负责新增 code/kern/mm/slub.c、slub.h，
+以及 docs/lab2-slub-notes.md 开发记录；开发记录按项目约定使用英文。
+启动和测试集成由协调代理负责。
+
+公开接口为 slub_init()、kmalloc(size_t)、kfree(void *)，
+可提供 slub_check() 自检。
+底层使用当前的 alloc_pages() 和 free_pages()，默认管理器为最佳适应。
+页面虚拟地址通过 page2pa(page) 加 va_pa_offset 得到。
+
+支持例如 16 至 2048 字节的大小分类，较大对象直接按页分配。
+零大小请求返回 NULL，溢出请求返回 NULL，地址至少按 16 字节对齐；
+空对象页必须归还底层管理器。
+
+保证所有权和元数据生命周期正确，不改变 Page 布局。
+可以在页内保存自描述头和对象元数据；如需借用 Page 字段，
+必须先确认契约安全，并与伙伴系统实现方协调。
+
+明确限定单个硬件线程，不要求实现并发。
+优先使用简单的分类部分空闲链表，不要扩展成完整的生产内核分配器。
+查阅 Linux 官方文档及相关一手论文，记录取舍。
+不要修改共享文件、Makefile、init.c 或测试，不要提交版本记录。
+汇报实际接口。
 ```
 
-## Independent allocator tests
+## 独立分配器测试
 
 ```text
-Design and IMPLEMENT independent guest allocator tests for Lab2, owning ONLY new code/kern/mm/allocator_checks.c and allocator_checks.h plus docs/lab2-test-plan.md English. Read exercise/spec/tests and existing page interface. APIs from other agents: extern const struct pmm_manager buddy_pmm_manager, buddy alloc(n) power-of-two rounding and free(base,original n); SLUB void slub_init(), void *kmalloc(size_t), void kfree(void *), optional slub_check. Coordinate directly agents if needed. Parent will call allocator_checks() after pmm_init with Best-Fit active. Test Best-Fit via alloc/free deterministic mixed operations against small shadow map, nonoverlap, nr_free conservation, coalesce and actual smallest-fit choice with isolated allocation arena if necessary. Test Buddy without sacrificing global Best-Fit state: reserve aligned region using Best-Fit, temporary switch global manager to buddy and buddy.init/init_memmap on reserved Page span (note init_memmap may require SetPageReserved flags), test then restore Page state and original manager/free reserved span, avoid kernel corruption. SLUB payload patterns, cross-object nonalias, alignment, boundaries including 0, >page, varied order free, PMM baseline restoration, deterministic property-style mixed traces. Test output markers clear, asserts fail useful. Do not edit supplied basic_check/best_fit_check/test_lab2 or grading script. No production fixes. Don't run shared make clean. No git commit.
+设计并实现 Lab2 的独立客体测试。
+
+仅负责新增 code/kern/mm/allocator_checks.c、allocator_checks.h，
+以及 docs/lab2-test-plan.md 开发记录；开发记录按项目约定使用英文。
+阅读练习、规格、附带测试和现有页管理接口。
+
+伙伴系统接口为 buddy_pmm_manager，申请按二次幂取整，
+释放使用原始申请页数。对象分配接口为 slub_init()、kmalloc()、
+kfree()，可有 slub_check()。必要时直接与实现代理协调。
+协调代理会在 pmm_init() 后、最佳适应管理器生效时调用 allocator_checks()。
+
+最佳适应测试使用确定性混合分配释放轨迹和独立占用模型，
+检查不重叠、空闲页计数守恒、相邻合并及真正的最小充分块选择。
+必要时隔离测试区域。
+
+伙伴系统测试不能破坏全局最佳适应状态：先保留对齐区域，
+再临时切换管理器并初始化、登记区域。
+注意登记接口可能要求页面已设置保留标记。
+测试后恢复描述符和原管理器，再归还保留区域，不得损坏内核。
+
+对象分配器测试覆盖有效载荷模式、活对象不重叠、地址对齐、
+零大小和跨页等边界、不同释放顺序、页面基线恢复及确定性混合轨迹。
+
+输出清楚的测试标记，断言失败信息应有定位价值。
+不得修改 basic_check()、best_fit_check()、test_lab2 或评分脚本；
+不要修改生产实现，不要并行清理共享构建目录，不要提交版本记录。
 ```

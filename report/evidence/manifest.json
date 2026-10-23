@@ -68,9 +68,9 @@
     "docs/lab2-slub-notes.md": "f6cc113f70422b0178dcc2e07e0950543f1c8b81f54886061ca61a252e1079a1",
     "docs/lab2-test-plan.md": "bd67aeb7d4a5b9b0ed600982ccd529a2587cc88576f361f507198f723fbc3da0",
     "docs/lab2-verification.md": "3531f6686cfe113c4dc22d811108ae23eaed6c5d2d0b1997cea3df0ed8135460",
-    "report/prompt-initial-delegations.md": "c81342fe15b19a5d059296b41972bd865615e0e55861205f5237545ef59f4fdf",
-    "report/prompt.md": "cbf6edfde29a907524d8b6cd264427248932716ab346c1c9065027c06cb63827",
-    "report/report.md": "2eb1eab0c174193b1417595496bf6482632100ffc31ef22200870ebe5e726468",
+    "report/prompt-initial-delegations.md": "23d9b82cb86a6deda3e7bb45ef680804b7b03bfdf90f61af5af32e96cb825ed6",
+    "report/prompt.md": "be610df5ac79785e5c2eadbd33bd2beef7428a959698fe34d56ae9d673e23cf4",
+    "report/report.md": "4625b18a1c8af20e1bbc9d03b5d1dd521c31c2122d4bef3b3c8ec39528ad86b5",
     "scripts/capture_lab2.py": "15ec700cf2527bc4fa4934e1b4093e626c421c619471edc17f45463e0ad2d0e0",
     "scripts/verify_lab2.py": "b9b04360527d8f00c1d6ab26b5ae9d7cf5e69cfe39adb748ce957bdfa1888e28",
     "tests/best_fit_property.c": "2905388d1fbccbe479ae82c6e53373469f15368d9c2a778362a8a0186f721926"
@@ -105,5 +105,9 @@
     "report/images/lab2-ram-matrix.png": "12081b2c0bc40e4b8883051ee05340a6a3d4e92e9d62065b51fb2a1fc92e9102"
   },
   "image_sha256": "3b5e1a1e44a12cf3aa5b8756d1969dea908c17fee72df49a6f02330d023da10d",
-  "clean_delivery_image_sha256": "06a449e901e5209480026152abf2b7b7720807e341abb1ac0b55adbcf3e5f55b"
+  "clean_delivery_image_sha256": "06a449e901e5209480026152abf2b7b7720807e341abb1ac0b55adbcf3e5f55b",
+  "documentation_revision": {
+    "date": "2026-10-23",
+    "reason": "Translate prompt records into Chinese and update report links; runtime sources and recorded test evidence are unchanged."
+  }
 }

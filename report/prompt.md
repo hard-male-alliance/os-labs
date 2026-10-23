@@ -1,6 +1,6 @@
-# Lab2 实际提示词记录
+# Lab2 实际提示词记录（中文整理版）
 
-本文件区分用户原始请求、协调代理的实现指令和独立测试指令。四段格式 `[PROMPT]`、`[RELY]`、`[GUARANTEE]`、`[SPECIFICATION]` 是实际开发中采用的规格表达，不声称用户一开始就提供了这些细节。
+本文件根据实际开发指令翻译整理，区分用户原始请求、实现指令和独立测试指令；不是重新编造一套开发过程。提示词采用“任务说明、可用依据、交付要求、行为规格”四段结构。文件名、函数名、宏和其他代码标识符保留源码中的写法，方便对照。
 
 ## 环境接入原始请求
 
@@ -16,68 +16,157 @@ OK，把 lab2 解包并且接好吧
 那你去完成这个实验吧。你可以部署多智能体，指挥好他们。
 ```
 
-用户授权协调代理完成实验并组织多智能体。以下为协调代理实际发给实现代理的后续规格复审提示词，按各模块的共享记录原文保存。这些不是用户原话，也不追溯声称为首次实现指令。独立测试提示词另行列出。
+用户授权完成实验并组织多智能体。下面是实际后续规格复审指令的中文整理版，不是用户原话，也不冒充首次实现指令。初始实现和测试任务另见 [初始代理指令（中文整理版）](prompt-initial-delegations.md)。
 
-初始实现与独立测试任务的完整原文另见 [初始代理指令](prompt-initial-delegations.md)，与下列后续规格复审指令共同构成实际代码生成记录。
+## 物理内存初始化与最佳适应分配器
 
-## 物理内存初始化与 Best-Fit
-
-来源：`docs/lab2-memory-notes.md`，实现完成过程中的规格复审指令。
+对应开发记录：`docs/lab2-memory-notes.md`。
 
 ```text
-[PROMPT] Review actual pmm.c and best_fit_pmm.c implementations; preserve provided tests and API. [RELY] dtb getters; PHYSICAL_MEMORY_OFFSET/END; nbase indexes DRAM_BASE; pmm_manager contract; course local documents. [GUARANTEE] page_init and complete best_fit_pmm_manager plus active selection. [SPECIFICATION] page_init validates nonzero supported DRAM range and overflow, page-aligns end placement, reserves firmware/kernel/metadata, frees only complete available pages, leaves no out-of-range descriptors; Best-Fit selects smallest sufficient block, exact n-page accounting, address-ordered insertion and two-sided coalescence, no supplied-test edits. Pre: boot DTB parsed, exclusive single-hart PMM. Post: byte layout and external API unchanged, focused objects compile. Document any remaining hidden risks. Parent handles integration.
+[任务说明]
+复审 pmm.c 和 best_fit_pmm.c 中的实际实现，保留课程提供的测试和现有接口。
+
+[可用依据]
+设备树内存查询函数、PHYSICAL_MEMORY_OFFSET、PHYSICAL_MEMORY_END、
+以 DRAM_BASE 为基准的 nbase、pmm_manager 接口和本地课程文档。
+
+[交付要求]
+实现 page_init() 和完整的 best_fit_pmm_manager，并将其设为当前管理器。
+保持数据结构布局和公开接口不变，相关目标文件必须能够编译。
+
+[行为规格]
+前置条件：启动设备树已解析，物理页管理器由单个硬件线程独占访问。
+
+page_init() 必须验证非空内存范围、支持的地址范围和算术溢出；
+将描述符数组按页对齐，保留固件、内核和元数据占用的空间；
+只登记完整的可用页面，不得访问描述符数组边界以外的元素。
+
+最佳适应分配器必须选择最小的足够大空闲块，准确记录分配的 n 页；
+按地址顺序插入空闲块，并合并左右相邻块。不得修改课程测试。
+记录仍然存在的风险，由协调代理负责整机集成。
 ```
 
-规格设计说明：把页号上界与页数量区分开；用明确的保留区和地址边界约束初始化；把 Best-Fit 的选择、分裂、合并与计数都写成行为要求，而不是只说“实现最佳适应”。框架两个测试函数不允许改变。
+规格设计说明：区分页号上界与页数量，明确保留区和地址边界；不能只说“实现最佳适应”，还要说清选择、拆分、合并和计数的规则。
 
-实际问题：初次构建发现课程内核没有 `MIN` 宏，采用局部条件表达式修正；复审没有发现需要再次改动的缺陷。局部宿主模型检查和整机验证分别记录，不混淆证据层次。
+实际问题：初次构建发现课程内核没有 `MIN` 宏，改用局部条件表达式。局部模型测试和整机验证分别记录，不把编译通过当成运行正确。
 
-## Buddy System
+## 伙伴系统
 
 ### 实现提示词
 
-来源：`docs/lab2-buddy-notes.md`，实际最终复审与完善指令。
+对应开发记录：`docs/lab2-buddy-notes.md`。
 
 ```text
-[PROMPT] Review and finish buddy_pmm.c/h, preserve existing Page/API. [RELY] pmm_manager, Page flags/property/list link, physical PFNs, PGSIZE, exclusive reserved input span. [GUARANTEE] buddy_pmm_manager init/init_memmap/alloc_pages/free_pages/nr_free_pages/check. [SPECIFICATION] Pre: single hart and reserved in-range pages on init_memmap; partition arbitrary spans into maximal physically aligned 2^order blocks. alloc(n) returns rounded power-of-two block or NULL without state change; free(base,original_n) validates allocation and returns exactly rounded capacity, recursively merges only true same-order free buddies within registered memory. Reject zero/overflow requests safely. Preserve Page layout and independent Best-Fit ownership. Post: non-overlap, free count conservation, full reclamation. Include tests and limitations in note, no concurrency claims.
+[任务说明]
+复审并完成 buddy_pmm.c 和 buddy_pmm.h，保留现有 Page 布局和接口。
+
+[可用依据]
+pmm_manager、Page 的标志位、property 字段和链表节点，
+物理页号、PGSIZE，以及由本管理器独占的保留页区间。
+
+[交付要求]
+实现 buddy_pmm_manager 的初始化、区域登记、分配、释放、
+空闲页计数和自检操作，在开发记录中说明测试及适用限制。
+
+[行为规格]
+前置条件：单个硬件线程执行；登记区域中的页面有效且处于保留状态。
+将任意起点的区域分解为尽可能大的、按物理地址对齐的二次幂块。
+
+申请 n 页时，向上取整为二次幂容量；失败返回 NULL，且不改变状态。
+释放时必须提供原始申请大小，先验证分配记录，再归还完整的取整容量。
+只有已登记区域内真正空闲、同阶的伙伴才能递归合并。
+安全拒绝零大小和溢出请求，不改变 Page 布局或最佳适应分配器的所有权。
+
+后置条件：分配区域不重叠，空闲页计数守恒，完整释放后资源全部收回。
+不得声称支持未实现的并发能力。
 ```
 
-规格设计说明：强制采用绝对物理页号计算伙伴；任意起点分解为对齐块；释放必须匹配原始请求，不能沿用 Best-Fit 的子区间释放测试。失败后计数和已有分配不变。
+规格设计说明：使用绝对物理页号计算伙伴；不能假定初始区域已经对齐；释放契约不能照搬允许子区间释放的最佳适应分配器。
 
-实际复审补充：明确拒绝 0 与溢出大小的申请，并加入对应内建检查。非法释放在修改状态之前断言失败。
+实际复审补充：明确拒绝零大小与溢出请求，加入对应自检；错误释放必须在修改状态前触发断言。
 
 ### 独立测试提示词
 
-来源：`docs/lab2-test-plan.md`，实际发给独立验证代理的测试生成指令。
+对应测试记录：`docs/lab2-test-plan.md`。
 
 ```text
-[PROMPT] Generate independent Buddy tests in allocator_checks.c. [RELY] buddy_pmm_manager rounds n to power2; free original n; isolated reserved physical-PFN-aligned arena. [GUARANTEE] Buddy test invoked from allocator_checks. [SPECIFICATION] Assert alignment/nonoverlap, split/coalesce, rounded capacity accounting, exhaustion/zero/overflow, deterministic mixed trace and full baseline restoration; never mutate original supplied tests or leave global manager changed.
+[任务说明]
+在 allocator_checks.c 中编写独立的伙伴系统测试。
+
+[可用依据]
+buddy_pmm_manager 按二次幂取整分配，释放时使用原始申请大小；
+测试使用隔离、保留且按物理页号对齐的区域。
+
+[交付要求]
+通过 allocator_checks() 调用伙伴系统测试。
+
+[行为规格]
+检查对齐、不重叠、拆分、合并和取整容量计数；
+覆盖内存耗尽、零大小、溢出请求，以及确定性混合分配释放轨迹。
+所有操作结束后，资源必须恢复到初始基线。
+不得修改课程原始测试，也不得遗留被切换的全局管理器。
 ```
 
-## SLUB
+## 对象分配器
 
 ### 实现提示词
 
-来源：`docs/lab2-slub-notes.md`，实际后续规格指令。
+对应开发记录：`docs/lab2-slub-notes.md`。
 
 ```text
-[PROMPT] Finish simplified SLUB object allocator with two-level page/object management. [RELY] existing alloc_pages/free_pages and page/address mapping; single hart; no Page layout changes. [GUARANTEE] slub_init, kmalloc(size), kfree(ptr), slub_check. [SPECIFICATION] Pre: PMM initialized, slub_init once before allocations. kmalloc(0)/impossible sizes return NULL; all successes at least16-byte aligned and nonoverlapping with requested-byte payload safe; size classes cover small requests and page-backed large fallback. kfree(NULL) no-op; freeing valid live allocation restores ownership and empty slab returns all backing pages. Allocation failure preserves existing live allocations. Keep bounded metadata and explicit misuse assertions; no multicore/per-CPU performance claims.
+[任务说明]
+完成简化的 SLUB 对象分配器，实现页面管理和对象管理两层结构。
+
+[可用依据]
+现有 alloc_pages()、free_pages() 和页面地址转换关系。
+运行环境为单个硬件线程，不改变 Page 布局。
+
+[交付要求]
+实现 slub_init()、kmalloc(size)、kfree(ptr) 和 slub_check()。
+
+[行为规格]
+前置条件：物理页管理器已初始化，对象分配前完成初始化。
+零大小或无法满足的请求返回 NULL；成功返回的地址至少按 16 字节对齐。
+不同活对象不得重叠，调用者申请的全部有效载荷字节都必须可安全使用。
+小请求使用大小分类，较大请求回退到连续页面分配。
+
+kfree(NULL) 不做任何操作。释放有效活对象后恢复所有权；
+当一个对象页中不再有活对象时，将全部支撑页面归还底层管理器。
+分配失败不得破坏已有活对象。
+
+元数据规模必须有界，使用明确断言诊断错误用法；
+不得声称实现了多核或每处理器缓存性能优化。
 ```
 
-规格设计说明：将“任意大小”解释为小对象大小类加大对象页面回退，而不是支持无限可用容量；明确 16 字节对齐、有效载荷完整安全、空 slab 回收以及 OOM 时活对象不受影响。串行前提与简化范围显式记录。
+规格设计说明：“任意大小”不等于无限容量。应明确大小分类、页面回退、对齐、有效载荷安全、空对象页回收以及内存不足时的行为。
 
 ### 独立测试提示词
 
-来源：`docs/lab2-test-plan.md`，实际发给独立验证代理的测试生成指令。
+对应测试记录：`docs/lab2-test-plan.md`。
 
 ```text
-[PROMPT] Generate independent SLUB tests. [RELY] slub_init/kmalloc/kfree and current PMM; 16-byte alignment. [GUARANTEE] SLUB test invoked from allocator_checks. [SPECIFICATION] Boundary sizes including0,16,17,2048,2049,4096,multipage; patterns across all requested payload bytes; nonalias of live objects; partial/full/empty transitions, deterministic mixed trace, overflow failure and exact PMM reclamation; kfree(NULL) no-op. Keep tests bounded and source-level independent of implementation metadata.
+[任务说明]
+为对象分配器编写独立测试。
+
+[可用依据]
+slub_init()、kmalloc()、kfree() 和当前物理页管理器，
+以及至少 16 字节对齐的接口约定。
+
+[交付要求]
+通过 allocator_checks() 调用对象分配器测试。
+
+[行为规格]
+覆盖 0、16、17、2048、2049、4096 字节和多页请求等边界。
+向每个请求范围的所有字节写入模式数据，检查活对象不重叠、内容不损坏。
+覆盖部分空闲、全满、全空之间的转换，以及确定性混合分配释放轨迹。
+检查溢出请求失败、页面准确回收，以及 kfree(NULL) 无操作。
+测试规模有界，不依赖实现内部的元数据布局。
 ```
 
 ## 整机集成的实际后续迭代
 
-以下是对实际修复的记录，不冒充未保存的用户提示词或四段代理指令。
+以下记录真实修复，不冒充未保存的用户提示词或代理指令。
 
-1. 初始构建发现框架无 `MIN` 宏，改用局部条件表达式。
-2. GDB 发现开启 `satp` 后下一条低地址取指无映射；先加入临时恒等映射、跳到高地址后再移除，整机检查验证最终映射。
-3. 干净导出验证发现 Linux-GNU 回退工具链默认 PIC 下，分页前 `la` 经 GOT 取得高地址。将启动参数保存处两条伪指令改成显式 PC 相对的 `lla`，避免靠全局编译选项绕过问题；默认 ELF 工具链机器码不变。修复后干净导出的 Linux-GNU 构建通过四 RAM、17 GDB 断言和课程评分 20/20；未复用缓存、虚拟环境或既有构建产物。
+1. 初始构建发现框架没有 `MIN` 宏，改用局部条件表达式。
+2. GDB 发现开启 `satp` 后下一条低地址指令没有映射。修复方式是加入临时恒等映射，跳到高地址后移除，再通过整机检查验证最终映射。
+3. 干净导出验证发现：Linux-GNU 回退工具链默认生成位置无关代码时，分页前的 `la` 会经过全局偏移表取得高地址。将保存启动参数的两条伪指令改为显式程序计数器相对寻址的 `lla`，不靠全局编译选项绕过问题；默认 ELF 工具链机器码不变。修复后，干净导出的 Linux-GNU 构建通过四种内存配置、17 项 GDB 断言和课程评分 20/20，未复用缓存、虚拟环境或既有构建产物。

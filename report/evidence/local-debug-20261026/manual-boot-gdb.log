@@ -1,0 +1,162 @@
+Hardware assisted breakpoint 1 at 0x80200000
+Continuing.
+
+Breakpoint 1, 0x0000000080200000 in ?? ()
+pc             0x80200000	0x80200000
+a0             0x0	0
+a1             0x87000000	2264924160
+satp           0x0	0
+=> 0x80200000:	auipc	t0,0x9
+   0x80200004:	mv	t0,t0
+   0x80200008:	sd	a0,0(t0)
+   0x8020000c:	auipc	t0,0x9
+   0x80200010:	addi	t0,t0,-4
+   0x80200014:	sd	a1,0(t0)
+   0x80200018:	lui	t0,0xc0208
+   0x8020001c:	addiw	t1,zero,-3
+   0x80200020:	slli	t1,t1,0x1e
+   0x80200022:	sub	t0,t0,t1
+   0x80200026:	srli	t0,t0,0xc
+   0x8020002a:	addiw	t1,zero,-1
+   0x80200018:	lui	t0,0xc0208
+   0x8020001c:	addiw	t1,zero,-3
+   0x80200020:	slli	t1,t1,0x1e
+   0x80200022:	sub	t0,t0,t1
+   0x80200026:	srli	t0,t0,0xc
+   0x8020002a:	addiw	t1,zero,-1
+   0x8020002e:	slli	t1,t1,0x3f
+   0x80200030:	or	t0,t0,t1
+   0x80200034:	csrw	satp,t0
+   0x80200038:	sfence.vma
+   0x8020003c:	lui	t0,0xc0200
+   0x80200040:	addi	t0,t0,70
+   0x80200044:	jr	t0
+   0x80200046:	lui	t0,0xc0208
+   0x8020004a:	sd	zero,16(t0)
+   0x8020004e:	sfence.vma
+   0x80200052:	lui	sp,0xc0208
+   0x80200056:	lui	t0,0xc0200
+   0x8020005a:	addi	t0,t0,238
+   0x8020005e:	jr	t0
+   0x80200060:	ret
+   0x80200062:	addi	sp,sp,-16
+   0x80200064:	auipc	a0,0x4
+   0x80200068:	addi	a0,a0,-1620
+$1 = 0xffffffffc0208000
+Hardware assisted breakpoint 2 at 0x80200034
+Continuing.
+
+Breakpoint 2, 0x0000000080200034 in ?? ()
+pc             0x80200034	0x80200034
+t0             0x8000000000080208	-9223372036854251000
+satp           0x0	0
+0x80208010:	0x00000000200000cf
+0x80208ff8:	0x00000000200000cf
+0x0000000080200038 in ?? ()
+pc             0x80200038	0x80200038
+satp           0x8000000000080208	-9223372036854251000
+=> 0x80200038:	sfence.vma
+   0x8020003c:	lui	t0,0xc0200
+   0xffffffffc0200038 <kern_entry+56>:	sfence.vma
+   0xffffffffc020003c <kern_entry+60>:	lui	t0,0xc0200
+0x0000000080200044 in ?? ()
+pc             0x80200044	0x80200044
+t0             0xffffffffc0200046	-1071644602
+kern_entry () at kern/init/entry.S:40
+40	    lui     t0, %hi(boot_page_table_sv39)
+pc             0xffffffffc0200046	0xffffffffc0200046 <kern_entry+70>
+=> 0xffffffffc0200046 <kern_entry+70>:	lui	t0,0xc0208
+   0xffffffffc020004a <kern_entry+74>:	sd	zero,16(t0)
+   0xffffffffc020004e <kern_entry+78>:	sfence.vma
+42	    sfence.vma
+0xffffffffc0208010:	0x0000000000000000
+0xffffffffc0208ff8:	0x00000000200000cf
+47	    lui sp, %hi(bootstacktop)
+pc             0xffffffffc0200052	0xffffffffc0200052 <kern_entry+82>
+   0x80200052:	Cannot access memory at address 0x80200052
+Hardware assisted breakpoint 3 at 0xffffffffc02000ee: file kern/init/init.c, line 37.
+Continuing.
+
+Breakpoint 3, kern_init () at kern/init/init.c:37
+37	    memset(edata, 0, end - edata);
+pc             0xffffffffc02000ee	0xffffffffc02000ee <kern_init>
+sp             0xffffffffc0208000	0xffffffffc0208000
+satp           0x8000000000080208	-9223372036854251000
+$2 = 0xffffffffc0206000
+$3 = 0xffffffffc0208000
+Hardware assisted breakpoint 4 at 0xffffffffc0202c8c: file kern/mm/pmm.c, line 71.
+Continuing.
+
+Breakpoint 4, page_init () at kern/mm/pmm.c:71
+71	    if (mem_base == 0 || mem_size == 0 || mem_size > (uint64_t)-1 - mem_base) {
+#0  page_init () at kern/mm/pmm.c:71
+#1  pmm_init () at kern/mm/pmm.c:124
+#2  0xffffffffc0200126 in kern_init () at kern/init/init.c:47
+#3  0x000000008000966a in ?? ()
+$4 = 0x80000000
+$5 = 0x8000000
+Hardware assisted breakpoint 5 at 0xffffffffc0202d5c: file kern/mm/pmm.c, line 105.
+Continuing.
+
+Breakpoint 5, page_init () at kern/mm/pmm.c:105
+105	    uintptr_t free_start = ROUNDUP(descriptors_pa + descriptors_size, PGSIZE);
+$6 = 0xffffffffc020ab64
+$7 = 0xffffffffc020b000
+$8 = 0x88000
+$9 = 40
+106	    cprintf("  managed: [0x%016lx, 0x%016lx), free starts at 0x%016lx\n",
+$10 = 0x8034b000
+Hardware assisted breakpoint 6 at 0xffffffffc0201c48: file libs/list.h, line 123.
+Continuing.
+
+Breakpoint 6, best_fit_check () at libs/list.h:123
+123	    return listelm->next;
+$11 = 0xffffffffc0204198 "best_fit_pmm_manager"
+$12 = 31925
+$13 = {ref = 0, flags = 2, property = 31925, page_link = {prev = 0xffffffffc020a018 <free_area>, next = 0xffffffffc020a018 <free_area>}}
+Hardware assisted breakpoint 7 at 0xffffffffc02014b4: file kern/mm/allocator_checks.c, line 149.
+Continuing.
+
+Breakpoint 7, check_best_fit () at kern/mm/allocator_checks.c:149
+149	    struct Page *smallest = alloc_pages(3);
+$14 = 14
+$15 = 10
+$16 = 4
+150	    assert(smallest == all + 11);
+$17 = 11
+$18 = 11
+$19 = {ref = 0, flags = 2, property = 1, page_link = {prev = 0xffffffffc02133d0, next = 0xffffffffc020a018 <free_area>}}
+$20 = 10
+check_best_fit () at kern/mm/allocator_checks.c:152
+152	    struct Page *large = alloc_pages(10);
+$21 = {ref = 0, flags = 2, property = 4, page_link = {prev = 0xffffffffc02133d0, next = 0xffffffffc020a018 <free_area>}}
+$22 = 14
+Hardware assisted breakpoint 8 at 0xffffffffc02015ee: file kern/mm/allocator_checks.c, line 222.
+Continuing.
+
+Breakpoint 8, check_buddy () at kern/mm/allocator_checks.c:222
+222	    struct Page *rounded = alloc_pages(3);
+$23 = 0xffffffffc0204a50 "buddy_pmm_manager"
+$24 = 64
+223	    assert(rounded != NULL && page2ppn(rounded) % 4 == 0);
+$25 = 60
+$26 = 0
+check_buddy () at kern/mm/allocator_checks.c:226
+226	    page_trace(arena, 1, 0xB0DD1234U);
+$27 = 64
+$28 = {ref = 0, flags = 10, property = 6, page_link = {prev = 0xffffffffc020a090 <free_lists+96>, next = 0xffffffffc020a090 <free_lists+96>}}
+Hardware assisted breakpoint 9 at 0xffffffffc0202fc4: file kern/mm/slub.c, line 115.
+Continuing.
+
+Breakpoint 9, kmalloc (size=size@entry=1) at kern/mm/slub.c:115
+115	    if (size == 0) {
+kmalloc (size=size@entry=1) at kern/mm/slub.c:135
+135	    void *obj = slab->free;
+value has been optimized out
+$29 = 31924
+Run till exit from #0  kmalloc (size=size@entry=1) at kern/mm/slub.c:135
+0xffffffffc020099c in fill_object (slot=slot@entry=0xffffffffc0207ac0, size=1, pattern=0 '\000') at kern/mm/allocator_checks.c:264
+264	    slot->size = size;
+Value returned is $30 = (void *) 0xffffffffc034b060
+$31 = 0xffffffffc034b060
+$32 = {magic = 6002266146613576242, link = {prev = 0xffffffffc020aa90 <partial>, next = 0xffffffffc020aa90 <partial>}, free = 0xffffffffc034b070, npages = 1, class = 0, capacity = 250, used = 1, allocated = {1, 0, 0, 0}}

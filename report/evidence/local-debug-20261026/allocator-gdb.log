@@ -1,0 +1,70 @@
+(mi) -gdb-set mi-async on
+(mi) -interpreter-exec console "set pagination off"
+(mi) -interpreter-exec console "set confirm off"
+(mi) -interpreter-exec console "file /home/knight/os-labs-lab2/code/bin/kernel"
+Reading symbols from /home/knight/os-labs-lab2/code/bin/kernel...
+(mi) -interpreter-exec console "target remote 127.0.0.1:45843"
+Remote debugging using 127.0.0.1:45843
+0x0000000000001000 in ?? ()
+*stopped,frame={addr="0x0000000000001000",func="??",args=[],arch="riscv:rv64"},thread-id="1",stopped-threads="all"
+(mi) -interpreter-exec console "hbreak *kmalloc if $a0 == 1"
+Hardware assisted breakpoint 1 at 0xffffffffc0202fc4: file kern/mm/slub.c, line 115.
+(mi) -interpreter-exec console "continue"
+Continuing.
+
+Breakpoint 1, kmalloc (size=1) at kern/mm/slub.c:115
+115	    if (size == 0) {
+*stopped,reason="breakpoint-hit",disp="keep",bkptno="1",frame={addr="0xffffffffc0202fc4",func="kmalloc",args=[{name="size",value="1"}],file="kern/mm/slub.c",fullname="/home/knight/os-labs-lab2/code/kern/mm/slub.c",line="115",arch="riscv:rv64"},thread-id="1",stopped-threads="all"
+(mi) -interpreter-exec console "finish"
+Run till exit from #0  kmalloc (size=1) at kern/mm/slub.c:115
+slub_check () at kern/mm/slub.c:193
+193	        assert(obj != NULL && (uintptr_t)obj % SLUB_ALIGN == 0);
+Value returned is $1 = (void *) 0xffffffffc034b060
+*stopped,reason="function-finished",frame={addr="0xffffffffc0203386",func="slub_check",args=[],file="kern/mm/slub.c",fullname="/home/knight/os-labs-lab2/code/kern/mm/slub.c",line="193",arch="riscv:rv64"},gdb-result-var="$1",return-value="(void *) 0xffffffffc034b060",thread-id="1",stopped-threads="all"
+(mi) -data-evaluate-expression "$a0"
+(mi) -interpreter-exec console "set $slab = (struct slab *)0xffffffffc034b000"
+(mi) -interpreter-exec console "p *$slab"
+$2 = {magic = 6002266146613576242, link = {prev = 0xffffffffc020aa90 <partial>, next = 0xffffffffc020aa90 <partial>}, free = 0xffffffffc034b070, npages = 1, class = 0, capacity = 250, used = 1, allocated = {1, 0, 0, 0}}
+(mi) -data-evaluate-expression "$slab->used"
+(mi) -data-evaluate-expression "$slab->npages"
+(mi) -data-evaluate-expression "$slab->class"
+(mi) -data-evaluate-expression "$slab->capacity"
+(mi) -data-evaluate-expression "$slab->used"
+(mi) -interpreter-exec console "delete breakpoints"
+(mi) -interpreter-exec console "hbreak *kfree if (((unsigned long)$a0 & ~0xfffUL) == (unsigned long)$slab) && ($slab->used == 1)"
+Hardware assisted breakpoint 2 at 0xffffffffc0203182: file kern/mm/slub.c, line 150.
+(mi) -interpreter-exec console "continue"
+Continuing.
+
+Breakpoint 2, kfree (ptr=0xffffffffc034b060) at kern/mm/slub.c:150
+150	    if (ptr == NULL) {
+*stopped,reason="breakpoint-hit",disp="keep",bkptno="2",frame={addr="0xffffffffc0203182",func="kfree",args=[{name="ptr",value="0xffffffffc034b060"}],file="kern/mm/slub.c",fullname="/home/knight/os-labs-lab2/code/kern/mm/slub.c",line="150",arch="riscv:rv64"},thread-id="1",stopped-threads="all"
+(mi) -interpreter-exec console "p *$slab"
+$3 = {magic = 6002266146613576242, link = {prev = 0xffffffffc020aa90 <partial>, next = 0xffffffffc020aa90 <partial>}, free = 0xffffffffc034b070, npages = 1, class = 0, capacity = 250, used = 1, allocated = {1, 0, 0, 0}}
+(mi) -data-evaluate-expression "'best_fit_pmm.c'::free_area.nr_free"
+(mi) -interpreter-exec console "finish"
+Run till exit from #0  kfree (ptr=0xffffffffc034b060) at kern/mm/slub.c:150
+slub_check () at kern/mm/slub.c:201
+201	        assert(nr_free_pages() == before);
+*stopped,reason="function-finished",frame={addr="0xffffffffc02033c8",func="slub_check",args=[],file="kern/mm/slub.c",fullname="/home/knight/os-labs-lab2/code/kern/mm/slub.c",line="201",arch="riscv:rv64"},thread-id="1",stopped-threads="all"
+(mi) -data-evaluate-expression "'best_fit_pmm.c'::free_area.nr_free"
+(mi) -interpreter-exec console "delete breakpoints"
+(mi) -interpreter-exec console "hbreak *allocator_checks_done"
+Hardware assisted breakpoint 3 at 0xffffffffc0200060: file kern/init/init.c, line 14.
+(mi) -interpreter-exec console "continue"
+Continuing.
+
+Breakpoint 3, allocator_checks_done () at kern/init/init.c:14
+14	    asm volatile("" ::: "memory");
+*stopped,reason="breakpoint-hit",disp="keep",bkptno="3",frame={addr="0xffffffffc0200060",func="allocator_checks_done",args=[],file="kern/init/init.c",fullname="/home/knight/os-labs-lab2/code/kern/init/init.c",line="14",arch="riscv:rv64"},thread-id="1",stopped-threads="all"
+(mi) -data-evaluate-expression "'best_fit_pmm.c'::free_area.nr_free"
+(mi) -data-evaluate-expression "$pc"
+(mi) -interpreter-exec console "p pmm_manager->name"
+$4 = 0xffffffffc0204198 "best_fit_pmm_manager"
+(mi) -interpreter-exec console "info registers pc satp priv"
+pc             0xffffffffc0200060	0xffffffffc0200060 <allocator_checks_done>
+satp           0x8000000000080208	-9223372036854251000
+priv           0x1	prv:1 [Supervisor]
+(mi) -interpreter-exec console "kill"
+[Inferior 1 (process 1) killed]
+(mi) -gdb-exit

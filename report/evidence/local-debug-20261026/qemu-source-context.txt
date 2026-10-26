@@ -1,0 +1,413 @@
+
+QEMU 7.0.0 target/riscv/cpu_helper.c
+790:     if (mode == PRV_M || !riscv_feature(env, RISCV_FEATURE_MMU)) {
+791:         *physical = addr;
+792:         *prot = PAGE_READ | PAGE_WRITE | PAGE_EXEC;
+793:         return TRANSLATE_SUCCESS;
+794:     }
+795: 
+796:     *prot = 0;
+797: 
+798:     hwaddr base;
+799:     int levels, ptidxbits, ptesize, vm, sum, mxr, widened;
+800: 
+801:     if (first_stage == true) {
+802:         mxr = get_field(env->mstatus, MSTATUS_MXR);
+803:     } else {
+804:         mxr = get_field(env->vsstatus, MSTATUS_MXR);
+805:     }
+806: 
+807:     if (first_stage == true) {
+808:         if (use_background) {
+809:             if (riscv_cpu_mxl(env) == MXL_RV32) {
+810:                 base = (hwaddr)get_field(env->vsatp, SATP32_PPN) << PGSHIFT;
+811:                 vm = get_field(env->vsatp, SATP32_MODE);
+812:             } else {
+813:                 base = (hwaddr)get_field(env->vsatp, SATP64_PPN) << PGSHIFT;
+814:                 vm = get_field(env->vsatp, SATP64_MODE);
+815:             }
+816:         } else {
+817:             if (riscv_cpu_mxl(env) == MXL_RV32) {
+818:                 base = (hwaddr)get_field(env->satp, SATP32_PPN) << PGSHIFT;
+819:                 vm = get_field(env->satp, SATP32_MODE);
+820:             } else {
+821:                 base = (hwaddr)get_field(env->satp, SATP64_PPN) << PGSHIFT;
+822:                 vm = get_field(env->satp, SATP64_MODE);
+823:             }
+824:         }
+825:         widened = 0;
+826:     } else {
+827:         if (riscv_cpu_mxl(env) == MXL_RV32) {
+828:             base = (hwaddr)get_field(env->hgatp, SATP32_PPN) << PGSHIFT;
+829:             vm = get_field(env->hgatp, SATP32_MODE);
+830:         } else {
+831:             base = (hwaddr)get_field(env->hgatp, SATP64_PPN) << PGSHIFT;
+832:             vm = get_field(env->hgatp, SATP64_MODE);
+833:         }
+834:         widened = 2;
+835:     }
+836:     /* status.SUM will be ignored if execute on background */
+837:     sum = get_field(env->mstatus, MSTATUS_SUM) || use_background || is_debug;
+838:     switch (vm) {
+839:     case VM_1_10_SV32:
+840:       levels = 2; ptidxbits = 10; ptesize = 4; break;
+841:     case VM_1_10_SV39:
+842:       levels = 3; ptidxbits = 9; ptesize = 8; break;
+843:     case VM_1_10_SV48:
+844:       levels = 4; ptidxbits = 9; ptesize = 8; break;
+845:     case VM_1_10_SV57:
+846:       levels = 5; ptidxbits = 9; ptesize = 8; break;
+847:     case VM_1_10_MBARE:
+848:         *physical = addr;
+849:         *prot = PAGE_READ | PAGE_WRITE | PAGE_EXEC;
+850:         return TRANSLATE_SUCCESS;
+870:     int ptshift = (levels - 1) * ptidxbits;
+871:     int i;
+872: 
+873: #if !TCG_OVERSIZED_GUEST
+874: restart:
+875: #endif
+876:     for (i = 0; i < levels; i++, ptshift -= ptidxbits) {
+877:         target_ulong idx;
+878:         if (i == 0) {
+879:             idx = (addr >> (PGSHIFT + ptshift)) &
+880:                            ((1 << (ptidxbits + widened)) - 1);
+881:         } else {
+882:             idx = (addr >> (PGSHIFT + ptshift)) &
+883:                            ((1 << ptidxbits) - 1);
+884:         }
+906:             pte_addr = vbase + idx * ptesize;
+907:         } else {
+908:             pte_addr = base + idx * ptesize;
+909:         }
+910: 
+911:         int pmp_prot;
+912:         int pmp_ret = get_physical_address_pmp(env, &pmp_prot, NULL, pte_addr,
+913:                                                sizeof(target_ulong),
+914:                                                MMU_DATA_LOAD, PRV_S);
+915:         if (pmp_ret != TRANSLATE_SUCCESS) {
+916:             return TRANSLATE_PMP_FAIL;
+917:         }
+918: 
+919:         target_ulong pte;
+920:         if (riscv_cpu_mxl(env) == MXL_RV32) {
+921:             pte = address_space_ldl(cs->as, pte_addr, attrs, &res);
+922:         } else {
+923:             pte = address_space_ldq(cs->as, pte_addr, attrs, &res);
+924:         }
+925: 
+926:         if (res != MEMTX_OK) {
+927:             return TRANSLATE_FAIL;
+928:         }
+929: 
+930:         if (riscv_cpu_sxl(env) == MXL_RV32) {
+931:             ppn = pte >> PTE_PPN_SHIFT;
+932:         } else if (cpu->cfg.ext_svpbmt || cpu->cfg.ext_svnapot) {
+933:             ppn = (pte & (target_ulong)PTE_PPN_MASK) >> PTE_PPN_SHIFT;
+934:         } else {
+935:             ppn = pte >> PTE_PPN_SHIFT;
+936:             if ((pte & ~(target_ulong)PTE_PPN_MASK) >> PTE_PPN_SHIFT) {
+937:                 return TRANSLATE_FAIL;
+938:             }
+939:         }
+940: 
+941:         if (!(pte & PTE_V)) {
+942:             /* Invalid PTE */
+943:             return TRANSLATE_FAIL;
+944:         } else if (!cpu->cfg.ext_svpbmt && (pte & PTE_PBMT)) {
+945:             return TRANSLATE_FAIL;
+946:         } else if (!(pte & (PTE_R | PTE_W | PTE_X))) {
+947:             /* Inner PTE, continue walking */
+948:             if (pte & (PTE_D | PTE_A | PTE_U | PTE_ATTR)) {
+949:                 return TRANSLATE_FAIL;
+950:             }
+951:             base = ppn << PGSHIFT;
+952:         } else if ((pte & (PTE_R | PTE_W | PTE_X)) == PTE_W) {
+953:             /* Reserved leaf PTE flags: PTE_W */
+954:             return TRANSLATE_FAIL;
+955:         } else if ((pte & (PTE_R | PTE_W | PTE_X)) == (PTE_W | PTE_X)) {
+956:             /* Reserved leaf PTE flags: PTE_W + PTE_X */
+957:             return TRANSLATE_FAIL;
+958:         } else if ((pte & PTE_U) && ((mode != PRV_U) &&
+959:                    (!sum || access_type == MMU_INST_FETCH))) {
+960:             /* User PTE flags when not U mode and mstatus.SUM is not set,
+961:                or the access type is an instruction fetch */
+962:             return TRANSLATE_FAIL;
+963:         } else if (!(pte & PTE_U) && (mode != PRV_S)) {
+964:             /* Supervisor PTE flags when not S mode */
+965:             return TRANSLATE_FAIL;
+966:         } else if (ppn & ((1ULL << ptshift) - 1)) {
+967:             /* Misaligned PPN */
+968:             return TRANSLATE_FAIL;
+969:         } else if (access_type == MMU_DATA_LOAD && !((pte & PTE_R) ||
+970:                    ((pte & PTE_X) && mxr))) {
+971:             /* Read access check failed */
+972:             return TRANSLATE_FAIL;
+973:         } else if (access_type == MMU_DATA_STORE && !(pte & PTE_W)) {
+974:             /* Write access check failed */
+975:             return TRANSLATE_FAIL;
+976:         } else if (access_type == MMU_INST_FETCH && !(pte & PTE_X)) {
+977:             /* Fetch access check failed */
+978:             return TRANSLATE_FAIL;
+979:         } else {
+980:             /* if necessary, set accessed and dirty bits. */
+981:             target_ulong updated_pte = pte | PTE_A |
+982:                 (access_type == MMU_DATA_STORE ? PTE_D : 0);
+983: 
+984:             /* Page table updates need to be atomic with MTTCG enabled */
+985:             if (updated_pte != pte) {
+1021:             /* for superpage mappings, make a fake leaf PTE for the TLB's
+1022:                benefit. */
+1023:             target_ulong vpn = addr >> PGSHIFT;
+1024: 
+1025:             if (cpu->cfg.ext_svnapot && (pte & PTE_N)) {
+1026:                 napot_bits = ctzl(ppn) + 1;
+1027:                 if ((i != (levels - 1)) || (napot_bits != 4)) {
+1028:                     return TRANSLATE_FAIL;
+1029:                 }
+1030:             }
+1031: 
+1032:             napot_mask = (1 << napot_bits) - 1;
+1033:             *physical = (((ppn & ~napot_mask) | (vpn & napot_mask) |
+1034:                           (vpn & (((target_ulong)1 << ptshift) - 1))
+1035:                          ) << PGSHIFT) | (addr & ~TARGET_PAGE_MASK);
+1036: 
+1037:             /* set permissions on the TLB entry */
+1038:             if ((pte & PTE_R) || ((pte & PTE_X) && mxr)) {
+1039:                 *prot |= PAGE_READ;
+1040:             }
+1041:             if ((pte & PTE_X)) {
+1042:                 *prot |= PAGE_EXEC;
+1043:             }
+1044:             /* add write permission on stores or if the page is already dirty,
+1045:                so that we TLB miss on later writes to update the dirty bit */
+1046:             if ((pte & PTE_W) &&
+1047:                     (access_type == MMU_DATA_STORE || (pte & PTE_D))) {
+1048:                 *prot |= PAGE_WRITE;
+1049:             }
+1050:             return TRANSLATE_SUCCESS;
+1051:         }
+1276:     } else {
+1277:         /* Single stage lookup */
+1278:         ret = get_physical_address(env, &pa, &prot, address, NULL,
+1279:                                    access_type, mmu_idx, true, false, false);
+1280: 
+1281:         qemu_log_mask(CPU_LOG_MMU,
+1282:                       "%s address=%" VADDR_PRIx " ret %d physical "
+1283:                       TARGET_FMT_plx " prot %d\n",
+1284:                       __func__, address, ret, pa, prot);
+1285: 
+1286:         if (ret == TRANSLATE_SUCCESS) {
+1287:             ret = get_physical_address_pmp(env, &prot_pmp, &tlb_size, pa,
+1288:                                            size, access_type, mode);
+1289: 
+1290:             qemu_log_mask(CPU_LOG_MMU,
+1291:                           "%s PMP address=" TARGET_FMT_plx " ret %d prot"
+1292:                           " %d tlb_size " TARGET_FMT_lu "\n",
+1293:                           __func__, pa, ret, prot_pmp, tlb_size);
+1294: 
+1295:             prot &= prot_pmp;
+1296:         }
+1297:     }
+1298: 
+1299:     if (ret == TRANSLATE_PMP_FAIL) {
+1300:         pmp_violation = true;
+1301:     }
+1302: 
+1303:     if (ret == TRANSLATE_SUCCESS) {
+1304:         tlb_set_page(cs, address & ~(tlb_size - 1), pa & ~(tlb_size - 1),
+1305:                      prot, mmu_idx, tlb_size);
+1306:         return true;
+1307:     } else if (probe) {
+
+QEMU 7.0.0 accel/tcg/cputlb.c
+1108: {
+1109:     CPUArchState *env = cpu->env_ptr;
+1110:     CPUTLB *tlb = env_tlb(env);
+1111:     CPUTLBDesc *desc = &tlb->d[mmu_idx];
+1112:     MemoryRegionSection *section;
+1113:     unsigned int index;
+1114:     target_ulong address;
+1115:     target_ulong write_address;
+1116:     uintptr_t addend;
+1117:     CPUTLBEntry *te, tn;
+1118:     hwaddr iotlb, xlat, sz, paddr_page;
+1152:     is_ram = memory_region_is_ram(section->mr);
+1153:     is_romd = memory_region_is_romd(section->mr);
+1154: 
+1155:     if (is_ram || is_romd) {
+1156:         /* RAM and ROMD both have associated host memory. */
+1157:         addend = (uintptr_t)memory_region_get_ram_ptr(section->mr) + xlat;
+1158:     } else {
+1159:         /* I/O does not; force the host address to NULL. */
+1303: static void tlb_fill(CPUState *cpu, target_ulong addr, int size,
+1304:                      MMUAccessType access_type, int mmu_idx, uintptr_t retaddr)
+1305: {
+1306:     CPUClass *cc = CPU_GET_CLASS(cpu);
+1307:     bool ok;
+1308: 
+1309:     /*
+1310:      * This is not a probe, so only valid return is success; failure
+1311:      * should result in exception + longjmp to the cpu loop.
+1312:      */
+1313:     ok = cc->tcg_ops->tlb_fill(cpu, addr, size,
+1314:                                access_type, mmu_idx, false, retaddr);
+1315:     assert(ok);
+1906: static inline uint64_t QEMU_ALWAYS_INLINE
+1907: load_helper(CPUArchState *env, target_ulong addr, MemOpIdx oi,
+1908:             uintptr_t retaddr, MemOp op, bool code_read,
+1909:             FullLoadHelper *full_load)
+1910: {
+1911:     uintptr_t mmu_idx = get_mmuidx(oi);
+1912:     uintptr_t index = tlb_index(env, mmu_idx, addr);
+1913:     CPUTLBEntry *entry = tlb_entry(env, mmu_idx, addr);
+1914:     target_ulong tlb_addr = code_read ? entry->addr_code : entry->addr_read;
+1915:     const size_t tlb_off = code_read ?
+1916:         offsetof(CPUTLBEntry, addr_code) : offsetof(CPUTLBEntry, addr_read);
+1917:     const MMUAccessType access_type =
+1918:         code_read ? MMU_INST_FETCH : MMU_DATA_LOAD;
+1919:     unsigned a_bits = get_alignment_bits(get_memop(oi));
+1920:     void *haddr;
+1921:     uint64_t res;
+1922:     size_t size = memop_size(op);
+1923: 
+1924:     /* Handle CPU specific unaligned behaviour */
+1925:     if (addr & ((1 << a_bits) - 1)) {
+1926:         cpu_unaligned_access(env_cpu(env), addr, access_type,
+1927:                              mmu_idx, retaddr);
+1928:     }
+1929: 
+1930:     /* If the TLB entry is for a different page, reload and try again.  */
+1931:     if (!tlb_hit(tlb_addr, addr)) {
+1932:         if (!victim_tlb_hit(env, mmu_idx, index, tlb_off,
+1933:                             addr & TARGET_PAGE_MASK)) {
+1934:             tlb_fill(env_cpu(env), addr, size,
+1935:                      access_type, mmu_idx, retaddr);
+1936:             index = tlb_index(env, mmu_idx, addr);
+1937:             entry = tlb_entry(env, mmu_idx, addr);
+1938:         }
+1939:         tlb_addr = code_read ? entry->addr_code : entry->addr_read;
+1940:         tlb_addr &= ~TLB_INVALID_MASK;
+1941:     }
+
+QEMU 7.0.0 include/exec/cpu_ldst.h
+362: /* Find the TLB index corresponding to the mmu_idx + address pair.  */
+363: static inline uintptr_t tlb_index(CPUArchState *env, uintptr_t mmu_idx,
+364:                                   target_ulong addr)
+365: {
+366:     uintptr_t size_mask = env_tlb(env)->f[mmu_idx].mask >> CPU_TLB_ENTRY_BITS;
+367: 
+368:     return (addr >> TARGET_PAGE_BITS) & size_mask;
+369: }
+370: 
+371: /* Find the TLB entry corresponding to the mmu_idx + address pair.  */
+372: static inline CPUTLBEntry *tlb_entry(CPUArchState *env, uintptr_t mmu_idx,
+373:                                      target_ulong addr)
+374: {
+375:     return &env_tlb(env)->f[mmu_idx].table[tlb_index(env, mmu_idx, addr)];
+376: }
+
+QEMU 7.0.0 include/exec/cpu-all.h
+399:  * tlb_hit_page: return true if page aligned @addr is a hit against the
+400:  * TLB entry @tlb_addr
+401:  *
+402:  * @addr: virtual address to test (must be page aligned)
+403:  * @tlb_addr: TLB entry address (a CPUTLBEntry addr_read/write/code value)
+404:  */
+405: static inline bool tlb_hit_page(target_ulong tlb_addr, target_ulong addr)
+406: {
+407:     return addr == (tlb_addr & (TARGET_PAGE_MASK | TLB_INVALID_MASK));
+408: }
+409: 
+410: /**
+411:  * tlb_hit: return true if @addr is a hit against the TLB entry @tlb_addr
+412:  *
+413:  * @addr: virtual address to test (need not be page aligned)
+414:  * @tlb_addr: TLB entry address (a CPUTLBEntry addr_read/write/code value)
+415:  */
+416: static inline bool tlb_hit(target_ulong tlb_addr, target_ulong addr)
+417: {
+418:     return tlb_hit_page(tlb_addr, addr & TARGET_PAGE_MASK);
+419: }
+
+QEMU 7.0.0 tcg/i386/tcg-target.c.inc
+1737: static inline void tcg_out_tlb_load(TCGContext *s, TCGReg addrlo, TCGReg addrhi,
+1738:                                     int mem_index, MemOp opc,
+1739:                                     tcg_insn_unit **label_ptr, int which)
+1740: {
+1741:     const TCGReg r0 = TCG_REG_L0;
+1742:     const TCGReg r1 = TCG_REG_L1;
+1743:     TCGType ttype = TCG_TYPE_I32;
+1744:     TCGType tlbtype = TCG_TYPE_I32;
+1780:        cross pages for the complete access.  */
+1781:     if (a_bits >= s_bits) {
+1782:         tcg_out_mov(s, ttype, r1, addrlo);
+1783:     } else {
+1784:         tcg_out_modrm_offset(s, OPC_LEA + trexw, r1, addrlo, s_mask - a_mask);
+1785:     }
+1786:     tlb_mask = (target_ulong)TARGET_PAGE_MASK | a_mask;
+1787:     tgen_arithi(s, ARITH_AND + trexw, r1, tlb_mask, 0);
+1788: 
+1789:     /* cmp 0(r0), r1 */
+1790:     tcg_out_modrm_offset(s, OPC_CMP_GvEv + trexw, r1, r0, which);
+1791: 
+1792:     /* Prepare for both the fast path add of the tlb addend, and the slow
+1793:        path function argument setup.  */
+1794:     tcg_out_mov(s, ttype, r1, addrlo);
+1795: 
+1796:     /* jne slow_path */
+1797:     tcg_out_opc(s, OPC_JCC_long + JCC_JNE, 0, 0, 0);
+1798:     label_ptr[0] = s->code_ptr;
+1799:     s->code_ptr += 4;
+1800: 
+1801:     if (TARGET_LONG_BITS > TCG_TARGET_REG_BITS) {
+1802:         /* cmp 4(r0), addrhi */
+1803:         tcg_out_modrm_offset(s, OPC_CMP_GvEv, addrhi, r0, which + 4);
+1804: 
+1805:         /* jne slow_path */
+1806:         tcg_out_opc(s, OPC_JCC_long + JCC_JNE, 0, 0, 0);
+1807:         label_ptr[1] = s->code_ptr;
+1808:         s->code_ptr += 4;
+1809:     }
+1810: 
+1811:     /* TLB Hit.  */
+1812: 
+1813:     /* add addend(r0), r1 */
+1814:     tcg_out_modrm_offset(s, OPC_ADD_GvEv + hrexw, r1, r0,
+1815:                          offsetof(CPUTLBEntry, addend));
+1816: }
+1817: 
+1818: /*
+1819:  * Record the context of a call to the out of line helper code for the slow path
+1820:  * for a load or store, so that we can later generate the correct helper code
+2210: static void tcg_out_qemu_ld(TCGContext *s, const TCGArg *args, bool is64)
+2211: {
+2212:     TCGReg datalo, datahi, addrlo;
+2213:     TCGReg addrhi __attribute__((unused));
+2214:     MemOpIdx oi;
+2215:     MemOp opc;
+2216: #if defined(CONFIG_SOFTMMU)
+2217:     int mem_index;
+2218:     tcg_insn_unit *label_ptr[2];
+2219: #else
+2220:     unsigned a_bits;
+2221: #endif
+2222: 
+2223:     datalo = *args++;
+2224:     datahi = (TCG_TARGET_REG_BITS == 32 && is64 ? *args++ : 0);
+2225:     addrlo = *args++;
+2226:     addrhi = (TARGET_LONG_BITS > TCG_TARGET_REG_BITS ? *args++ : 0);
+2227:     oi = *args++;
+2228:     opc = get_memop(oi);
+2229: 
+2230: #if defined(CONFIG_SOFTMMU)
+2231:     mem_index = get_mmuidx(oi);
+2232: 
+2233:     tcg_out_tlb_load(s, addrlo, addrhi, mem_index, opc,
+2234:                      label_ptr, offsetof(CPUTLBEntry, addr_read));
+2235: 
+2236:     /* TLB Hit.  */
+2237:     tcg_out_qemu_ld_direct(s, datalo, datahi, TCG_REG_L1, -1, 0, 0, is64, opc);
+2238: 
+2239:     /* Record the current context of a load into ldst label */
+2240:     add_qemu_ldst_label(s, true, is64, oi, datalo, datahi, addrlo, addrhi,

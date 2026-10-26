@@ -1,0 +1,131 @@
+{
+  "passed": true,
+  "checks": [
+    {
+      "name": "SLUB allocation",
+      "passed": true,
+      "object": "0xffffffffc034b060",
+      "slab": "0xffffffffc034b000",
+      "used": 1
+    },
+    {
+      "name": "SLUB last-object page reclamation",
+      "passed": true,
+      "before": 31924,
+      "after": 31925,
+      "returned_pages": 1
+    },
+    {
+      "name": "Final allocator baseline",
+      "passed": true,
+      "free_pages": 31925,
+      "pc": "0xffffffffc0200060"
+    },
+    {
+      "name": "Bare-mode identity translation",
+      "passed": true,
+      "virtual": "0x80209000",
+      "physical": "0x80209000"
+    },
+    {
+      "name": "Software TLB is used in Bare mode",
+      "passed": true,
+      "virtual_page": "0x80209000",
+      "physical_page": "0x80209000"
+    },
+    {
+      "name": "Cold software TLB entry is not a read hit",
+      "passed": true,
+      "label": "before_first_load",
+      "index": 10,
+      "mask": "0x7e0",
+      "addr_read": 18446744073709551615,
+      "addend": 18446744073709551615
+    },
+    {
+      "name": "Sv39 configuration",
+      "passed": true,
+      "satp": "0x8000000000080208",
+      "root_physical": "0x80208000",
+      "levels": 3
+    },
+    {
+      "name": "Top-level superpage PTE",
+      "passed": true,
+      "index": 511,
+      "iteration": 0,
+      "ptshift": 18,
+      "pte_physical": "0x80208ff8",
+      "pte": "0x200000cf",
+      "flags": {
+        "V": true,
+        "R": true,
+        "W": true,
+        "X": true,
+        "U": false,
+        "A": true,
+        "D": true
+      }
+    },
+    {
+      "name": "Real kernel LD virtual-to-physical translation",
+      "passed": true,
+      "instruction_pc": "0xffffffffc0200586",
+      "virtual": "0xffffffffc020ab20",
+      "physical": "0x8020ab20",
+      "root_physical": "0x80208000",
+      "mapping_size": 1073741824
+    },
+    {
+      "name": "Sv39 result enters software TLB",
+      "passed": true,
+      "virtual_page": "0xffffffffc020a000",
+      "physical_page": "0x8020a000",
+      "software_tlb_fill_size": 4096,
+      "prot": 7
+    },
+    {
+      "name": "Software TLB addend resolves host RAM",
+      "passed": true,
+      "host_pointer": "0x7fffa800ab20",
+      "value": "0x80000000",
+      "label": "after_first_fill",
+      "index": 10,
+      "mask": "0x7e0",
+      "addr_read": 18446744072637947904,
+      "addend": 140737083604992
+    },
+    {
+      "name": "First real LD completes",
+      "passed": true,
+      "value": "0x80000000",
+      "pc": "0xffffffffc020058a"
+    },
+    {
+      "name": "Repeated LD hits TLB without another page walk",
+      "passed": true,
+      "first_load_fills": 1,
+      "second_load_fills": 1,
+      "page_walks": 1,
+      "value": "0x80000000",
+      "label": "after_second_load",
+      "index": 10,
+      "mask": "0x7e0",
+      "addr_read": 18446744072637947904,
+      "addend": 140737083604992
+    },
+    {
+      "name": "SFENCE.VMA forces another fill and walk",
+      "passed": true,
+      "fills": 2,
+      "walks": 2,
+      "fence_instruction": "0xffffffffc020004e"
+    },
+    {
+      "name": "Kernel finishes after controlled MMU observations",
+      "passed": true,
+      "free_pages": 31925
+    }
+  ],
+  "image_sha256": "b7bd797789b3519b20b1624fd738a1dd0f7a231e6ccd3ef4aa177cf67ec9a578"
+}

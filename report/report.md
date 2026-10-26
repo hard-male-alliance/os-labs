@@ -289,6 +289,185 @@ GDB 分别在 `kern_init` 和 `allocator_checks_done` 设置断点。17 项断�
 
 截图来自保存的实际文本输出，不是生成的示意图。原始日志、结构化结果和原启动故障日志存放在 [evidence/](evidence/)，复现脚本保留在 `scripts/`；环境版本和文件指纹由证据清单记录。
 
+### 5.6 GDB 调试
+
+调试采用三个终端：终端一执行 `make debug` 启动并暂停 QEMU；终端二使用宿主 GDB 调试 QEMU 源码；终端三执行 `make gdb GDB=gdb-multiarch`，控制 RISC-V 内核的断点和单步。下面的源码行号对应本次实际使用的 QEMU 7.0.0。
+
+#### 5.6.1 任务一：调用路径与虚拟地址到物理地址的转换
+
+我们选择 `get_memory_base()` 中读取全局变量 `memory_base` 的真实访存指令。客体 GDB 在函数第一条指令处设置硬件断点，使用 `x/3i $pc` 观察到：
+
+```text
+0xffffffffc0200582: auipc a0,0xa
+0xffffffffc0200586: ld    a0,1438(a0)
+0xffffffffc020058a: ret
+```
+
+AUIPC 执行后，`a0=0xffffffffc020a582`；LD 的位移为 `1438=0x59e`，因此实际访问的虚拟地址为 `0xffffffffc020ab20`。宿主 GDB 用条件断点只捕获目标地址的真实读访问：
+
+```gdb
+break get_physical_address if addr == 0xffffffffc020ab20 && access_type == 0 && !is_debug
+continue
+```
+
+其中 `access_type == 0` 表示读访问，`!is_debug` 排除调试器自身读内存引起的地址翻译。为了使目标访问触发查表，我们在客体 GDB 中临时将 PC 指向内核已有的 `0xffffffffc020004e: sfence.vma`，单步后回到函数入口执行 AUIPC 和 LD。该操作用于控制 TLB 初始状态，没有修改指令或页表。
+
+宿主命中断点后，使用 `bt 8` 得到实际调用路径：
+
+```text
+客体 LD → TCG 生成的宿主代码
+        → helper_le_ldq_mmu / load_helper
+        → tlb_fill
+        → riscv_cpu_tlb_fill
+        → get_physical_address
+```
+
+`load_helper` 负责访存慢路径，`riscv_cpu_tlb_fill` 负责 RISC-V 地址翻译与填充处理，`get_physical_address` 负责根据访问模式和页表计算物理地址。翻译函数返回成功后，调用者再经 `tlb_set_page → tlb_set_page_with_attrs` 填充软件 TLB；填充函数不是 `get_physical_address` 的下级调用。
+
+路径中的关键分支包括：TLB 主表及 victim TLB 是否命中；当前是 Bare 还是 Sv39 模式；PTE 是否有效、是否为叶项，以及访问权限和大页对齐是否满足。我们在后续三个任务中分别观察这些分支。
+
+```gdb
+p/x addr
+set $pa_out = physical
+finish
+p/x *$pa_out
+```
+
+实测输入 `addr=0xffffffffc020ab20`，函数返回值为 `0`，输出参数为 `0x8020ab20`。返回值 0 表示翻译成功，物理地址由 `physical` 输出。恢复 QEMU 后，客体停在下一条 `ret`，`pc=0xffffffffc020058a`、`a0=0x80000000`，说明 LD 已经完成读取。
+
+**结果：** 本次访问的虚拟地址是 `0xffffffffc020ab20`，对应物理地址为 `0x8020ab20`，该位置保存的数据为 `0x80000000`，即设备树解析得到的 RAM 基址。地址与读出的数据含义不同。
+
+#### 5.6.2 任务二：单步调试页表查询过程
+
+我们再次使 TLB 失效并执行相同 LD，在宿主 `get_physical_address` 内使用 `until` 到达关键语句，再用 `next` 实际执行 PTE 读取和物理地址组合：
+
+```gdb
+until target/riscv/cpu_helper.c:876
+info locals
+until target/riscv/cpu_helper.c:923
+p/d idx
+p/x pte_addr
+next
+p/x pte
+until target/riscv/cpu_helper.c:941
+list 941,950
+until target/riscv/cpu_helper.c:1033
+p i
+next
+p/x *physical
+```
+
+关键观察值如下：
+
+| 检查位置 | 实测结果 | 含义 |
+|---|---|---|
+| `satp` | `0x8000000000080208` | MODE=8，启用 Sv39；根页表 PPN 为 `0x80208` |
+| 页表循环入口 | `base=0x80208000`、`levels=3`、`ptidxbits=9`、`ptesize=8` | 根页表物理地址、最多三级、每级 9 位索引、PTE 大小 8 字节 |
+| 第一轮循环 | `i=0`、`ptshift=18` | 当前查询顶层，即规范中的 L2 |
+| 顶层索引 | `idx=511` | 由 `(VA >> 30) & 0x1ff` 得到 |
+| PTE 地址 | `0x80208ff8` | `0x80208000 + 511 × 8` |
+| 实际读出的 PTE | `0x200000cf` | V、R、W、X、A、D 为 1，U 为 0 |
+| 地址组合后 | `*physical=0x8020ab20` | 得到目标数据的物理地址 |
+
+Sv39 基本页大小为 4 KiB，每个页表页有 `4096 / 8 = 512` 个 PTE。虚拟地址按 `VPN[2]、VPN[1]、VPN[0]、12 位页内偏移` 划分，从根页表开始查询；普通 4 KiB 映射需要依次查询 L2、L1、L0。
+
+本次读取 PTE 后，第 941 行先检查 V 位；第 946 行判断 RWX 是否全为 0，只有合法的非叶项才将 PPN 作为下一级页表基址继续循环。本项有效且 R/W/X 均为 1，因此进入叶项处理。后续检查中，U=0 允许本次 S 模式页面访问，R=1 满足读权限，PPN 满足大页对齐要求，A/D 已设置，无需更新 PTE。
+
+由于在第一轮 `i=0` 就遇到叶项，本次实际使用的是 **1 GiB 大页映射，只读取了顶层一个 PTE**，没有继续访问 L1、L0。该映射的物理基址为 `0x80000000`，地址计算为：
+
+```text
+PA = 0x80000000 + (VA & 0x3fffffff)
+   = 0x80000000 + 0x20ab20
+   = 0x8020ab20
+```
+
+**结果：** GDB 中实际读取的 PTE、循环轮次与最终物理地址相互吻合，确认本次翻译在顶层大页叶项结束。Sv39 支持三级结构，并不意味着每次访存都会读取三级页表。
+
+#### 5.6.3 任务三：TLB 查询、填充与命中
+
+我们在宿主 GDB 中查看 `accel/tcg/cputlb.c:1911–1938` 的 `load_helper`。代码先根据 `mmu_idx` 和虚拟页号定位条目，取出 `addr_read` 标签，通过 `tlb_hit` 判断主表是否命中；未命中再查询 victim TLB，两者都未命中才调用 `tlb_fill`。
+
+```gdb
+list accel/tcg/cputlb.c:1911,1938
+```
+
+其中第 1931 行是 `if (!tlb_hit(tlb_addr, addr))`，第 1932 行开始检查 `victim_tlb_hit`，第 1934 行调用 `tlb_fill`。这表明访问顺序是先查询 TLB，未命中后才进入页表翻译；TLB 未命中本身不等于缺页异常。
+
+在翻译尚未完成填充时，我们切到 `riscv_cpu_tlb_fill` 栈帧检查实际软件 TLB 条目：
+
+```gdb
+frame 1
+set $cpu = (RISCVCPU *)cs
+set $idx = (0xffffffffc020ab20 >> 12) & ($cpu->neg.tlb.f[1].mask >> 5)
+p/x $cpu->neg.tlb.f[1].table[$idx].addr_read
+break tlb_set_page_with_attrs if vaddr == 0xffffffffc020a000
+continue
+p/x vaddr
+p/x paddr
+finish
+p/x $cpu->neg.tlb.f[1].table[$idx].addr_read
+```
+
+本次 `mmu_idx=1`、表掩码为 `0x7e0`、索引为 10。填充前读标签为 `0xffffffffffffffff`，属于无效状态；填充函数的参数为 `vaddr=0xffffffffc020a000`、`paddr=0x8020a000`、`prot=7`、`size=4096`，填充后读标签变为 `0xffffffffc020a000`。这里的 4096 字节是本次软件 TLB 填充粒度，与页表中 1 GiB 大页映射的大小不同。
+
+恢复 QEMU，让首次 LD 完成后，我们在客体中回到 `get_memory_base` 入口，再执行 AUIPC 和 LD，保留已有 TLB 内容。第二次读取仍得到 `a0=0x80000000`，宿主没有再次进入目标地址的查表和填充断点。独立复现进一步记录了三个阶段的目标地址真实访问计数：
+
+| 操作 | 累计软件 TLB 填充次数 | 累计页表翻译次数 | LD 结果 |
+|---|---:|---:|---|
+| 执行 `sfence.vma` 后首次 LD | 1 | 1 | `0x80000000` |
+| 保留 TLB，重复执行相同 LD | 1 | 1 | `0x80000000` |
+| 再执行 `sfence.vma`，然后 LD | 2 | 2 | `0x80000000` |
+
+计数只针对目标地址的真实数据读访问，排除了 `is_debug`。每次均实际执行 LD 并检查下一条指令的位置，避免只观察旧寄存器值。首次访问完成填充，重复访问命中缓存，执行 `sfence.vma` 后重新查表并填充。
+
+我们还检查了软件 TLB 的 `addend`：虚拟地址加上该偏移可得到 QEMU 进程中的宿主 RAM 指针，直接读取对应宿主内存也得到 `0x80000000`。在 `code_gen_buffer` 的反汇编中，观察到比较页标签、未命中跳转到慢路径、命中后加偏移并以宿主 `mov` 读内存的操作。因此，命中时可由 TCG 生成的宿主指令直接完成访问，不一定再次进入 C 慢路径。
+
+**结果：** 实际条目从无效变为有效，配合重复读取和失效后的计数变化，验证了“查询 TLB → 未命中时查页表 → 填充 → 后续命中”的完整过程。
+
+#### 5.6.4 任务四：分页前后对比与软件 TLB
+
+为了与 Sv39 访存对照，我们重新启动 QEMU，在客体启动代码的 `0x80200008: sd a0,0(t0)` 前设置硬件断点。此时实测 `pc=0x80200008`、`satp=0`、`t0=0x80209000`、`a0=0`，尚未开启分页。宿主 GDB 设置以下条件断点，再由客体执行一次 `si`：
+
+```gdb
+break get_physical_address if addr == 0x80209000 && access_type == 1 && !is_debug
+continue
+```
+
+`access_type == 1` 表示写访问。命中后用 `bt 6` 观察到 `helper_le_stq_mmu / store_helper → tlb_fill → riscv_cpu_tlb_fill → get_physical_address`，说明 Bare 模式的真实存储仍会进入 QEMU 软件 TLB 慢路径。
+
+```gdb
+until target/riscv/cpu_helper.c:848
+list 847,850
+next
+p/x *physical
+```
+
+第 848 行位于 Bare 分支，直接执行 `*physical = addr`，实测结果为 `0x80209000`，与输入地址相同，没有读取页表。随后在 `tlb_set_page_with_attrs` 设置条件断点，查看填充参数和写标签：
+
+```gdb
+break tlb_set_page_with_attrs if vaddr == 0x80209000
+continue
+info args
+set $cpu = (RISCVCPU *)cpu
+set $idx = (0x80209000 >> 12) & ($cpu->neg.tlb.f[1].mask >> 5)
+finish
+p/x $cpu->neg.tlb.f[1].table[$idx].addr_write & ~0xfffUL
+```
+
+实测 `vaddr=paddr=0x80209000`、`mmu_idx=1`、`prot=7`、`size=4096`；完成填充后，写标签屏蔽低位软件标记得到的页地址仍为 `0x80209000`。因此，即使客体未开启分页，QEMU 仍然填充了软件 TLB。
+
+| 对比项 | Bare 模式存储 | Sv39 模式读取 |
+|---|---|---|
+| `satp` | `0` | `0x8000000000080208` |
+| 输入地址 | `0x80209000` | `0xffffffffc020ab20` |
+| 地址处理 | 直接令物理地址等于输入地址 | 读取 PTE，本次在顶层叶项结束 |
+| 输出物理地址 | `0x80209000` | `0x8020ab20` |
+| QEMU 软件 TLB | 仍进行填充 | 翻译成功后填充，重复访问命中 |
+
+**结果：** 真实 CPU 的地址转换 TLB 主要缓存体系结构规定的地址翻译及权限，Bare 模式无需进行 Sv39 页表遍历。QEMU 的软件 TLB 还承担客体地址到宿主 RAM 或设备访问路径的缓存，保存宿主偏移、访问属性和慢路径标记，所以客体关闭分页时仍会使用它。是否出现软件 TLB 填充，不能作为客体是否开启分页的判断依据。
+
+以上四个任务均有已有断点输出和复现结果支持。原始记录见 [宿主 GDB 日志](evidence/local-debug-20261026/mmu-host-gdb.log)、[客体 GDB 日志](evidence/local-debug-20261026/mmu-guest-gdb.log)；包含上述 MMU 观察的 [结构化结果](evidence/local-debug-20261026/result.json) 共 15 项检查全部通过，其中也包含 SLUB 回收检查。受控观察结束后，内核继续运行并通过分配器检查，空闲页数恢复为 31925。
+
 ## 六、实验总结与收获
 
 ### 6.1 实验与操作系统原理的对应
@@ -303,14 +482,6 @@ GDB 分别在 `kern_init` 和 `allocator_checks_done` 设置断点。17 项断�
 | 状态不变量驱动验证 | 位图模型、页计数、对齐、负载内容与回收 | 单次自检通过不是任意并发条件的证明 |
 
 课程原理中重要、但本实验尚未覆盖的有：用户态隔离与权限、缺页异常、写时复制、页面置换与交换、进程内存映射、SMP 同步、TLB 一致性、NUMA 和内存热插拔。本次重点是基础资源账本与分配，不以附加这些机制作为完成标准。
-
-### 6.2 AI 协作开发经验
-
-本次用户目标是一句“完成实验”，而代码生成需要更细的可执行约束。有效的提示词先规定谁拥有状态、何时有效、失败是否改变状态，再写算法；例如 Buddy 的“原始申请大小归还”和 Best-Fit 的“允许子区间释放”必须先区分，不能套用同一组测试。
-
-多代理协作的收益来自模块边界清楚和独立验证，而不是并行数量。`Page` 布局、默认管理器与启动流程由集成方统一；实现方只改自己的模块；报告只引用真实日志。发现缺少宏这样的小问题可以直接局部修正，涉及跨分配器所有权的问题则应回到接口约束。
-
-提示词记录按实际指令翻译整理为中文，代码检查和运行证据纠正生成结果；不编造多轮失败，也不把待填写成员信息包装为已完成交付。
 
 ## 参考资料
 

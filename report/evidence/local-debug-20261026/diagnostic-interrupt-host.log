@@ -1,0 +1,161 @@
+(mi) -gdb-set mi-async on
+(mi) -interpreter-exec console "set pagination off"
+(mi) -interpreter-exec console "set confirm off"
+(mi) -interpreter-exec console "file /opt/qemu-7.0.0/bin/qemu-system-riscv64"
+Reading symbols from /opt/qemu-7.0.0/bin/qemu-system-riscv64...
+(mi) -interpreter-exec console "set args -machine virt -nographic -bios default -kernel /home/knight/os-labs-lab2/code/bin/ucore.img -S -gdb tcp:127.0.0.1:56133 -serial file:/home/knight/os-labs-lab2/.cache/local-debug-20261026/mmu/serial.log -monitor none"
+(mi) -interpreter-exec console "handle SIGPIPE nostop noprint pass"
+Signal        Stop	Print	Pass to program	Description
+SIGPIPE       No	No	Yes		Broken pipe
+(mi) -interpreter-exec console "handle SIGUSR1 nostop noprint pass"
+Signal        Stop	Print	Pass to program	Description
+SIGUSR1       No	No	Yes		User defined signal 1
+(mi) -interpreter-exec console "handle SIGUSR2 nostop noprint pass"
+Signal        Stop	Print	Pass to program	Description
+SIGUSR2       No	No	Yes		User defined signal 2
+(mi) -interpreter-exec console "break riscv_cpu_tlb_fill if address == 0x80209000 && access_type == 1"
+Breakpoint 1 at 0x4f89c0: file ../target/riscv/cpu_helper.c, line 1184.
+(mi) -interpreter-exec console "run"
+Starting program: /opt/qemu-7.0.0/bin/qemu-system-riscv64 -machine virt -nographic -bios default -kernel /home/knight/os-labs-lab2/code/bin/ucore.img -S -gdb tcp:127.0.0.1:56133 -serial file:/home/knight/os-labs-lab2/.cache/local-debug-20261026/mmu/serial.log -monitor none
+[Thread debugging using libthread_db enabled]
+Using host libthread_db library "/lib/x86_64-linux-gnu/libthread_db.so.1".
+[New Thread 0x7ffff7568640 (LWP 3172)]
+[New Thread 0x7ffff6b22640 (LWP 3173)]
+[Switching to Thread 0x7ffff6b22640 (LWP 3173)]
+
+Thread 3 "qemu-system-ris" hit Breakpoint 1, riscv_cpu_tlb_fill (cs=0x555556891a80, address=2149617664, size=8, access_type=MMU_DATA_STORE, mmu_idx=1, probe=false, retaddr=140736146178370) at ../target/riscv/cpu_helper.c:1184
+1184	{
+*stopped,reason="breakpoint-hit",disp="keep",bkptno="1",frame={addr="0x0000555555a4c9c0",func="riscv_cpu_tlb_fill",args=[{name="cs",value="0x555556891a80"},{name="address",value="2149617664"},{name="size",value="8"},{name="access_type",value="MMU_DATA_STORE"},{name="mmu_idx",value="1"},{name="probe",value="false"},{name="retaddr",value="140736146178370"}],file="../target/riscv/cpu_helper.c",fullname="/home/knight/src/qemu-7.0.0/target/riscv/cpu_helper.c",line="1184",arch="i386:x86-64"},thread-id="3",stopped-threads="all",core="2"
+(mi) -interpreter-exec console "bt 12"
+#0  riscv_cpu_tlb_fill (cs=0x555556891a80, address=2149617664, size=8, access_type=MMU_DATA_STORE, mmu_idx=1, probe=false, retaddr=140736146178370) at ../target/riscv/cpu_helper.c:1184
+#1  0x0000555555ba9629 in tlb_fill (cpu=0x555556891a80, addr=2149617664, size=8, access_type=MMU_DATA_STORE, mmu_idx=1, retaddr=140736146178370) at ../accel/tcg/cputlb.c:1313
+#2  0x0000555555bafb1c in store_helper (op=MO_64, retaddr=<optimized out>, oi=<optimized out>, val=0, addr=2149617664, env=0x55555689ac00) at /home/knight/src/qemu-7.0.0/include/exec/cpu-all.h:467
+#3  helper_le_stq_mmu (env=0x55555689ac00, addr=2149617664, val=0, oi=<optimized out>, retaddr=140736146178370) at ../accel/tcg/cputlb.c:2477
+#4  0x00007fffb0000142 in code_gen_buffer ()
+#5  0x0000555555b9ee2e in cpu_tb_exec (cpu=cpu@entry=0x555556891a80, itb=itb@entry=0x7fffb0000040 <code_gen_buffer+19>, tb_exit=tb_exit@entry=0x7ffff6b21824) at ../accel/tcg/cpu-exec.c:357
+#6  0x0000555555b9ffd8 in cpu_loop_exec_tb (tb_exit=0x7ffff6b21824, last_tb=<synthetic pointer>, tb=0x7fffb0000040 <code_gen_buffer+19>, cpu=0x555556891a80) at ../accel/tcg/cpu-exec.c:847
+#7  cpu_exec (cpu=cpu@entry=0x555556891a80) at ../accel/tcg/cpu-exec.c:1006
+#8  0x0000555555bb97d4 in tcg_cpus_exec (cpu=cpu@entry=0x555556891a80) at ../accel/tcg/tcg-accel-ops.c:68
+#9  0x0000555555bb9927 in mttcg_cpu_thread_fn (arg=arg@entry=0x555556891a80) at ../accel/tcg/tcg-accel-ops-mttcg.c:96
+#10 0x0000555555d99691 in qemu_thread_start (args=<optimized out>) at ../util/qemu-thread-posix.c:556
+#11 0x00007ffff7694a83 in start_thread (arg=<optimized out>) at ./nptl/pthread_create.c:442
+(More stack frames follow...)
+(mi) -interpreter-exec console "info args"
+cs = 0x555556891a80
+address = 2149617664
+size = 8
+access_type = MMU_DATA_STORE
+mmu_idx = 1
+probe = false
+retaddr = 140736146178370
+(mi) -interpreter-exec console "p/x ((RISCVCPU *)cs)->env.satp"
+$1 = 0x0
+(mi) -interpreter-exec console "ptype RISCVCPU"
+type = struct ArchCPU {
+    CPUState parent_obj;
+    CPUNegativeOffsetState neg;
+    CPURISCVState env;
+    char *dyn_csr_xml;
+    char *dyn_vreg_xml;
+    RISCVCPUConfig cfg;
+}
+(mi) -interpreter-exec console "break get_physical_address if addr == 0x80209000 && !is_debug"
+Breakpoint 2 at 0x555555a4b3d0: file ../target/riscv/cpu_helper.c, line 750.
+(mi) -interpreter-exec console "continue"
+Continuing.
+
+Thread 3 "qemu-system-ris" hit Breakpoint 2, get_physical_address (env=env@entry=0x55555689ac00, physical=physical@entry=0x7ffff6b211a8, prot=prot@entry=0x7ffff6b2119c, addr=addr@entry=2149617664, fault_pte_addr=fault_pte_addr@entry=0x0, access_type=access_type@entry=1, mmu_idx=1, first_stage=true, two_stage=false, is_debug=false) at ../target/riscv/cpu_helper.c:750
+750	{
+*stopped,reason="breakpoint-hit",disp="keep",bkptno="2",frame={addr="0x0000555555a4b3d0",func="get_physical_address",args=[{name="env",value="0x55555689ac00"},{name="env@entry",value="0x55555689ac00"},{name="physical",value="0x7ffff6b211a8"},{name="physical@entry",value="0x7ffff6b211a8"},{name="prot",value="0x7ffff6b2119c"},{name="prot@entry",value="0x7ffff6b2119c"},{name="addr",value="2149617664"},{name="addr@entry",value="2149617664"},{name="fault_pte_addr",value="0x0"},{name="fault_pte_addr@entry",value="0x0"},{name="access_type",value="1"},{name="access_type@entry",value="1"},{name="mmu_idx",value="1"},{name="first_stage",value="true"},{name="two_stage",value="false"},{name="is_debug",value="false"}],file="../target/riscv/cpu_helper.c",fullname="/home/knight/src/qemu-7.0.0/target/riscv/cpu_helper.c",line="750",arch="i386:x86-64"},thread-id="3",stopped-threads="all",core="2"
+(mi) -interpreter-exec console "info args"
+env = 0x55555689ac00
+physical = 0x7ffff6b211a8
+prot = 0x7ffff6b2119c
+addr = 2149617664
+fault_pte_addr = 0x0
+access_type = 1
+mmu_idx = 1
+first_stage = true
+two_stage = false
+is_debug = false
+(mi) -interpreter-exec console "set $physical_out = physical"
+(mi) -interpreter-exec console "p/x env->satp"
+$2 = 0x0
+(mi) -interpreter-exec console "until target/riscv/cpu_helper.c:848"
+get_physical_address (env=env@entry=0x55555689ac00, physical=physical@entry=0x7ffff6b211a8, prot=prot@entry=0x7ffff6b2119c, addr=addr@entry=2149617664, fault_pte_addr=fault_pte_addr@entry=0x0, access_type=access_type@entry=1, mmu_idx=1, first_stage=true, two_stage=false, is_debug=false) at ../target/riscv/cpu_helper.c:848
+848	        *physical = addr;
+*stopped,reason="location-reached",frame={addr="0x0000555555a4b960",func="get_physical_address",args=[{name="env",value="0x55555689ac00"},{name="env@entry",value="0x55555689ac00"},{name="physical",value="0x7ffff6b211a8"},{name="physical@entry",value="0x7ffff6b211a8"},{name="prot",value="0x7ffff6b2119c"},{name="prot@entry",value="0x7ffff6b2119c"},{name="addr",value="2149617664"},{name="addr@entry",value="2149617664"},{name="fault_pte_addr",value="0x0"},{name="fault_pte_addr@entry",value="0x0"},{name="access_type",value="1"},{name="access_type@entry",value="1"},{name="mmu_idx",value="1"},{name="first_stage",value="true"},{name="two_stage",value="false"},{name="is_debug",value="false"}],file="../target/riscv/cpu_helper.c",fullname="/home/knight/src/qemu-7.0.0/target/riscv/cpu_helper.c",line="848",arch="i386:x86-64"},thread-id="3",stopped-threads="all",core="2"
+(mi) -interpreter-exec console "info locals"
+res = 0
+attrs = <optimized out>
+mode = <optimized out>
+use_background = <optimized out>
+ppn = <optimized out>
+cpu = 0x555556891a80
+napot_bits = 0
+napot_mask = <optimized out>
+base = 0
+levels = <optimized out>
+ptidxbits = <optimized out>
+ptesize = <optimized out>
+vm = 0
+sum = 0
+mxr = <optimized out>
+widened = <optimized out>
+__func__ = "get_physical_address"
+cs = <optimized out>
+va_bits = <optimized out>
+mask = <optimized out>
+masked_msbs = <optimized out>
+ptshift = <optimized out>
+i = <optimized out>
+(mi) -interpreter-exec console "finish"
+Run till exit from #0  get_physical_address (env=env@entry=0x55555689ac00, physical=physical@entry=0x7ffff6b211a8, prot=prot@entry=0x7ffff6b2119c, addr=addr@entry=2149617664, fault_pte_addr=fault_pte_addr@entry=0x0, access_type=access_type@entry=1, mmu_idx=1, first_stage=true, two_stage=false, is_debug=false) at ../target/riscv/cpu_helper.c:848
+0x0000555555a4cbae in riscv_cpu_tlb_fill (cs=0x555556891a80, address=2149617664, size=8, access_type=MMU_DATA_STORE, mmu_idx=1, probe=<optimized out>, retaddr=140736146178370) at ../target/riscv/cpu_helper.c:1281
+1281	        qemu_log_mask(CPU_LOG_MMU,
+Value returned is $3 = 0
+*stopped,reason="function-finished",frame={addr="0x0000555555a4cbae",func="riscv_cpu_tlb_fill",args=[{name="cs",value="0x555556891a80"},{name="address",value="2149617664"},{name="size",value="8"},{name="access_type",value="MMU_DATA_STORE"},{name="mmu_idx",value="1"},{name="probe",value="<optimized out>"},{name="retaddr",value="140736146178370"}],file="../target/riscv/cpu_helper.c",fullname="/home/knight/src/qemu-7.0.0/target/riscv/cpu_helper.c",line="1281",arch="i386:x86-64"},gdb-result-var="$3",return-value="0",thread-id="3",stopped-threads="all",core="2"
+(mi) -data-evaluate-expression "*$physical_out"
+(mi) -interpreter-exec console "break tlb_set_page_with_attrs if vaddr == 0x80209000"
+Breakpoint 3 at 0x555555bae540: file ../accel/tcg/cputlb.c, line 1108.
+(mi) -interpreter-exec console "continue"
+Continuing.
+
+Thread 3 "qemu-system-ris" hit Breakpoint 3, tlb_set_page_with_attrs (cpu=cpu@entry=0x555556891a80, vaddr=2149617664, paddr=2149617664, attrs=attrs@entry=..., prot=7, mmu_idx=mmu_idx@entry=1, size=4096) at ../accel/tcg/cputlb.c:1108
+1108	{
+*stopped,reason="breakpoint-hit",disp="keep",bkptno="3",frame={addr="0x0000555555bae540",func="tlb_set_page_with_attrs",args=[{name="cpu",value="0x555556891a80"},{name="cpu@entry",value="0x555556891a80"},{name="vaddr",value="2149617664"},{name="paddr",value="2149617664"},{name="attrs",value="..."},{name="attrs@entry",value="..."},{name="prot",value="7"},{name="mmu_idx",value="1"},{name="mmu_idx@entry",value="1"},{name="size",value="4096"}],file="../accel/tcg/cputlb.c",fullname="/home/knight/src/qemu-7.0.0/accel/tcg/cputlb.c",line="1108",arch="i386:x86-64"},thread-id="3",stopped-threads="all",core="2"
+(mi) -interpreter-exec console "info args"
+cpu = 0x555556891a80
+vaddr = 2149617664
+paddr = 2149617664
+attrs = {unspecified = 1, secure = 0, user = 0, memory = 0, requester_id = 0, byte_swap = 0, target_tlb_bit0 = 0, target_tlb_bit1 = 0, target_tlb_bit2 = 0}
+prot = 7
+mmu_idx = 1
+size = 4096
+(mi) -interpreter-exec console "bt 8"
+#0  tlb_set_page_with_attrs (cpu=cpu@entry=0x555556891a80, vaddr=2149617664, paddr=2149617664, attrs=attrs@entry=..., prot=7, mmu_idx=mmu_idx@entry=1, size=4096) at ../accel/tcg/cputlb.c:1108
+#1  0x0000555555baeaea in tlb_set_page (cpu=cpu@entry=0x555556891a80, vaddr=<optimized out>, paddr=<optimized out>, prot=<optimized out>, mmu_idx=mmu_idx@entry=1, size=<optimized out>) at ../accel/tcg/cputlb.c:1282
+#2  0x0000555555a4cd66 in riscv_cpu_tlb_fill (cs=0x555556891a80, address=2149617664, size=<optimized out>, access_type=<optimized out>, mmu_idx=1, probe=<optimized out>, retaddr=140736146178370) at ../target/riscv/cpu_helper.c:1304
+#3  0x0000555555ba9629 in tlb_fill (cpu=0x555556891a80, addr=2149617664, size=8, access_type=MMU_DATA_STORE, mmu_idx=1, retaddr=140736146178370) at ../accel/tcg/cputlb.c:1313
+#4  0x0000555555bafb1c in store_helper (op=MO_64, retaddr=<optimized out>, oi=<optimized out>, val=0, addr=2149617664, env=0x55555689ac00) at /home/knight/src/qemu-7.0.0/include/exec/cpu-all.h:467
+#5  helper_le_stq_mmu (env=0x55555689ac00, addr=2149617664, val=0, oi=<optimized out>, retaddr=140736146178370) at ../accel/tcg/cputlb.c:2477
+#6  0x00007fffb0000142 in code_gen_buffer ()
+#7  0x0000555555b9ee2e in cpu_tb_exec (cpu=cpu@entry=0x555556891a80, itb=itb@entry=0x7fffb0000040 <code_gen_buffer+19>, tb_exit=tb_exit@entry=0x7ffff6b21824) at ../accel/tcg/cpu-exec.c:357
+(More stack frames follow...)
+(mi) -data-evaluate-expression "vaddr"
+(mi) -data-evaluate-expression "paddr"
+(mi) -data-evaluate-expression "vaddr"
+(mi) -data-evaluate-expression "paddr"
+(mi) -interpreter-exec console "disable breakpoints"
+(mi) -interpreter-exec console "continue"
+Continuing.
+(mi) -exec-interrupt --all
+[Thread 0x7ffff7568640 (LWP 3172) exited]
+[Thread 0x7ffff7869bc0 (LWP 3169) exited]
+[Thread 0x7ffff6b22640 (LWP 3173) exited]
+[New process 3169]
+[Inferior 1 (process 3169) exited normally]
+*stopped,reason="exited-normally"
+(mi) -interpreter-exec console "kill"
+The program is not being run.
+(mi) -gdb-exit

@@ -1,0 +1,2 @@
+# Preserve original debugger output bytes for SHA-256 verification.
+* -text

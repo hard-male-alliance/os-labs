@@ -1,0 +1,146 @@
+{
+  "passed": true,
+  "ram_matrix": [
+    {
+      "memory_mib": 32,
+      "passed": true,
+      "managed_end": 2181038080,
+      "log": ".cache/lab2/verify-ram-32.log",
+      "free_start": 2149953536,
+      "expected_free_pages": 7589
+    },
+    {
+      "memory_mib": 64,
+      "passed": true,
+      "managed_end": 2214592512,
+      "log": ".cache/lab2/verify-ram-64.log",
+      "free_start": 2150281216,
+      "expected_free_pages": 15701
+    },
+    {
+      "memory_mib": 128,
+      "passed": true,
+      "managed_end": 2281701376,
+      "log": ".cache/lab2/verify-ram-128.log",
+      "free_start": 2150936576,
+      "expected_free_pages": 31925
+    },
+    {
+      "memory_mib": 256,
+      "passed": true,
+      "managed_end": 2281701376,
+      "log": ".cache/lab2/verify-ram-256.log",
+      "free_start": 2150936576,
+      "expected_free_pages": 31925
+    }
+  ],
+  "qemu_command": [
+    "qemu-system-riscv64",
+    "-machine",
+    "virt",
+    "-nographic",
+    "-bios",
+    "default",
+    "-kernel",
+    "bin/ucore.img"
+  ],
+  "image_sha256": "b7bd797789b3519b20b1624fd738a1dd0f7a231e6ccd3ef4aa177cf67ec9a578",
+  "gdb": {
+    "checks": [
+      {
+        "name": "reached_kern_init",
+        "passed": true,
+        "pc": 18446744072637907182
+      },
+      {
+        "name": "high_virtual_C_entry",
+        "passed": true,
+        "pc": 18446744072637907182
+      },
+      {
+        "name": "Sv39_at_entry",
+        "passed": true,
+        "satp": 9223372036855300616
+      },
+      {
+        "name": "entry_stack",
+        "passed": true,
+        "sp": 18446744072637939712,
+        "bottom": 18446744072637931520,
+        "top": 18446744072637939712
+      },
+      {
+        "name": "reached_allocator_checks_done",
+        "passed": true,
+        "pc": 18446744072637907040
+      },
+      {
+        "name": "supervisor_mode",
+        "passed": true,
+        "privilege": 1
+      },
+      {
+        "name": "Sv39_after_checks",
+        "passed": true,
+        "satp": 9223372036855300616
+      },
+      {
+        "name": "identity_mapping_removed",
+        "passed": true,
+        "root_2": 0
+      },
+      {
+        "name": "high_mapping_preserved",
+        "passed": true,
+        "root_511": 536871119,
+        "expected": 536871119
+      },
+      {
+        "name": "satp_root_matches",
+        "passed": true,
+        "satp": 9223372036855300616,
+        "root_physical": 2149613568
+      },
+      {
+        "name": "physical_virtual_offset",
+        "passed": true,
+        "offset": 18446744070488326144
+      },
+      {
+        "name": "managed_page_bound",
+        "passed": true,
+        "npage": 557056
+      },
+      {
+        "name": "best_fit_selected",
+        "passed": true,
+        "manager": "best_fit_pmm_manager"
+      },
+      {
+        "name": "free_pages_restored",
+        "passed": true,
+        "free": 31925,
+        "expected": 31925
+      },
+      {
+        "name": "free_list_bounded",
+        "passed": true,
+        "blocks": 0
+      },
+      {
+        "name": "free_block_invariants",
+        "passed": true,
+        "address": 18446744072637985720,
+        "pages": 31925
+      },
+      {
+        "name": "free_list_accounting",
+        "passed": true,
+        "total": 31925,
+        "free": 31925,
+        "blocks": 1
+      }
+    ],
+    "passed": true
+  }
+}

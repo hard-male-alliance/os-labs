@@ -1,0 +1,119 @@
+(mi) -gdb-set mi-async on
+(mi) -interpreter-exec console "set pagination off"
+(mi) -interpreter-exec console "set confirm off"
+(mi) -interpreter-exec console "file /home/knight/os-labs-lab2/code/bin/kernel"
+Reading symbols from /home/knight/os-labs-lab2/code/bin/kernel...
+(mi) -interpreter-exec console "target remote 127.0.0.1:54021"
+Remote debugging using 127.0.0.1:54021
+0x0000000000001000 in ?? ()
+*stopped,frame={addr="0x0000000000001000",func="??",args=[],arch="riscv:rv64"},thread-id="1",stopped-threads="all"
+(mi) -interpreter-exec console "hbreak *0x80200008"
+Hardware assisted breakpoint 1 at 0x80200008
+(mi) -interpreter-exec console "continue"
+Continuing.
+
+Breakpoint 1, 0x0000000080200008 in ?? ()
+*stopped,reason="breakpoint-hit",disp="keep",bkptno="1",frame={addr="0x0000000080200008",func="??",args=[],arch="riscv:rv64"},thread-id="1",stopped-threads="all"
+(mi) -interpreter-exec console "info registers pc t0 a0 satp priv"
+pc             0x80200008	0x80200008
+t0             0x80209000	2149617664
+a0             0x0	0
+satp           0x0	0
+priv           0x1	prv:1 [Supervisor]
+(mi) -interpreter-exec console "stepi"
+0x000000008020000c in ?? ()
+*stopped,reason="end-stepping-range",frame={addr="0x000000008020000c",func="??",args=[],arch="riscv:rv64"},thread-id="1",stopped-threads="all"
+(mi) -interpreter-exec console "delete breakpoints"
+(mi) -interpreter-exec console "hbreak *get_memory_base"
+Hardware assisted breakpoint 2 at 0xffffffffc0200582: file kern/driver/dtb.c, line 145.
+(mi) -interpreter-exec console "continue"
+Continuing.
+
+Breakpoint 2, get_memory_base () at kern/driver/dtb.c:145
+145	    return memory_base;
+*stopped,reason="breakpoint-hit",disp="keep",bkptno="2",frame={addr="0xffffffffc0200582",func="get_memory_base",args=[],file="kern/driver/dtb.c",fullname="/home/knight/os-labs-lab2/code/kern/driver/dtb.c",line="145",arch="riscv:rv64"},thread-id="1",stopped-threads="all"
+(mi) -interpreter-exec console "disassemble /r get_memory_base"
+Dump of assembler code for function get_memory_base:
+=> 0xffffffffc0200582 <+0>:	17 a5 00 00	auipc	a0,0xa
+   0xffffffffc0200586 <+4>:	03 35 e5 59	ld	a0,1438(a0) # 0xffffffffc020ab20 <memory_base>
+   0xffffffffc020058a <+8>:	82 80	ret
+End of assembler dump.
+(mi) -interpreter-exec console "info registers pc satp"
+pc             0xffffffffc0200582	0xffffffffc0200582 <get_memory_base>
+satp           0x8000000000080208	-9223372036854251000
+(mi) -interpreter-exec console "delete breakpoints"
+(mi) -interpreter-exec console "stepi"
+0xffffffffc0200586	145	    return memory_base;
+*stopped,reason="end-stepping-range",frame={addr="0xffffffffc0200586",func="get_memory_base",args=[],file="kern/driver/dtb.c",fullname="/home/knight/os-labs-lab2/code/kern/driver/dtb.c",line="145",arch="riscv:rv64"},thread-id="1",stopped-threads="all"
+(mi) -interpreter-exec console "x/i $pc"
+=> 0xffffffffc0200586 <get_memory_base+4>:	ld	a0,1438(a0)
+(mi) -data-evaluate-expression "$pc"
+(mi) -data-evaluate-expression "$a0"
+(mi) -interpreter-exec console "disassemble kern_entry"
+Dump of assembler code for function kern_entry:
+   0xffffffffc0200000 <+0>:	auipc	t0,0x9
+   0xffffffffc0200004 <+4>:	mv	t0,t0
+   0xffffffffc0200008 <+8>:	sd	a0,0(t0) # 0xffffffffc0209000
+   0xffffffffc020000c <+12>:	auipc	t0,0x9
+   0xffffffffc0200010 <+16>:	addi	t0,t0,-4 # 0xffffffffc0209008
+   0xffffffffc0200014 <+20>:	sd	a1,0(t0)
+   0xffffffffc0200018 <+24>:	lui	t0,0xc0208
+   0xffffffffc020001c <+28>:	addiw	t1,zero,-3
+   0xffffffffc0200020 <+32>:	slli	t1,t1,0x1e
+   0xffffffffc0200022 <+34>:	sub	t0,t0,t1
+   0xffffffffc0200026 <+38>:	srli	t0,t0,0xc
+   0xffffffffc020002a <+42>:	addiw	t1,zero,-1
+   0xffffffffc020002e <+46>:	slli	t1,t1,0x3f
+   0xffffffffc0200030 <+48>:	or	t0,t0,t1
+   0xffffffffc0200034 <+52>:	csrw	satp,t0
+   0xffffffffc0200038 <+56>:	sfence.vma
+   0xffffffffc020003c <+60>:	lui	t0,0xc0200
+   0xffffffffc0200040 <+64>:	addi	t0,t0,70 # 0xffffffffc0200046 <kern_entry+70>
+   0xffffffffc0200044 <+68>:	jr	t0
+   0xffffffffc0200046 <+70>:	lui	t0,0xc0208
+   0xffffffffc020004a <+74>:	sd	zero,16(t0) # 0xffffffffc0208010
+   0xffffffffc020004e <+78>:	sfence.vma
+   0xffffffffc0200052 <+82>:	lui	sp,0xc0208
+   0xffffffffc0200056 <+86>:	lui	t0,0xc0200
+   0xffffffffc020005a <+90>:	addi	t0,t0,238 # 0xffffffffc02000ee <kern_init>
+   0xffffffffc020005e <+94>:	jr	t0
+End of assembler dump.
+(mi) -interpreter-exec console "set $pc = 0xffffffffc020004e"
+(mi) -interpreter-exec console "stepi"
+47	    lui sp, %hi(bootstacktop)
+*stopped,reason="end-stepping-range",frame={addr="0xffffffffc0200052",func="kern_entry",args=[],file="kern/init/entry.S",fullname="/home/knight/os-labs-lab2/code/kern/init/entry.S",line="47",arch="riscv:rv64"},thread-id="1",stopped-threads="all"
+(mi) -interpreter-exec console "set $pc = 0xffffffffc0200586"
+(mi) -interpreter-exec console "set $a0 = 0xffffffffc020a582"
+(mi) -interpreter-exec console "stepi"
+0xffffffffc020058a	145	    return memory_base;
+*stopped,reason="end-stepping-range",frame={addr="0xffffffffc020058a",func="get_memory_base",args=[],file="kern/driver/dtb.c",fullname="/home/knight/os-labs-lab2/code/kern/driver/dtb.c",line="145",arch="riscv:rv64"},thread-id="1",stopped-threads="all"
+(mi) -data-evaluate-expression "$a0"
+(mi) -data-evaluate-expression "$pc"
+(mi) -interpreter-exec console "set $pc = 0xffffffffc0200586"
+(mi) -interpreter-exec console "set $a0 = 0xffffffffc020a582"
+(mi) -interpreter-exec console "stepi"
+0xffffffffc020058a	145	    return memory_base;
+*stopped,reason="end-stepping-range",frame={addr="0xffffffffc020058a",func="get_memory_base",args=[],file="kern/driver/dtb.c",fullname="/home/knight/os-labs-lab2/code/kern/driver/dtb.c",line="145",arch="riscv:rv64"},thread-id="1",stopped-threads="all"
+(mi) -data-evaluate-expression "$a0"
+(mi) -interpreter-exec console "set $pc = 0xffffffffc020004e"
+(mi) -interpreter-exec console "stepi"
+47	    lui sp, %hi(bootstacktop)
+*stopped,reason="end-stepping-range",frame={addr="0xffffffffc0200052",func="kern_entry",args=[],file="kern/init/entry.S",fullname="/home/knight/os-labs-lab2/code/kern/init/entry.S",line="47",arch="riscv:rv64"},thread-id="1",stopped-threads="all"
+(mi) -interpreter-exec console "set $pc = 0xffffffffc0200586"
+(mi) -interpreter-exec console "set $a0 = 0xffffffffc020a582"
+(mi) -interpreter-exec console "stepi"
+0xffffffffc020058a	145	    return memory_base;
+*stopped,reason="end-stepping-range",frame={addr="0xffffffffc020058a",func="get_memory_base",args=[],file="kern/driver/dtb.c",fullname="/home/knight/os-labs-lab2/code/kern/driver/dtb.c",line="145",arch="riscv:rv64"},thread-id="1",stopped-threads="all"
+(mi) -interpreter-exec console "hbreak *allocator_checks_done"
+Hardware assisted breakpoint 3 at 0xffffffffc0200060: file kern/init/init.c, line 14.
+(mi) -interpreter-exec console "continue"
+Continuing.
+
+Breakpoint 3, allocator_checks_done () at kern/init/init.c:14
+14	    asm volatile("" ::: "memory");
+*stopped,reason="breakpoint-hit",disp="keep",bkptno="3",frame={addr="0xffffffffc0200060",func="allocator_checks_done",args=[],file="kern/init/init.c",fullname="/home/knight/os-labs-lab2/code/kern/init/init.c",line="14",arch="riscv:rv64"},thread-id="1",stopped-threads="all"
+(mi) -data-evaluate-expression "'best_fit_pmm.c'::free_area.nr_free"
+(mi) -data-evaluate-expression "'best_fit_pmm.c'::free_area.nr_free"
+(mi) -interpreter-exec console "kill"
+[Inferior 1 (process 1) killed]
+(mi) -gdb-exit

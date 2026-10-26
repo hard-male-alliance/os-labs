@@ -1,0 +1,731 @@
+=thread-group-added,id="i1"
+(gdb) 
+1^done
+(gdb) 
+=cmd-param-changed,param="pagination",value="off"
+2^done
+(gdb) 
+=cmd-param-changed,param="confirm",value="off"
+3^done
+(gdb) 
+~"Reading symbols from /opt/qemu-7.0.0/bin/qemu-system-riscv64...\n"
+4^done
+(gdb) 
+=cmd-param-changed,param="args",value="-machine virt -nographic -bios default -kernel /home/knight/os-labs-lab2/code/bin/ucore.img -S -gdb tcp:127.0.0.1:54021 -serial file:/home/knight/os-labs-lab2/.cache/local-debug-20261026/mmu/serial.log -monitor none"
+5^done
+(gdb) 
+~"Signal        Stop\tPrint\tPass to program\tDescription\n"
+~"SIGPIPE       No\tNo\tYes\t\tBroken pipe\n"
+6^done
+(gdb) 
+~"Signal        Stop\tPrint\tPass to program\tDescription\n"
+~"SIGUSR1       No\tNo\tYes\t\tUser defined signal 1\n"
+7^done
+(gdb) 
+~"Signal        Stop\tPrint\tPass to program\tDescription\n"
+~"SIGUSR2       No\tNo\tYes\t\tUser defined signal 2\n"
+8^done
+(gdb) 
+~"Signal        Stop\tPrint\tPass to program\tDescription\n"
+~"SIGSTOP       Yes\tYes\tNo\t\tStopped (signal)\n"
+9^done
+(gdb) 
+~"Breakpoint 1 at 0x4f89c0: file ../target/riscv/cpu_helper.c, line 1184.\n"
+=breakpoint-created,bkpt={number="1",type="breakpoint",disp="keep",enabled="y",addr="0x00000000004f89c0",func="riscv_cpu_tlb_fill",file="../target/riscv/cpu_helper.c",fullname="/home/knight/src/qemu-7.0.0/target/riscv/cpu_helper.c",line="1184",thread-groups=["i1"],cond="address == 0x80209000 && access_type == 1",times="0",original-location="riscv_cpu_tlb_fill"}
+10^done
+(gdb) 
+~"Starting program: /opt/qemu-7.0.0/bin/qemu-system-riscv64 -machine virt -nographic -bios default -kernel /home/knight/os-labs-lab2/code/bin/ucore.img -S -gdb tcp:127.0.0.1:54021 -serial file:/home/knight/os-labs-lab2/.cache/local-debug-20261026/mmu/serial.log -monitor none\n"
+=thread-group-started,id="i1",pid="3411"
+=thread-created,id="1",group-id="i1"
+=breakpoint-modified,bkpt={number="1",type="breakpoint",disp="keep",enabled="y",addr="0x0000555555a4c9c0",func="riscv_cpu_tlb_fill",file="../target/riscv/cpu_helper.c",fullname="/home/knight/src/qemu-7.0.0/target/riscv/cpu_helper.c",line="1184",thread-groups=["i1"],cond="address == 0x80209000 && access_type == 1",times="0",original-location="riscv_cpu_tlb_fill"}
+=library-loaded,id="/lib64/ld-linux-x86-64.so.2",target-name="/lib64/ld-linux-x86-64.so.2",host-name="/lib64/ld-linux-x86-64.so.2",symbols-loaded="0",thread-group="i1",ranges=[{from="0x00007ffff7fc5090",to="0x00007ffff7fee315"}]
+11^running
+*running,thread-id="all"
+(gdb) 
+=library-loaded,id="/lib/x86_64-linux-gnu/libfdt.so.1",target-name="/lib/x86_64-linux-gnu/libfdt.so.1",host-name="/lib/x86_64-linux-gnu/libfdt.so.1",symbols-loaded="0",thread-group="i1",ranges=[{from="0x00007ffff7fa81a0",to="0x00007ffff7fac7e0"}]
+=library-loaded,id="/lib/x86_64-linux-gnu/libpixman-1.so.0",target-name="/lib/x86_64-linux-gnu/libpixman-1.so.0",host-name="/lib/x86_64-linux-gnu/libpixman-1.so.0",symbols-loaded="0",thread-group="i1",ranges=[{from="0x00007ffff7f05300",to="0x00007ffff7f8a4bf"}]
+=library-loaded,id="/lib/x86_64-linux-gnu/libz.so.1",target-name="/lib/x86_64-linux-gnu/libz.so.1",host-name="/lib/x86_64-linux-gnu/libz.so.1",symbols-loaded="0",thread-group="i1",ranges=[{from="0x00007ffff7ee1280",to="0x00007ffff7ef1c14"}]
+=library-loaded,id="/lib/x86_64-linux-gnu/libseccomp.so.2",target-name="/lib/x86_64-linux-gnu/libseccomp.so.2",host-name="/lib/x86_64-linux-gnu/libseccomp.so.2",symbols-loaded="0",thread-group="i1",ranges=[{from="0x00007ffff7ec1340",to="0x00007ffff7ecea3a"}]
+=library-loaded,id="/lib/x86_64-linux-gnu/libgio-2.0.so.0",target-name="/lib/x86_64-linux-gnu/libgio-2.0.so.0",host-name="/lib/x86_64-linux-gnu/libgio-2.0.so.0",symbols-loaded="0",thread-group="i1",ranges=[{from="0x00007ffff7d233e0",to="0x00007ffff7e2d4fd"}]
+=library-loaded,id="/lib/x86_64-linux-gnu/libgobject-2.0.so.0",target-name="/lib/x86_64-linux-gnu/libgobject-2.0.so.0",host-name="/lib/x86_64-linux-gnu/libgobject-2.0.so.0",symbols-loaded="0",thread-group="i1",ranges=[{from="0x00007ffff7c91fd0",to="0x00007ffff7cc3c5e"}]
+=library-loaded,id="/lib/x86_64-linux-gnu/libglib-2.0.so.0",target-name="/lib/x86_64-linux-gnu/libglib-2.0.so.0",host-name="/lib/x86_64-linux-gnu/libglib-2.0.so.0",symbols-loaded="0",thread-group="i1",ranges=[{from="0x00007ffff7b65b20",to="0x00007ffff7bf32c2"}]
+=library-loaded,id="/lib/x86_64-linux-gnu/libslirp.so.0",target-name="/lib/x86_64-linux-gnu/libslirp.so.0",host-name="/lib/x86_64-linux-gnu/libslirp.so.0",symbols-loaded="0",thread-group="i1",ranges=[{from="0x00007ffff7b299e0",to="0x00007ffff7b3d478"}]
+=library-loaded,id="/lib/x86_64-linux-gnu/libncursesw.so.6",target-name="/lib/x86_64-linux-gnu/libncursesw.so.6",host-name="/lib/x86_64-linux-gnu/libncursesw.so.6",symbols-loaded="0",thread-group="i1",ranges=[{from="0x00007ffff7af3090",to="0x00007ffff7b1a5ea"}]
+=library-loaded,id="/lib/x86_64-linux-gnu/libtinfo.so.6",target-name="/lib/x86_64-linux-gnu/libtinfo.so.6",host-name="/lib/x86_64-linux-gnu/libtinfo.so.6",symbols-loaded="0",thread-group="i1",ranges=[{from="0x00007ffff7ac6780",to="0x00007ffff7ad61ab"}]
+=library-loaded,id="/lib/x86_64-linux-gnu/libgmodule-2.0.so.0",target-name="/lib/x86_64-linux-gnu/libgmodule-2.0.so.0",host-name="/lib/x86_64-linux-gnu/libgmodule-2.0.so.0",symbols-loaded="0",thread-group="i1",ranges=[{from="0x00007ffff7ab34a0",to="0x00007ffff7ab4433"}]
+=library-loaded,id="/lib/x86_64-linux-gnu/liburing.so.2",target-name="/lib/x86_64-linux-gnu/liburing.so.2",host-name="/lib/x86_64-linux-gnu/liburing.so.2",symbols-loaded="0",thread-group="i1",ranges=[{from="0x00007ffff7aaa180",to="0x00007ffff7aab6d3"}]
+=library-loaded,id="/lib/x86_64-linux-gnu/libaio.so.1",target-name="/lib/x86_64-linux-gnu/libaio.so.1",host-name="/lib/x86_64-linux-gnu/libaio.so.1",symbols-loaded="0",thread-group="i1",ranges=[{from="0x00007ffff7aa40a0",to="0x00007ffff7aa45eb"}]
+=library-loaded,id="/lib/x86_64-linux-gnu/libm.so.6",target-name="/lib/x86_64-linux-gnu/libm.so.6",host-name="/lib/x86_64-linux-gnu/libm.so.6",symbols-loaded="0",thread-group="i1",ranges=[{from="0x00007ffff79ca3a0",to="0x00007ffff7a458c8"}]
+=library-loaded,id="/lib/x86_64-linux-gnu/libgcc_s.so.1",target-name="/lib/x86_64-linux-gnu/libgcc_s.so.1",host-name="/lib/x86_64-linux-gnu/libgcc_s.so.1",symbols-loaded="0",thread-group="i1",ranges=[{from="0x00007ffff799f660",to="0x00007ffff79b5805"}]
+=library-loaded,id="/lib/x86_64-linux-gnu/libc.so.6",target-name="/lib/x86_64-linux-gnu/libc.so.6",host-name="/lib/x86_64-linux-gnu/libc.so.6",symbols-loaded="0",thread-group="i1",ranges=[{from="0x00007ffff7628700",to="0x00007ffff77ba9fd"}]
+=library-loaded,id="/lib/x86_64-linux-gnu/libmount.so.1",target-name="/lib/x86_64-linux-gnu/libmount.so.1",host-name="/lib/x86_64-linux-gnu/libmount.so.1",symbols-loaded="0",thread-group="i1",ranges=[{from="0x00007ffff7961280",to="0x00007ffff798bee2"}]
+=library-loaded,id="/lib/x86_64-linux-gnu/libselinux.so.1",target-name="/lib/x86_64-linux-gnu/libselinux.so.1",host-name="/lib/x86_64-linux-gnu/libselinux.so.1",symbols-loaded="0",thread-group="i1",ranges=[{from="0x00007ffff7930fc0",to="0x00007ffff794967d"}]
+=library-loaded,id="/lib/x86_64-linux-gnu/libffi.so.8",target-name="/lib/x86_64-linux-gnu/libffi.so.8",host-name="/lib/x86_64-linux-gnu/libffi.so.8",symbols-loaded="0",thread-group="i1",ranges=[{from="0x00007ffff791f460",to="0x00007ffff7925392"}]
+=library-loaded,id="/lib/x86_64-linux-gnu/libpcre.so.3",target-name="/lib/x86_64-linux-gnu/libpcre.so.3",host-name="/lib/x86_64-linux-gnu/libpcre.so.3",symbols-loaded="0",thread-group="i1",ranges=[{from="0x00007ffff78a92a0",to="0x00007ffff78fd5b0"}]
+=library-loaded,id="/lib/x86_64-linux-gnu/libblkid.so.1",target-name="/lib/x86_64-linux-gnu/libblkid.so.1",host-name="/lib/x86_64-linux-gnu/libblkid.so.1",symbols-loaded="0",thread-group="i1",ranges=[{from="0x00007ffff7877d00",to="0x00007ffff78968e2"}]
+=library-loaded,id="/lib/x86_64-linux-gnu/libpcre2-8.so.0",target-name="/lib/x86_64-linux-gnu/libpcre2-8.so.0",host-name="/lib/x86_64-linux-gnu/libpcre2-8.so.0",symbols-loaded="0",thread-group="i1",ranges=[{from="0x00007ffff756b2e0",to="0x00007ffff75d5adf"}]
+~"[Thread debugging using libthread_db enabled]\n"
+~"Using host libthread_db library \"/lib/x86_64-linux-gnu/libthread_db.so.1\".\n"
+=thread-created,id="2",group-id="i1"
+~"[New Thread 0x7ffff7568640 (LWP 3414)]\n"
+*running,thread-id="2"
+=thread-created,id="3",group-id="i1"
+~"[New Thread 0x7ffff6b22640 (LWP 3415)]\n"
+*running,thread-id="3"
+=breakpoint-modified,bkpt={number="1",type="breakpoint",disp="keep",enabled="y",addr="0x0000555555a4c9c0",func="riscv_cpu_tlb_fill",file="../target/riscv/cpu_helper.c",fullname="/home/knight/src/qemu-7.0.0/target/riscv/cpu_helper.c",line="1184",thread-groups=["i1"],cond="address == 0x80209000 && access_type == 1",times="1",original-location="riscv_cpu_tlb_fill"}
+~"[Switching to Thread 0x7ffff6b22640 (LWP 3415)]\n"
+~"\n"
+~"Thread 3 \"qemu-system-ris\" hit Breakpoint 1, riscv_cpu_tlb_fill (cs=0x555556891a80, address=2149617664, size=8, access_type=MMU_DATA_STORE, mmu_idx=1, probe=false, retaddr=140736146178370) at ../target/riscv/cpu_helper.c:1184\n"
+~"1184\t{\n"
+*stopped,reason="breakpoint-hit",disp="keep",bkptno="1",frame={addr="0x0000555555a4c9c0",func="riscv_cpu_tlb_fill",args=[{name="cs",value="0x555556891a80"},{name="address",value="2149617664"},{name="size",value="8"},{name="access_type",value="MMU_DATA_STORE"},{name="mmu_idx",value="1"},{name="probe",value="false"},{name="retaddr",value="140736146178370"}],file="../target/riscv/cpu_helper.c",fullname="/home/knight/src/qemu-7.0.0/target/riscv/cpu_helper.c",line="1184",arch="i386:x86-64"},thread-id="3",stopped-threads="all",core="6"
+~"#0  riscv_cpu_tlb_fill (cs=0x555556891a80, address=2149617664, size=8, access_type=MMU_DATA_STORE, mmu_idx=1, probe=false, retaddr=140736146178370) at ../target/riscv/cpu_helper.c:1184\n"
+~"#1  0x0000555555ba9629 in tlb_fill (cpu=0x555556891a80, addr=2149617664, size=8, access_type=MMU_DATA_STORE, mmu_idx=1, retaddr=140736146178370) at ../accel/tcg/cputlb.c:1313\n"
+~"#2  0x0000555555bafb1c in store_helper (op=MO_64, retaddr=<optimized out>, oi=<optimized out>, val=0, addr=2149617664, env=0x55555689ac00) at /home/knight/src/qemu-7.0.0/include/exec/cpu-all.h:467\n"
+~"#3  helper_le_stq_mmu (env=0x55555689ac00, addr=2149617664, val=0, oi=<optimized out>, retaddr=140736146178370) at ../accel/tcg/cputlb.c:2477\n"
+~"#4  0x00007fffb0000142 in code_gen_buffer ()\n"
+~"#5  0x0000555555b9ee2e in cpu_tb_exec (cpu=cpu@entry=0x555556891a80, itb=itb@entry=0x7fffb0000040 <code_gen_buffer+19>, tb_exit=tb_exit@entry=0x7ffff6b21824) at ../accel/tcg/cpu-exec.c:357\n"
+~"#6  0x0000555555b9ffd8 in cpu_loop_exec_tb (tb_exit=0x7ffff6b21824, last_tb=<synthetic pointer>, tb=0x7fffb0000040 <code_gen_buffer+19>, cpu=0x555556891a80) at ../accel/tcg/cpu-exec.c:847\n"
+~"#7  cpu_exec (cpu=cpu@entry=0x555556891a80) at ../accel/tcg/cpu-exec.c:1006\n"
+~"#8  0x0000555555bb97d4 in tcg_cpus_exec (cpu=cpu@entry=0x555556891a80) at ../accel/tcg/tcg-accel-ops.c:68\n"
+~"#9  0x0000555555bb9927 in mttcg_cpu_thread_fn (arg=arg@entry=0x555556891a80) at ../accel/tcg/tcg-accel-ops-mttcg.c:96\n"
+~"#10 0x0000555555d99691 in qemu_thread_start (args=<optimized out>) at ../util/qemu-thread-posix.c:556\n"
+~"#11 0x00007ffff7694a83 in start_thread (arg=<optimized out>) at ./nptl/pthread_create.c:442\n"
+~"(More stack frames follow...)\n"
+12^done
+(gdb) 
+~"cs = 0x555556891a80\n"
+~"address = 2149617664\n"
+~"size = 8\n"
+~"access_type = MMU_DATA_STORE\n"
+~"mmu_idx = 1\n"
+~"probe = false\n"
+~"retaddr = 140736146178370\n"
+13^done
+(gdb) 
+~"$1 = 0x0\n"
+14^done
+(gdb) 
+~"type = struct ArchCPU {\n"
+~"    CPUState parent_obj;\n"
+~"    CPUNegativeOffsetState neg;\n"
+~"    CPURISCVState env;\n"
+~"    char *dyn_csr_xml;\n"
+~"    char *dyn_vreg_xml;\n"
+~"    RISCVCPUConfig cfg;\n"
+~"}\n"
+15^done
+(gdb) 
+~"Breakpoint 2 at 0x555555a4b3d0: file ../target/riscv/cpu_helper.c, line 750.\n"
+=breakpoint-created,bkpt={number="2",type="breakpoint",disp="keep",enabled="y",addr="0x0000555555a4b3d0",func="get_physical_address",file="../target/riscv/cpu_helper.c",fullname="/home/knight/src/qemu-7.0.0/target/riscv/cpu_helper.c",line="750",thread-groups=["i1"],cond="addr == 0x80209000 && !is_debug",times="0",original-location="get_physical_address"}
+16^done
+(gdb) 
+~"Continuing.\n"
+17^running
+*running,thread-id="all"
+(gdb) 
+=breakpoint-modified,bkpt={number="2",type="breakpoint",disp="keep",enabled="y",addr="0x0000555555a4b3d0",func="get_physical_address",file="../target/riscv/cpu_helper.c",fullname="/home/knight/src/qemu-7.0.0/target/riscv/cpu_helper.c",line="750",thread-groups=["i1"],cond="addr == 0x80209000 && !is_debug",times="1",original-location="get_physical_address"}
+~"\n"
+~"Thread 3 \"qemu-system-ris\" hit Breakpoint 2, get_physical_address (env=env@entry=0x55555689ac00, physical=physical@entry=0x7ffff6b211a8, prot=prot@entry=0x7ffff6b2119c, addr=addr@entry=2149617664, fault_pte_addr=fault_pte_addr@entry=0x0, access_type=access_type@entry=1, mmu_idx=1, first_stage=true, two_stage=false, is_debug=false) at ../target/riscv/cpu_helper.c:750\n"
+~"750\t{\n"
+*stopped,reason="breakpoint-hit",disp="keep",bkptno="2",frame={addr="0x0000555555a4b3d0",func="get_physical_address",args=[{name="env",value="0x55555689ac00"},{name="env@entry",value="0x55555689ac00"},{name="physical",value="0x7ffff6b211a8"},{name="physical@entry",value="0x7ffff6b211a8"},{name="prot",value="0x7ffff6b2119c"},{name="prot@entry",value="0x7ffff6b2119c"},{name="addr",value="2149617664"},{name="addr@entry",value="2149617664"},{name="fault_pte_addr",value="0x0"},{name="fault_pte_addr@entry",value="0x0"},{name="access_type",value="1"},{name="access_type@entry",value="1"},{name="mmu_idx",value="1"},{name="first_stage",value="true"},{name="two_stage",value="false"},{name="is_debug",value="false"}],file="../target/riscv/cpu_helper.c",fullname="/home/knight/src/qemu-7.0.0/target/riscv/cpu_helper.c",line="750",arch="i386:x86-64"},thread-id="3",stopped-threads="all",core="6"
+~"env = 0x55555689ac00\n"
+~"physical = 0x7ffff6b211a8\n"
+~"prot = 0x7ffff6b2119c\n"
+~"addr = 2149617664\n"
+~"fault_pte_addr = 0x0\n"
+~"access_type = 1\n"
+~"mmu_idx = 1\n"
+~"first_stage = true\n"
+~"two_stage = false\n"
+~"is_debug = false\n"
+18^done
+(gdb) 
+19^done
+(gdb) 
+~"$2 = 0x0\n"
+20^done
+(gdb) 
+21^running
+*running,thread-id="all"
+(gdb) 
+~"get_physical_address (env=env@entry=0x55555689ac00, physical=physical@entry=0x7ffff6b211a8, prot=prot@entry=0x7ffff6b2119c, addr=addr@entry=2149617664, fault_pte_addr=fault_pte_addr@entry=0x0, access_type=access_type@entry=1, mmu_idx=1, first_stage=true, two_stage=false, is_debug=false) at ../target/riscv/cpu_helper.c:848\n"
+~"848\t        *physical = addr;\n"
+*stopped,reason="location-reached",frame={addr="0x0000555555a4b960",func="get_physical_address",args=[{name="env",value="0x55555689ac00"},{name="env@entry",value="0x55555689ac00"},{name="physical",value="0x7ffff6b211a8"},{name="physical@entry",value="0x7ffff6b211a8"},{name="prot",value="0x7ffff6b2119c"},{name="prot@entry",value="0x7ffff6b2119c"},{name="addr",value="2149617664"},{name="addr@entry",value="2149617664"},{name="fault_pte_addr",value="0x0"},{name="fault_pte_addr@entry",value="0x0"},{name="access_type",value="1"},{name="access_type@entry",value="1"},{name="mmu_idx",value="1"},{name="first_stage",value="true"},{name="two_stage",value="false"},{name="is_debug",value="false"}],file="../target/riscv/cpu_helper.c",fullname="/home/knight/src/qemu-7.0.0/target/riscv/cpu_helper.c",line="848",arch="i386:x86-64"},thread-id="3",stopped-threads="all",core="6"
+~"res = 0\n"
+~"attrs = <optimized out>\n"
+~"mode = <optimized out>\n"
+~"use_background = <optimized out>\n"
+~"ppn = <optimized out>\n"
+~"cpu = 0x555556891a80\n"
+~"napot_bits = 0\n"
+~"napot_mask = <optimized out>\n"
+~"base = 0\n"
+~"levels = <optimized out>\n"
+~"ptidxbits = <optimized out>\n"
+~"ptesize = <optimized out>\n"
+~"vm = 0\n"
+~"sum = 0\n"
+~"mxr = <optimized out>\n"
+~"widened = <optimized out>\n"
+~"__func__ = \"get_physical_address\"\n"
+~"cs = <optimized out>\n"
+~"va_bits = <optimized out>\n"
+~"mask = <optimized out>\n"
+~"masked_msbs = <optimized out>\n"
+~"ptshift = <optimized out>\n"
+~"i = <optimized out>\n"
+22^done
+(gdb) 
+~"Run till exit from #0  get_physical_address (env=env@entry=0x55555689ac00, physical=physical@entry=0x7ffff6b211a8, prot=prot@entry=0x7ffff6b2119c, addr=addr@entry=2149617664, fault_pte_addr=fault_pte_addr@entry=0x0, access_type=access_type@entry=1, mmu_idx=1, first_stage=true, two_stage=false, is_debug=false) at ../target/riscv/cpu_helper.c:848\n"
+23^running
+*running,thread-id="all"
+(gdb) 
+~"0x0000555555a4cbae in riscv_cpu_tlb_fill (cs=0x555556891a80, address=2149617664, size=8, access_type=MMU_DATA_STORE, mmu_idx=1, probe=<optimized out>, retaddr=140736146178370) at ../target/riscv/cpu_helper.c:1281\n"
+~"1281\t        qemu_log_mask(CPU_LOG_MMU,\n"
+~"Value returned is $3 = 0\n"
+*stopped,reason="function-finished",frame={addr="0x0000555555a4cbae",func="riscv_cpu_tlb_fill",args=[{name="cs",value="0x555556891a80"},{name="address",value="2149617664"},{name="size",value="8"},{name="access_type",value="MMU_DATA_STORE"},{name="mmu_idx",value="1"},{name="probe",value="<optimized out>"},{name="retaddr",value="140736146178370"}],file="../target/riscv/cpu_helper.c",fullname="/home/knight/src/qemu-7.0.0/target/riscv/cpu_helper.c",line="1281",arch="i386:x86-64"},gdb-result-var="$3",return-value="0",thread-id="3",stopped-threads="all",core="6"
+24^done,value="2149617664"
+(gdb) 
+~"Breakpoint 3 at 0x555555bae540: file ../accel/tcg/cputlb.c, line 1108.\n"
+=breakpoint-created,bkpt={number="3",type="breakpoint",disp="keep",enabled="y",addr="0x0000555555bae540",func="tlb_set_page_with_attrs",file="../accel/tcg/cputlb.c",fullname="/home/knight/src/qemu-7.0.0/accel/tcg/cputlb.c",line="1108",thread-groups=["i1"],cond="vaddr == 0x80209000",times="0",original-location="tlb_set_page_with_attrs"}
+25^done
+(gdb) 
+~"Continuing.\n"
+26^running
+*running,thread-id="all"
+(gdb) 
+=breakpoint-modified,bkpt={number="3",type="breakpoint",disp="keep",enabled="y",addr="0x0000555555bae540",func="tlb_set_page_with_attrs",file="../accel/tcg/cputlb.c",fullname="/home/knight/src/qemu-7.0.0/accel/tcg/cputlb.c",line="1108",thread-groups=["i1"],cond="vaddr == 0x80209000",times="1",original-location="tlb_set_page_with_attrs"}
+~"\n"
+~"Thread 3 \"qemu-system-ris\" hit Breakpoint 3, tlb_set_page_with_attrs (cpu=cpu@entry=0x555556891a80, vaddr=2149617664, paddr=2149617664, attrs=attrs@entry=..., prot=7, mmu_idx=mmu_idx@entry=1, size=4096) at ../accel/tcg/cputlb.c:1108\n"
+~"1108\t{\n"
+*stopped,reason="breakpoint-hit",disp="keep",bkptno="3",frame={addr="0x0000555555bae540",func="tlb_set_page_with_attrs",args=[{name="cpu",value="0x555556891a80"},{name="cpu@entry",value="0x555556891a80"},{name="vaddr",value="2149617664"},{name="paddr",value="2149617664"},{name="attrs",value="..."},{name="attrs@entry",value="..."},{name="prot",value="7"},{name="mmu_idx",value="1"},{name="mmu_idx@entry",value="1"},{name="size",value="4096"}],file="../accel/tcg/cputlb.c",fullname="/home/knight/src/qemu-7.0.0/accel/tcg/cputlb.c",line="1108",arch="i386:x86-64"},thread-id="3",stopped-threads="all",core="6"
+~"cpu = 0x555556891a80\n"
+~"vaddr = 2149617664\n"
+~"paddr = 2149617664\n"
+~"attrs = {unspecified = 1, secure = 0, user = 0, memory = 0, requester_id = 0, byte_swap = 0, target_tlb_bit0 = 0, target_tlb_bit1 = 0, target_tlb_bit2 = 0}\n"
+~"prot = 7\n"
+~"mmu_idx = 1\n"
+~"size = 4096\n"
+27^done
+(gdb) 
+~"#0  tlb_set_page_with_attrs (cpu=cpu@entry=0x555556891a80, vaddr=2149617664, paddr=2149617664, attrs=attrs@entry=..., prot=7, mmu_idx=mmu_idx@entry=1, size=4096) at ../accel/tcg/cputlb.c:1108\n"
+~"#1  0x0000555555baeaea in tlb_set_page (cpu=cpu@entry=0x555556891a80, vaddr=<optimized out>, paddr=<optimized out>, prot=<optimized out>, mmu_idx=mmu_idx@entry=1, size=<optimized out>) at ../accel/tcg/cputlb.c:1282\n"
+~"#2  0x0000555555a4cd66 in riscv_cpu_tlb_fill (cs=0x555556891a80, address=2149617664, size=<optimized out>, access_type=<optimized out>, mmu_idx=1, probe=<optimized out>, retaddr=140736146178370) at ../target/riscv/cpu_helper.c:1304\n"
+~"#3  0x0000555555ba9629 in tlb_fill (cpu=0x555556891a80, addr=2149617664, size=8, access_type=MMU_DATA_STORE, mmu_idx=1, retaddr=140736146178370) at ../accel/tcg/cputlb.c:1313\n"
+~"#4  0x0000555555bafb1c in store_helper (op=MO_64, retaddr=<optimized out>, oi=<optimized out>, val=0, addr=2149617664, env=0x55555689ac00) at /home/knight/src/qemu-7.0.0/include/exec/cpu-all.h:467\n"
+~"#5  helper_le_stq_mmu (env=0x55555689ac00, addr=2149617664, val=0, oi=<optimized out>, retaddr=140736146178370) at ../accel/tcg/cputlb.c:2477\n"
+~"#6  0x00007fffb0000142 in code_gen_buffer ()\n"
+~"#7  0x0000555555b9ee2e in cpu_tb_exec (cpu=cpu@entry=0x555556891a80, itb=itb@entry=0x7fffb0000040 <code_gen_buffer+19>, tb_exit=tb_exit@entry=0x7ffff6b21824) at ../accel/tcg/cpu-exec.c:357\n"
+~"(More stack frames follow...)\n"
+28^done
+(gdb) 
+29^done,value="2149617664"
+(gdb) 
+30^done,value="2149617664"
+(gdb) 
+31^done,value="2149617664"
+(gdb) 
+32^done,value="2149617664"
+(gdb) 
+=breakpoint-modified,bkpt={number="1",type="breakpoint",disp="keep",enabled="n",addr="0x0000555555a4c9c0",func="riscv_cpu_tlb_fill",file="../target/riscv/cpu_helper.c",fullname="/home/knight/src/qemu-7.0.0/target/riscv/cpu_helper.c",line="1184",thread-groups=["i1"],cond="address == 0x80209000 && access_type == 1",times="1",original-location="riscv_cpu_tlb_fill"}
+=breakpoint-modified,bkpt={number="2",type="breakpoint",disp="keep",enabled="n",addr="0x0000555555a4b3d0",func="get_physical_address",file="../target/riscv/cpu_helper.c",fullname="/home/knight/src/qemu-7.0.0/target/riscv/cpu_helper.c",line="750",thread-groups=["i1"],cond="addr == 0x80209000 && !is_debug",times="1",original-location="get_physical_address"}
+=breakpoint-modified,bkpt={number="3",type="breakpoint",disp="keep",enabled="n",addr="0x0000555555bae540",func="tlb_set_page_with_attrs",file="../accel/tcg/cputlb.c",fullname="/home/knight/src/qemu-7.0.0/accel/tcg/cputlb.c",line="1108",thread-groups=["i1"],cond="vaddr == 0x80209000",times="1",original-location="tlb_set_page_with_attrs"}
+33^done
+(gdb) 
+~"Continuing.\n"
+34^running
+*running,thread-id="all"
+(gdb) 
+~"\nThread "
+~"1 \"qemu-system-ris\" received signal SIGSTOP, Stopped (signal).\n"
+~"[Switching to Thread 0x7ffff7869bc0 (LWP 3411)]\n"
+~"0x00007ffff7718e1e in __ppoll (fds=0x555556d823b0, nfds=5, timeout=<optimized out>, timeout@entry=0x7fffffffdef0, sigmask=sigmask@entry=0x0) at ../sysdeps/unix/sysv/linux/ppoll.c:42\n"
+&"42\t../sysdeps/unix/sysv/linux/ppoll.c: No such file or directory.\n"
+*stopped,reason="signal-received",signal-name="SIGSTOP",signal-meaning="Stopped (signal)",frame={addr="0x00007ffff7718e1e",func="__ppoll",args=[{name="fds",value="0x555556d823b0"},{name="nfds",value="5"},{name="timeout",value="<optimized out>"},{name="timeout@entry",value="0x7fffffffdef0"},{name="sigmask",value="0x0"},{name="sigmask@entry",value="0x0"}],file="../sysdeps/unix/sysv/linux/ppoll.c",fullname="./io/../sysdeps/unix/sysv/linux/ppoll.c",line="42",arch="i386:x86-64"},thread-id="1",stopped-threads="all",core="9"
+=breakpoint-deleted,id="1"
+=breakpoint-deleted,id="2"
+=breakpoint-deleted,id="3"
+35^done
+(gdb) 
+~"Breakpoint 4 at 0x555555a4c9c0: file ../target/riscv/cpu_helper.c, line 1184.\n"
+=breakpoint-created,bkpt={number="4",type="breakpoint",disp="keep",enabled="y",addr="0x0000555555a4c9c0",func="riscv_cpu_tlb_fill",file="../target/riscv/cpu_helper.c",fullname="/home/knight/src/qemu-7.0.0/target/riscv/cpu_helper.c",line="1184",thread-groups=["i1"],cond="address == 0xffffffffc020ab20 && access_type == 0",times="0",original-location="riscv_cpu_tlb_fill"}
+36^done
+(gdb) 
+~"Breakpoint 5 at 0x555555a4b3d0: file ../target/riscv/cpu_helper.c, line 750.\n"
+=breakpoint-created,bkpt={number="5",type="breakpoint",disp="keep",enabled="y",addr="0x0000555555a4b3d0",func="get_physical_address",file="../target/riscv/cpu_helper.c",fullname="/home/knight/src/qemu-7.0.0/target/riscv/cpu_helper.c",line="750",thread-groups=["i1"],cond="addr == 0xffffffffc020ab20 && !is_debug",times="0",original-location="get_physical_address"}
+37^done
+(gdb) 
+~"Breakpoint 6 at 0x555555bae540: file ../accel/tcg/cputlb.c, line 1108.\n"
+=breakpoint-created,bkpt={number="6",type="breakpoint",disp="keep",enabled="y",addr="0x0000555555bae540",func="tlb_set_page_with_attrs",file="../accel/tcg/cputlb.c",fullname="/home/knight/src/qemu-7.0.0/accel/tcg/cputlb.c",line="1108",thread-groups=["i1"],cond="vaddr == 0xffffffffc020a000",times="0",original-location="tlb_set_page_with_attrs"}
+38^done
+(gdb) 
+~"Continuing.\n"
+39^running
+*running,thread-id="all"
+(gdb) 
+=breakpoint-modified,bkpt={number="4",type="breakpoint",disp="keep",enabled="y",addr="0x0000555555a4c9c0",func="riscv_cpu_tlb_fill",file="../target/riscv/cpu_helper.c",fullname="/home/knight/src/qemu-7.0.0/target/riscv/cpu_helper.c",line="1184",thread-groups=["i1"],cond="address == 0xffffffffc020ab20 && access_type == 0",times="1",original-location="riscv_cpu_tlb_fill"}
+~"[Switching to Thread 0x7ffff6b22640 (LWP 3415)]\n"
+~"\n"
+~"Thread 3 \"qemu-system-ris\" hit Breakpoint 4, riscv_cpu_tlb_fill (cs=0x555556891a80, address=18446744072637950752, size=8, access_type=MMU_DATA_LOAD, mmu_idx=1, probe=false, retaddr=140736146178371) at ../target/riscv/cpu_helper.c:1184\n"
+~"1184\t{\n"
+*stopped,reason="breakpoint-hit",disp="keep",bkptno="4",frame={addr="0x0000555555a4c9c0",func="riscv_cpu_tlb_fill",args=[{name="cs",value="0x555556891a80"},{name="address",value="18446744072637950752"},{name="size",value="8"},{name="access_type",value="MMU_DATA_LOAD"},{name="mmu_idx",value="1"},{name="probe",value="false"},{name="retaddr",value="140736146178371"}],file="../target/riscv/cpu_helper.c",fullname="/home/knight/src/qemu-7.0.0/target/riscv/cpu_helper.c",line="1184",arch="i386:x86-64"},thread-id="3",stopped-threads="all",core="6"
+~"#0  riscv_cpu_tlb_fill (cs=0x555556891a80, address=18446744072637950752, size=8, access_type=MMU_DATA_LOAD, mmu_idx=1, probe=false, retaddr=140736146178371) at ../target/riscv/cpu_helper.c:1184\n"
+~"#1  0x0000555555ba9629 in tlb_fill (cpu=0x555556891a80, addr=18446744072637950752, size=8, access_type=MMU_DATA_LOAD, mmu_idx=1, retaddr=140736146178371) at ../accel/tcg/cputlb.c:1313\n"
+~"#2  0x0000555555baf234 in load_helper (full_load=0x555555baf0a0 <helper_le_ldq_mmu>, code_read=false, op=MO_64, retaddr=140736146178371, oi=49, addr=18446744072637950752, env=0x55555689ac00) at /home/knight/src/qemu-7.0.0/include/exec/cpu-all.h:467\n"
+~"#3  helper_le_ldq_mmu (env=0x55555689ac00, addr=18446744072637950752, oi=49, retaddr=140736146178371) at ../accel/tcg/cputlb.c:2094\n"
+~"#4  0x00007fffb000017e in code_gen_buffer ()\n"
+~"#5  0x0000555555b9ee2e in cpu_tb_exec (cpu=cpu@entry=0x555556891a80, itb=itb@entry=0x7fffb0000040 <code_gen_buffer+19>, tb_exit=tb_exit@entry=0x7ffff6b21824) at ../accel/tcg/cpu-exec.c:357\n"
+~"#6  0x0000555555b9ffd8 in cpu_loop_exec_tb (tb_exit=0x7ffff6b21824, last_tb=<synthetic pointer>, tb=0x7fffb0000040 <code_gen_buffer+19>, cpu=0x555556891a80) at ../accel/tcg/cpu-exec.c:847\n"
+~"#7  cpu_exec (cpu=cpu@entry=0x555556891a80) at ../accel/tcg/cpu-exec.c:1006\n"
+~"#8  0x0000555555bb97d4 in tcg_cpus_exec (cpu=cpu@entry=0x555556891a80) at ../accel/tcg/tcg-accel-ops.c:68\n"
+~"#9  0x0000555555bb9927 in mttcg_cpu_thread_fn (arg=arg@entry=0x555556891a80) at ../accel/tcg/tcg-accel-ops-mttcg.c:96\n"
+~"#10 0x0000555555d99691 in qemu_thread_start (args=<optimized out>) at ../util/qemu-thread-posix.c:556\n"
+~"#11 0x00007ffff7694a83 in start_thread (arg=<optimized out>) at ./nptl/pthread_create.c:442\n"
+~"#12 0x00007ffff77268e0 in clone3 () at ../sysdeps/unix/sysv/linux/x86_64/clone3.S:81\n"
+40^done
+(gdb) 
+~"cs = 0x555556891a80\n"
+~"address = 18446744072637950752\n"
+~"size = 8\n"
+~"access_type = MMU_DATA_LOAD\n"
+~"mmu_idx = 1\n"
+~"probe = false\n"
+~"retaddr = 140736146178371\n"
+41^done
+(gdb) 
+42^done
+(gdb) 
+43^done,value="2016"
+(gdb) 
+~"$4 = {{{addr_read = 0xffffffffffffffff, addr_write = 0xffffffffffffffff, addr_code = 0xffffffffffffffff, addend = 0xffffffffffffffff}, dummy = {0xff <repeats 32 times>}}}\n"
+44^done
+(gdb) 
+45^done,value="18446744073709551615"
+(gdb) 
+46^done,value="18446744073709551615"
+(gdb) 
+~"REAL C SOFTWARE-TLB LOOKUP FRAME\n"
+~"full_load = 0x555555baf0a0 <helper_le_ldq_mmu>\n"
+~"code_read = false\n"
+~"op = MO_64\n"
+~"retaddr = 140736146178371\n"
+~"oi = 49\n"
+~"addr = 18446744072637950752\n"
+~"env = 0x55555689ac00\n"
+~"tlb_off = 0\n"
+~"res = <optimized out>\n"
+~"size = 8\n"
+~"entry = 0x7fffa0055f40\n"
+~"tlb_addr = <optimized out>\n"
+~"mmu_idx = 1\n"
+~"index = <optimized out>\n"
+~"access_type = MMU_DATA_LOAD\n"
+~"a_bits = <optimized out>\n"
+~"haddr = <optimized out>\n"
+~"mmu_idx = <optimized out>\n"
+~"index = <optimized out>\n"
+~"entry = <optimized out>\n"
+~"tlb_addr = <optimized out>\n"
+~"tlb_off = <optimized out>\n"
+~"access_type = <optimized out>\n"
+~"a_bits = <optimized out>\n"
+~"haddr = <optimized out>\n"
+~"res = <optimized out>\n"
+~"size = <optimized out>\n"
+~"do_unaligned_access = <optimized out>\n"
+~"iotlbentry = <optimized out>\n"
+~"need_swap = <optimized out>\n"
+~"addr1 = <optimized out>\n"
+~"addr2 = <optimized out>\n"
+~"r1 = <optimized out>\n"
+~"r2 = <optimized out>\n"
+~"shift = <optimized out>\n"
+~"ACTUAL TRANSLATED HOST BLOCK 0x7fffb0000100 <code_gen_buffer+211>\n"
+47^done
+(gdb) 
+~"Dump of assembler code from 0x7fffb0000100 to 0x7fffb00001a0:\n"
+~"   0x00007fffb0000100 <code_gen_buffer+211>:\t8b 5d f0\tmov    -0x10(%rbp),%ebx\n"
+~"   0x00007fffb0000103 <code_gen_buffer+214>:\t85 db\ttest   %ebx,%ebx\n"
+~"   0x00007fffb0000105 <code_gen_buffer+216>:\t0f 8c 52 00 00 00\tjl     0x7fffb000015d <code_gen_buffer+304>\n"
+~"   0x00007fffb000010b <code_gen_buffer+222>:\t48 8b 5d 50\tmov    0x50(%rbp),%rbx\n"
+~"   0x00007fffb000010f <code_gen_buffer+226>:\t48 81 c3 9e 05 00 00\tadd    $0x59e,%rbx\n"
+~"   0x00007fffb0000116 <code_gen_buffer+233>:\t48 8b fb\tmov    %rbx,%rdi\n"
+~"   0x00007fffb0000119 <code_gen_buffer+236>:\t48 c1 ef 07\tshr    $0x7,%rdi\n"
+~"   0x00007fffb000011d <code_gen_buffer+240>:\t48 23 7d 80\tand    -0x80(%rbp),%rdi\n"
+~"   0x00007fffb0000121 <code_gen_buffer+244>:\t48 03 7d 88\tadd    -0x78(%rbp),%rdi\n"
+~"   0x00007fffb0000125 <code_gen_buffer+248>:\t48 8d 73 07\tlea    0x7(%rbx),%rsi\n"
+~"   0x00007fffb0000129 <code_gen_buffer+252>:\t48 81 e6 00 f0 ff ff\tand    $0xfffffffffffff000,%rsi\n"
+~"   0x00007fffb0000130 <code_gen_buffer+259>:\t48 3b 37\tcmp    (%rdi),%rsi\n"
+~"   0x00007fffb0000133 <code_gen_buffer+262>:\t48 8b f3\tmov    %rbx,%rsi\n"
+~"   0x00007fffb0000136 <code_gen_buffer+265>:\t0f 85 2d 00 00 00\tjne    0x7fffb0000169 <code_gen_buffer+316>\n"
+~"   0x00007fffb000013c <code_gen_buffer+271>:\t48 03 77 18\tadd    0x18(%rdi),%rsi\n"
+~"   0x00007fffb0000140 <code_gen_buffer+275>:\t48 8b 1e\tmov    (%rsi),%rbx\n"
+~"   0x00007fffb0000143 <code_gen_buffer+278>:\t48 89 5d 50\tmov    %rbx,0x50(%rbp)\n"
+~"   0x00007fffb0000147 <code_gen_buffer+282>:\t48 c7 85 30 13 00 00 8a 05 20 c0\tmovq   $0xffffffffc020058a,0x1330(%rbp)\n"
+~"   0x00007fffb0000152 <code_gen_buffer+293>:\t48 8b fd\tmov    %rbp,%rdi\n"
+~"   0x00007fffb0000155 <code_gen_buffer+296>:\tff 15 2d 00 00 00\tcall   *0x2d(%rip)        # 0x7fffb0000188 <code_gen_buffer+347>\n"
+~"   0x00007fffb000015b <code_gen_buffer+302>:\tff e0\tjmp    *%rax\n"
+~"   0x00007fffb000015d <code_gen_buffer+304>:\t48 8d 05 df fe ff ff\tlea    -0x121(%rip),%rax        # 0x7fffb0000043 <code_gen_buffer+22>\n"
+~"   0x00007fffb0000164 <code_gen_buffer+311>:\te9 af fe ff ff\tjmp    0x7fffb0000018\n"
+~"   0x00007fffb0000169 <code_gen_buffer+316>:\t48 8b fd\tmov    %rbp,%rdi\n"
+~"   0x00007fffb000016c <code_gen_buffer+319>:\tba 31 00 00 00\tmov    $0x31,%edx\n"
+~"   0x00007fffb0000171 <code_gen_buffer+324>:\t48 8d 0d cb ff ff ff\tlea    -0x35(%rip),%rcx        # 0x7fffb0000143 <code_gen_buffer+278>\n"
+~"   0x00007fffb0000178 <code_gen_buffer+331>:\tff 15 12 00 00 00\tcall   *0x12(%rip)        # 0x7fffb0000190 <code_gen_buffer+355>\n"
+~"   0x00007fffb000017e <code_gen_buffer+337>:\t48 8b d8\tmov    %rax,%rbx\n"
+~"   0x00007fffb0000181 <code_gen_buffer+340>:\te9 bd ff ff ff\tjmp    0x7fffb0000143 <code_gen_buffer+278>\n"
+~"   0x00007fffb0000186 <code_gen_buffer+345>:\t90\tnop\n"
+~"   0x00007fffb0000187 <code_gen_buffer+346>:\t90\tnop\n"
+~"   0x00007fffb0000188 <code_gen_buffer+347>:\tc0 f7 b9\tshl    $0xb9,%bh\n"
+~"   0x00007fffb000018b <code_gen_buffer+350>:\t55\tpush   %rbp\n"
+~"   0x00007fffb000018c <code_gen_buffer+351>:\t55\tpush   %rbp\n"
+~"   0x00007fffb000018d <code_gen_buffer+352>:\t55\tpush   %rbp\n"
+~"   0x00007fffb000018e <code_gen_buffer+353>:\t00 00\tadd    %al,(%rax)\n"
+~"   0x00007fffb0000190 <code_gen_buffer+355>:\ta0 f0 ba 55 55 55 00 00 00\tmovabs 0x555555baf0,%al\n"
+~"   0x00007fffb0000199 <code_gen_buffer+364>:\te9 00 fe ff ff\tjmp    0x7fffafffff9e\n"
+~"   0x00007fffb000019e <code_gen_buffer+369>:\t48 8b fd\tmov    %rbp,%rdi\n"
+~"End of assembler dump.\n"
+48^done
+(gdb) 
+~"Continuing.\n"
+49^running
+*running,thread-id="all"
+(gdb) 
+=breakpoint-modified,bkpt={number="5",type="breakpoint",disp="keep",enabled="y",addr="0x0000555555a4b3d0",func="get_physical_address",file="../target/riscv/cpu_helper.c",fullname="/home/knight/src/qemu-7.0.0/target/riscv/cpu_helper.c",line="750",thread-groups=["i1"],cond="addr == 0xffffffffc020ab20 && !is_debug",times="1",original-location="get_physical_address"}
+~"\n"
+~"Thread 3 \"qemu-system-ris\" hit Breakpoint 5, get_physical_address (env=env@entry=0x55555689ac00, physical=physical@entry=0x7ffff6b211b8, prot=prot@entry=0x7ffff6b211ac, addr=addr@entry=18446744072637950752, fault_pte_addr=fault_pte_addr@entry=0x0, access_type=access_type@entry=0, mmu_idx=1, first_stage=true, two_stage=false, is_debug=false) at ../target/riscv/cpu_helper.c:750\n"
+~"750\t{\n"
+*stopped,reason="breakpoint-hit",disp="keep",bkptno="5",frame={addr="0x0000555555a4b3d0",func="get_physical_address",args=[{name="env",value="0x55555689ac00"},{name="env@entry",value="0x55555689ac00"},{name="physical",value="0x7ffff6b211b8"},{name="physical@entry",value="0x7ffff6b211b8"},{name="prot",value="0x7ffff6b211ac"},{name="prot@entry",value="0x7ffff6b211ac"},{name="addr",value="18446744072637950752"},{name="addr@entry",value="18446744072637950752"},{name="fault_pte_addr",value="0x0"},{name="fault_pte_addr@entry",value="0x0"},{name="access_type",value="0"},{name="access_type@entry",value="0"},{name="mmu_idx",value="1"},{name="first_stage",value="true"},{name="two_stage",value="false"},{name="is_debug",value="false"}],file="../target/riscv/cpu_helper.c",fullname="/home/knight/src/qemu-7.0.0/target/riscv/cpu_helper.c",line="750",arch="i386:x86-64"},thread-id="3",stopped-threads="all",core="6"
+~"#0  get_physical_address (env=env@entry=0x55555689ac00, physical=physical@entry=0x7ffff6b211b8, prot=prot@entry=0x7ffff6b211ac, addr=addr@entry=18446744072637950752, fault_pte_addr=fault_pte_addr@entry=0x0, access_type=access_type@entry=0, mmu_idx=1, first_stage=true, two_stage=false, is_debug=false) at ../target/riscv/cpu_helper.c:750\n"
+~"#1  0x0000555555a4cbae in riscv_cpu_tlb_fill (cs=0x555556891a80, address=18446744072637950752, size=8, access_type=MMU_DATA_LOAD, mmu_idx=1, probe=<optimized out>, retaddr=140736146178371) at ../target/riscv/cpu_helper.c:1278\n"
+~"#2  0x0000555555ba9629 in tlb_fill (cpu=0x555556891a80, addr=18446744072637950752, size=8, access_type=MMU_DATA_LOAD, mmu_idx=1, retaddr=140736146178371) at ../accel/tcg/cputlb.c:1313\n"
+~"#3  0x0000555555baf234 in load_helper (full_load=0x555555baf0a0 <helper_le_ldq_mmu>, code_read=false, op=MO_64, retaddr=140736146178371, oi=49, addr=18446744072637950752, env=0x55555689ac00) at /home/knight/src/qemu-7.0.0/include/exec/cpu-all.h:467\n"
+~"#4  helper_le_ldq_mmu (env=0x55555689ac00, addr=18446744072637950752, oi=49, retaddr=140736146178371) at ../accel/tcg/cputlb.c:2094\n"
+~"#5  0x00007fffb000017e in code_gen_buffer ()\n"
+~"#6  0x0000555555b9ee2e in cpu_tb_exec (cpu=cpu@entry=0x555556891a80, itb=itb@entry=0x7fffb0000040 <code_gen_buffer+19>, tb_exit=tb_exit@entry=0x7ffff6b21824) at ../accel/tcg/cpu-exec.c:357\n"
+~"#7  0x0000555555b9ffd8 in cpu_loop_exec_tb (tb_exit=0x7ffff6b21824, last_tb=<synthetic pointer>, tb=0x7fffb0000040 <code_gen_buffer+19>, cpu=0x555556891a80) at ../accel/tcg/cpu-exec.c:847\n"
+~"(More stack frames follow...)\n"
+50^done
+(gdb) 
+~"env = 0x55555689ac00\n"
+~"physical = 0x7ffff6b211b8\n"
+~"prot = 0x7ffff6b211ac\n"
+~"addr = 18446744072637950752\n"
+~"fault_pte_addr = 0x0\n"
+~"access_type = 0\n"
+~"mmu_idx = 1\n"
+~"first_stage = true\n"
+~"two_stage = false\n"
+~"is_debug = false\n"
+51^done
+(gdb) 
+52^done
+(gdb) 
+53^done,value="9223372036855300616"
+(gdb) 
+54^running
+*running,thread-id="all"
+(gdb) 
+~"get_physical_address (env=env@entry=0x55555689ac00, physical=physical@entry=0x7ffff6b211b8, prot=prot@entry=0x7ffff6b211ac, addr=addr@entry=18446744072637950752, fault_pte_addr=fault_pte_addr@entry=0x0, access_type=access_type@entry=0, mmu_idx=1, first_stage=true, two_stage=false, is_debug=false) at ../target/riscv/cpu_helper.c:876\n"
+~"876\t    for (i = 0; i < levels; i++, ptshift -= ptidxbits) {\n"
+*stopped,reason="location-reached",frame={addr="0x0000555555a4b78c",func="get_physical_address",args=[{name="env",value="0x55555689ac00"},{name="env@entry",value="0x55555689ac00"},{name="physical",value="0x7ffff6b211b8"},{name="physical@entry",value="0x7ffff6b211b8"},{name="prot",value="0x7ffff6b211ac"},{name="prot@entry",value="0x7ffff6b211ac"},{name="addr",value="18446744072637950752"},{name="addr@entry",value="18446744072637950752"},{name="fault_pte_addr",value="0x0"},{name="fault_pte_addr@entry",value="0x0"},{name="access_type",value="0"},{name="access_type@entry",value="0"},{name="mmu_idx",value="1"},{name="first_stage",value="true"},{name="two_stage",value="false"},{name="is_debug",value="false"}],file="../target/riscv/cpu_helper.c",fullname="/home/knight/src/qemu-7.0.0/target/riscv/cpu_helper.c",line="876",arch="i386:x86-64"},thread-id="3",stopped-threads="all",core="6"
+~"res = 0\n"
+~"attrs = <optimized out>\n"
+~"mode = <optimized out>\n"
+~"use_background = <optimized out>\n"
+~"ppn = <optimized out>\n"
+~"cpu = 0x555556891a80\n"
+~"napot_bits = 0\n"
+~"napot_mask = <optimized out>\n"
+~"base = 2149613568\n"
+~"levels = 3\n"
+~"ptidxbits = 9\n"
+~"ptesize = 8\n"
+~"vm = <optimized out>\n"
+~"sum = 0\n"
+~"mxr = <optimized out>\n"
+~"widened = <optimized out>\n"
+~"__func__ = \"get_physical_address\"\n"
+~"cs = 0x555556891a80\n"
+~"va_bits = <optimized out>\n"
+~"mask = <optimized out>\n"
+~"masked_msbs = <optimized out>\n"
+~"ptshift = 18\n"
+~"i = 0\n"
+55^done
+(gdb) 
+56^done,value="2149613568"
+(gdb) 
+57^done,value="3"
+(gdb) 
+58^running
+*running,thread-id="all"
+(gdb) 
+~"get_physical_address (env=env@entry=0x55555689ac00, physical=physical@entry=0x7ffff6b211b8, prot=prot@entry=0x7ffff6b211ac, addr=addr@entry=18446744072637950752, fault_pte_addr=fault_pte_addr@entry=0x0, access_type=access_type@entry=0, mmu_idx=1, first_stage=true, two_stage=false, is_debug=false) at ../target/riscv/cpu_helper.c:923\n"
+~"923\t            pte = address_space_ldq(cs->as, pte_addr, attrs, &res);\n"
+*stopped,reason="location-reached",frame={addr="0x0000555555a4b810",func="get_physical_address",args=[{name="env",value="0x55555689ac00"},{name="env@entry",value="0x55555689ac00"},{name="physical",value="0x7ffff6b211b8"},{name="physical@entry",value="0x7ffff6b211b8"},{name="prot",value="0x7ffff6b211ac"},{name="prot@entry",value="0x7ffff6b211ac"},{name="addr",value="18446744072637950752"},{name="addr@entry",value="18446744072637950752"},{name="fault_pte_addr",value="0x0"},{name="fault_pte_addr@entry",value="0x0"},{name="access_type",value="0"},{name="access_type@entry",value="0"},{name="mmu_idx",value="1"},{name="first_stage",value="true"},{name="two_stage",value="false"},{name="is_debug",value="false"}],file="../target/riscv/cpu_helper.c",fullname="/home/knight/src/qemu-7.0.0/target/riscv/cpu_helper.c",line="923",arch="i386:x86-64"},thread-id="3",stopped-threads="all",core="6"
+~"idx = 511\n"
+~"pmp_ret = <optimized out>\n"
+~"pte = <optimized out>\n"
+~"pte_addr = 2149617656\n"
+~"pmp_prot = <optimized out>\n"
+~"res = 0\n"
+~"attrs = <optimized out>\n"
+~"mode = <optimized out>\n"
+~"use_background = <optimized out>\n"
+~"ppn = <optimized out>\n"
+~"cpu = 0x555556891a80\n"
+~"napot_bits = 0\n"
+~"napot_mask = <optimized out>\n"
+~"base = 2149613568\n"
+~"levels = 3\n"
+~"ptidxbits = 9\n"
+~"ptesize = 8\n"
+~"vm = <optimized out>\n"
+~"sum = 0\n"
+~"mxr = <optimized out>\n"
+~"widened = <optimized out>\n"
+~"__func__ = \"get_physical_address\"\n"
+~"cs = 0x555556891a80\n"
+~"va_bits = <optimized out>\n"
+~"mask = <optimized out>\n"
+~"masked_msbs = <optimized out>\n"
+~"ptshift = 18\n"
+~"i = 0\n"
+59^done
+(gdb) 
+60^done,value="2149617656"
+(gdb) 
+61^done,value="511"
+(gdb) 
+62^done,value="0"
+(gdb) 
+63^done,value="18"
+(gdb) 
+64^running
+*running,thread-id="all"
+(gdb) 
+~"926\t        if (res != MEMTX_OK) {\n"
+*stopped,reason="end-stepping-range",frame={addr="0x0000555555a4b815",func="get_physical_address",args=[{name="env",value="0x55555689ac00"},{name="env@entry",value="0x55555689ac00"},{name="physical",value="0x7ffff6b211b8"},{name="physical@entry",value="0x7ffff6b211b8"},{name="prot",value="0x7ffff6b211ac"},{name="prot@entry",value="0x7ffff6b211ac"},{name="addr",value="18446744072637950752"},{name="addr@entry",value="18446744072637950752"},{name="fault_pte_addr",value="0x0"},{name="fault_pte_addr@entry",value="0x0"},{name="access_type",value="0"},{name="access_type@entry",value="0"},{name="mmu_idx",value="1"},{name="first_stage",value="true"},{name="two_stage",value="false"},{name="is_debug",value="false"}],file="../target/riscv/cpu_helper.c",fullname="/home/knight/src/qemu-7.0.0/target/riscv/cpu_helper.c",line="926",arch="i386:x86-64"},thread-id="3",stopped-threads="all",core="6"
+65^running
+*running,thread-id="all"
+(gdb) 
+~"get_physical_address (env=env@entry=0x55555689ac00, physical=physical@entry=0x7ffff6b211b8, prot=prot@entry=0x7ffff6b211ac, addr=addr@entry=18446744072637950752, fault_pte_addr=fault_pte_addr@entry=0x0, access_type=access_type@entry=0, mmu_idx=1, first_stage=true, two_stage=false, is_debug=false) at ../target/riscv/cpu_helper.c:941\n"
+~"941\t        if (!(pte & PTE_V)) {\n"
+*stopped,reason="location-reached",frame={addr="0x0000555555a4b85c",func="get_physical_address",args=[{name="env",value="0x55555689ac00"},{name="env@entry",value="0x55555689ac00"},{name="physical",value="0x7ffff6b211b8"},{name="physical@entry",value="0x7ffff6b211b8"},{name="prot",value="0x7ffff6b211ac"},{name="prot@entry",value="0x7ffff6b211ac"},{name="addr",value="18446744072637950752"},{name="addr@entry",value="18446744072637950752"},{name="fault_pte_addr",value="0x0"},{name="fault_pte_addr@entry",value="0x0"},{name="access_type",value="0"},{name="access_type@entry",value="0"},{name="mmu_idx",value="1"},{name="first_stage",value="true"},{name="two_stage",value="false"},{name="is_debug",value="false"}],file="../target/riscv/cpu_helper.c",fullname="/home/knight/src/qemu-7.0.0/target/riscv/cpu_helper.c",line="941",arch="i386:x86-64"},thread-id="3",stopped-threads="all",core="6"
+~"idx = 511\n"
+~"pmp_ret = <optimized out>\n"
+~"pte = 536871119\n"
+~"pte_addr = 2149617656\n"
+~"pmp_prot = <optimized out>\n"
+~"res = 0\n"
+~"attrs = <optimized out>\n"
+~"mode = <optimized out>\n"
+~"use_background = <optimized out>\n"
+~"ppn = 524288\n"
+~"cpu = 0x555556891a80\n"
+~"napot_bits = 0\n"
+~"napot_mask = <optimized out>\n"
+~"base = 2149613568\n"
+~"levels = 3\n"
+~"ptidxbits = 9\n"
+~"ptesize = 8\n"
+~"vm = <optimized out>\n"
+~"sum = 0\n"
+~"mxr = <optimized out>\n"
+~"widened = <optimized out>\n"
+~"__func__ = \"get_physical_address\"\n"
+~"cs = 0x555556891a80\n"
+~"va_bits = <optimized out>\n"
+~"mask = <optimized out>\n"
+~"masked_msbs = <optimized out>\n"
+~"ptshift = 18\n"
+~"i = 0\n"
+66^done
+(gdb) 
+67^done,value="536871119"
+(gdb) 
+68^running
+*running,thread-id="all"
+(gdb) 
+~"get_physical_address (env=env@entry=0x55555689ac00, physical=physical@entry=0x7ffff6b211b8, prot=prot@entry=0x7ffff6b211ac, addr=addr@entry=18446744072637950752, fault_pte_addr=fault_pte_addr@entry=0x0, access_type=access_type@entry=0, mmu_idx=1, first_stage=true, two_stage=false, is_debug=false) at ../target/riscv/cpu_helper.c:1033\n"
+~"1033\t            *physical = (((ppn & ~napot_mask) | (vpn & napot_mask) |\n"
+*stopped,reason="location-reached",frame={addr="0x0000555555a4bb8d",func="get_physical_address",args=[{name="env",value="0x55555689ac00"},{name="env@entry",value="0x55555689ac00"},{name="physical",value="0x7ffff6b211b8"},{name="physical@entry",value="0x7ffff6b211b8"},{name="prot",value="0x7ffff6b211ac"},{name="prot@entry",value="0x7ffff6b211ac"},{name="addr",value="18446744072637950752"},{name="addr@entry",value="18446744072637950752"},{name="fault_pte_addr",value="0x0"},{name="fault_pte_addr@entry",value="0x0"},{name="access_type",value="0"},{name="access_type@entry",value="0"},{name="mmu_idx",value="1"},{name="first_stage",value="true"},{name="two_stage",value="false"},{name="is_debug",value="false"}],file="../target/riscv/cpu_helper.c",fullname="/home/knight/src/qemu-7.0.0/target/riscv/cpu_helper.c",line="1033",arch="i386:x86-64"},thread-id="3",stopped-threads="all",core="6"
+~"updated_pte = 536871119\n"
+~"vpn = 4503599627108874\n"
+~"idx = <optimized out>\n"
+~"pmp_ret = <optimized out>\n"
+~"pte = 536871119\n"
+~"pte_addr = 2149617656\n"
+~"pmp_prot = <optimized out>\n"
+~"res = 0\n"
+~"attrs = <optimized out>\n"
+~"mode = <optimized out>\n"
+~"use_background = <optimized out>\n"
+~"ppn = 524288\n"
+~"cpu = 0x555556891a80\n"
+~"napot_bits = 0\n"
+~"napot_mask = <optimized out>\n"
+~"base = 2149613568\n"
+~"levels = 3\n"
+~"ptidxbits = 9\n"
+~"ptesize = 8\n"
+~"vm = <optimized out>\n"
+~"sum = 0\n"
+~"mxr = <optimized out>\n"
+~"widened = <optimized out>\n"
+~"__func__ = \"get_physical_address\"\n"
+~"cs = 0x555556891a80\n"
+~"va_bits = <optimized out>\n"
+~"mask = <optimized out>\n"
+~"masked_msbs = <optimized out>\n"
+~"ptshift = 18\n"
+~"i = 0\n"
+69^done
+(gdb) 
+~"Run till exit from #0  get_physical_address (env=env@entry=0x55555689ac00, physical=physical@entry=0x7ffff6b211b8, prot=prot@entry=0x7ffff6b211ac, addr=addr@entry=18446744072637950752, fault_pte_addr=fault_pte_addr@entry=0x0, access_type=access_type@entry=0, mmu_idx=1, first_stage=true, two_stage=false, is_debug=false) at ../target/riscv/cpu_helper.c:1033\n"
+70^running
+*running,thread-id="all"
+(gdb) 
+~"0x0000555555a4cbae in riscv_cpu_tlb_fill (cs=0x555556891a80, address=18446744072637950752, size=8, access_type=MMU_DATA_LOAD, mmu_idx=1, probe=<optimized out>, retaddr=140736146178371) at ../target/riscv/cpu_helper.c:1281\n"
+~"1281\t        qemu_log_mask(CPU_LOG_MMU,\n"
+~"Value returned is $5 = 0\n"
+*stopped,reason="function-finished",frame={addr="0x0000555555a4cbae",func="riscv_cpu_tlb_fill",args=[{name="cs",value="0x555556891a80"},{name="address",value="18446744072637950752"},{name="size",value="8"},{name="access_type",value="MMU_DATA_LOAD"},{name="mmu_idx",value="1"},{name="probe",value="<optimized out>"},{name="retaddr",value="140736146178371"}],file="../target/riscv/cpu_helper.c",fullname="/home/knight/src/qemu-7.0.0/target/riscv/cpu_helper.c",line="1281",arch="i386:x86-64"},gdb-result-var="$5",return-value="0",thread-id="3",stopped-threads="all",core="6"
+71^done,value="2149624608"
+(gdb) 
+~"Continuing.\n"
+72^running
+*running,thread-id="all"
+(gdb) 
+=breakpoint-modified,bkpt={number="6",type="breakpoint",disp="keep",enabled="y",addr="0x0000555555bae540",func="tlb_set_page_with_attrs",file="../accel/tcg/cputlb.c",fullname="/home/knight/src/qemu-7.0.0/accel/tcg/cputlb.c",line="1108",thread-groups=["i1"],cond="vaddr == 0xffffffffc020a000",times="1",original-location="tlb_set_page_with_attrs"}
+~"\n"
+~"Thread 3 \"qemu-system-ris\" hit Breakpoint 6, tlb_set_page_with_attrs (cpu=cpu@entry=0x555556891a80, vaddr=18446744072637947904, paddr=2149621760, attrs=attrs@entry=..., prot=7, mmu_idx=mmu_idx@entry=1, size=4096) at ../accel/tcg/cputlb.c:1108\n"
+~"1108\t{\n"
+*stopped,reason="breakpoint-hit",disp="keep",bkptno="6",frame={addr="0x0000555555bae540",func="tlb_set_page_with_attrs",args=[{name="cpu",value="0x555556891a80"},{name="cpu@entry",value="0x555556891a80"},{name="vaddr",value="18446744072637947904"},{name="paddr",value="2149621760"},{name="attrs",value="..."},{name="attrs@entry",value="..."},{name="prot",value="7"},{name="mmu_idx",value="1"},{name="mmu_idx@entry",value="1"},{name="size",value="4096"}],file="../accel/tcg/cputlb.c",fullname="/home/knight/src/qemu-7.0.0/accel/tcg/cputlb.c",line="1108",arch="i386:x86-64"},thread-id="3",stopped-threads="all",core="6"
+~"cpu = 0x555556891a80\n"
+~"vaddr = 18446744072637947904\n"
+~"paddr = 2149621760\n"
+~"attrs = {unspecified = 1, secure = 0, user = 0, memory = 0, requester_id = 0, byte_swap = 0, target_tlb_bit0 = 0, target_tlb_bit1 = 0, target_tlb_bit2 = 0}\n"
+~"prot = 7\n"
+~"mmu_idx = 1\n"
+~"size = 4096\n"
+73^done
+(gdb) 
+74^done,value="18446744072637947904"
+(gdb) 
+75^done,value="2149621760"
+(gdb) 
+76^done,value="18446744072637947904"
+(gdb) 
+77^done,value="2149621760"
+(gdb) 
+78^done,value="4096"
+(gdb) 
+79^done,value="7"
+(gdb) 
+~"Run till exit from #0  tlb_set_page_with_attrs (cpu=cpu@entry=0x555556891a80, vaddr=18446744072637947904, paddr=2149621760, attrs=attrs@entry=..., prot=7, mmu_idx=mmu_idx@entry=1, size=4096) at ../accel/tcg/cputlb.c:1108\n"
+80^running
+*running,thread-id="all"
+(gdb) 
+~"0x0000555555baeaea in tlb_set_page (cpu=cpu@entry=0x555556891a80, vaddr=<optimized out>, paddr=<optimized out>, prot=<optimized out>, mmu_idx=mmu_idx@entry=1, size=<optimized out>) at ../accel/tcg/cputlb.c:1284\n"
+~"1284\t}\n"
+*stopped,reason="function-finished",frame={addr="0x0000555555baeaea",func="tlb_set_page",args=[{name="cpu",value="0x555556891a80"},{name="cpu@entry",value="0x555556891a80"},{name="vaddr",value="<optimized out>"},{name="paddr",value="<optimized out>"},{name="prot",value="<optimized out>"},{name="mmu_idx",value="1"},{name="mmu_idx@entry",value="1"},{name="size",value="<optimized out>"}],file="../accel/tcg/cputlb.c",fullname="/home/knight/src/qemu-7.0.0/accel/tcg/cputlb.c",line="1284",arch="i386:x86-64"},thread-id="3",stopped-threads="all",core="6"
+81^done,value="2016"
+(gdb) 
+~"$6 = {{{addr_read = 0xffffffffc020a000, addr_write = 0xffffffffc020a000, addr_code = 0xffffffffc020a000, addend = 0x7fffe7e00000}, dummy = {0x0, 0xa0, 0x20, 0xc0, 0xff, 0xff, 0xff, 0xff, 0x0, 0xa0, 0x20, 0xc0, 0xff, 0xff, 0xff, 0xff, 0x0, 0xa0, 0x20, 0xc0, 0xff, 0xff, 0xff, 0xff, 0x0, 0x0, 0xe0, 0xe7, 0xff, 0x7f, 0x0, 0x0}}}\n"
+82^done
+(gdb) 
+83^done,value="18446744072637947904"
+(gdb) 
+84^done,value="140737083604992"
+(gdb) 
+85^done,value="2147483648"
+(gdb) 
+=breakpoint-deleted,id="4"
+=breakpoint-deleted,id="5"
+=breakpoint-deleted,id="6"
+86^done
+(gdb) 
+~"Breakpoint 7 at 0x555555a4c9c0: file ../target/riscv/cpu_helper.c, line 1184.\n"
+=breakpoint-created,bkpt={number="7",type="breakpoint",disp="keep",enabled="y",addr="0x0000555555a4c9c0",func="riscv_cpu_tlb_fill",file="../target/riscv/cpu_helper.c",fullname="/home/knight/src/qemu-7.0.0/target/riscv/cpu_helper.c",line="1184",thread-groups=["i1"],times="0",original-location="riscv_cpu_tlb_fill"}
+=breakpoint-modified,bkpt={number="7",type="breakpoint",disp="keep",enabled="y",addr="0x0000555555a4c9c0",func="riscv_cpu_tlb_fill",file="../target/riscv/cpu_helper.c",fullname="/home/knight/src/qemu-7.0.0/target/riscv/cpu_helper.c",line="1184",thread-groups=["i1"],cond="address == 0xffffffffc020ab20 && access_type == 0",times="0",original-location="riscv_cpu_tlb_fill"}
+~"Breakpoint 8 at 0x555555a4b3d0: file ../target/riscv/cpu_helper.c, line 750.\n"
+=breakpoint-created,bkpt={number="8",type="breakpoint",disp="keep",enabled="y",addr="0x0000555555a4b3d0",func="get_physical_address",file="../target/riscv/cpu_helper.c",fullname="/home/knight/src/qemu-7.0.0/target/riscv/cpu_helper.c",line="750",thread-groups=["i1"],times="0",original-location="get_physical_address"}
+=breakpoint-modified,bkpt={number="8",type="breakpoint",disp="keep",enabled="y",addr="0x0000555555a4b3d0",func="get_physical_address",file="../target/riscv/cpu_helper.c",fullname="/home/knight/src/qemu-7.0.0/target/riscv/cpu_helper.c",line="750",thread-groups=["i1"],cond="addr == 0xffffffffc020ab20 && !is_debug",times="0",original-location="get_physical_address"}
+87^done
+(gdb) 
+~"Continuing.\n"
+88^running
+*running,thread-id="all"
+(gdb) 
+~"\nThread "
+~"1 \"qemu-system-ris\" received signal SIGSTOP, Stopped (signal).\n"
+~"[Switching to Thread 0x7ffff7869bc0 (LWP 3411)]\n"
+~"0x00007ffff7718e1e in __ppoll (fds=0x555556d823b0, nfds=5, timeout=<optimized out>, timeout@entry=0x7fffffffdef0, sigmask=sigmask@entry=0x0) at ../sysdeps/unix/sysv/linux/ppoll.c:42\n"
+&"42\t../sysdeps/unix/sysv/linux/ppoll.c: No such file or directory.\n"
+*stopped,reason="signal-received",signal-name="SIGSTOP",signal-meaning="Stopped (signal)",frame={addr="0x00007ffff7718e1e",func="__ppoll",args=[{name="fds",value="0x555556d823b0"},{name="nfds",value="5"},{name="timeout",value="<optimized out>"},{name="timeout@entry",value="0x7fffffffdef0"},{name="sigmask",value="0x0"},{name="sigmask@entry",value="0x0"}],file="../sysdeps/unix/sysv/linux/ppoll.c",fullname="./io/../sysdeps/unix/sysv/linux/ppoll.c",line="42",arch="i386:x86-64"},thread-id="1",stopped-threads="all",core="9"
+89^done
+(gdb) 
+90^done
+(gdb) 
+91^done,value="1"
+(gdb) 
+92^done,value="1"
+(gdb) 
+93^done,value="2016"
+(gdb) 
+~"$7 = {{{addr_read = 0xffffffffc020a000, addr_write = 0xffffffffc020a000, addr_code = 0xffffffffc020a000, addend = 0x7fffe7e00000}, dummy = {0x0, 0xa0, 0x20, 0xc0, 0xff, 0xff, 0xff, 0xff, 0x0, 0xa0, 0x20, 0xc0, 0xff, 0xff, 0xff, 0xff, 0x0, 0xa0, 0x20, 0xc0, 0xff, 0xff, 0xff, 0xff, 0x0, 0x0, 0xe0, 0xe7, 0xff, 0x7f, 0x0, 0x0}}}\n"
+94^done
+(gdb) 
+95^done,value="18446744072637947904"
+(gdb) 
+96^done,value="140737083604992"
+(gdb) 
+~"Continuing.\n"
+97^running
+*running,thread-id="all"
+(gdb) 
+~"OBSERVED additional data TLB fill 2\n"
+~"OBSERVED additional real page walk 2\n"
+~"\nThread "
+~"1 \"qemu-system-ris\" received signal SIGSTOP, Stopped (signal).\n"
+~"0x00007ffff7718e1e in __ppoll (fds=0x555556d823b0, nfds=5, timeout=<optimized out>, timeout@entry=0x7fffffffdef0, sigmask=sigmask@entry=0x0) at ../sysdeps/unix/sysv/linux/ppoll.c:42\n"
+~"42\tin ../sysdeps/unix/sysv/linux/ppoll.c\n"
+*stopped,reason="signal-received",signal-name="SIGSTOP",signal-meaning="Stopped (signal)",frame={addr="0x00007ffff7718e1e",func="__ppoll",args=[{name="fds",value="0x555556d823b0"},{name="nfds",value="5"},{name="timeout",value="<optimized out>"},{name="timeout@entry",value="0x7fffffffdef0"},{name="sigmask",value="0x0"},{name="sigmask@entry",value="0x0"}],file="../sysdeps/unix/sysv/linux/ppoll.c",fullname="./io/../sysdeps/unix/sysv/linux/ppoll.c",line="42",arch="i386:x86-64"},thread-id="1",stopped-threads="all",core="9"
+98^done
+(gdb) 
+99^done
+(gdb) 
+100^done,value="2"
+(gdb) 
+101^done,value="2"
+(gdb) 
+102^done,value="2"
+(gdb) 
+103^done,value="2"
+(gdb) 
+=breakpoint-modified,bkpt={number="7",type="breakpoint",disp="keep",enabled="n",addr="0x0000555555a4c9c0",func="riscv_cpu_tlb_fill",file="../target/riscv/cpu_helper.c",fullname="/home/knight/src/qemu-7.0.0/target/riscv/cpu_helper.c",line="1184",thread-groups=["i1"],cond="address == 0xffffffffc020ab20 && access_type == 0",times="0",original-location="riscv_cpu_tlb_fill"}
+=breakpoint-modified,bkpt={number="8",type="breakpoint",disp="keep",enabled="n",addr="0x0000555555a4b3d0",func="get_physical_address",file="../target/riscv/cpu_helper.c",fullname="/home/knight/src/qemu-7.0.0/target/riscv/cpu_helper.c",line="750",thread-groups=["i1"],cond="addr == 0xffffffffc020ab20 && !is_debug",times="0",original-location="get_physical_address"}
+104^done
+(gdb) 
+~"Continuing.\n"
+105^running
+*running,thread-id="all"
+(gdb) 
+qemu-system-riscv64: QEMU: Terminated via GDBstub
+~"[Thread 0x7ffff7568640 (LWP 3414) exited]\n"
+=thread-exited,id="2",group-id="i1"
+~"[Thread 0x7ffff7869bc0 (LWP 3411) exited]\n"
+=thread-exited,id="1",group-id="i1"
+~"[Thread 0x7ffff6b22640 (LWP 3415) exited]\n"
+=thread-exited,id="3",group-id="i1"
+=thread-created,id="4",group-id="i1"
+~"[New process 3411]\n"
+~"[Inferior 1 (process 3411) exited normally]\n"
+=thread-exited,id="4",group-id="i1"
+=thread-group-exited,id="i1",exit-code="0"
+*stopped,reason="exited-normally"
+(gdb) 
+&"The program is not being run.\n"
+106^error,msg="The program is not being run."
+(gdb) 
+107^exit

@@ -5,9 +5,7 @@ SLASH	:= /
 
 V       := @
 
-#ifndef GCCPREFIX
-GCCPREFIX := riscv64-unknown-elf-
-#endif
+GCCPREFIX ?= $(if $(shell command -v riscv64-unknown-elf-gcc 2>/dev/null),riscv64-unknown-elf-,riscv64-linux-gnu-)
 
 ifndef QEMU
 QEMU := qemu-system-riscv64
@@ -27,7 +25,8 @@ endif
 HOSTCC		:= gcc
 HOSTCFLAGS	:= -Wall -O2
 
-GDB		:= $(GCCPREFIX)gdb
+GDB ?= $(if $(shell command -v $(GCCPREFIX)gdb 2>/dev/null),$(GCCPREFIX)gdb,gdb-multiarch)
+GDB_PORT ?= 1234
 
 CC		:= $(GCCPREFIX)gcc
 CFLAGS  := -mcmodel=medany -std=gnu99 -Wno-unused -Werror 
@@ -161,34 +160,21 @@ endif
 TARGETS: $(TARGETS)
 
 .DEFAULT_GOAL := TARGETS
-.PHONY: qemu spike test
-qemu: $(UCOREIMG) $(SWAPIMG) $(SFSIMG)
-	$(V)$(QEMU) \
-		-machine virt \
-		-nographic \
-		-bios default \
-		-device loader,file=$(UCOREIMG),addr=0x80200000
+QEMUOPTS = -machine virt -nographic -bios default -kernel $(UCOREIMG)
+
+.PHONY: qemu debug gdb spike test
+qemu test: $(UCOREIMG) $(SWAPIMG) $(SFSIMG)
+	$(V)$(QEMU) $(QEMUOPTS)
 
 debug: $(UCOREIMG) $(SWAPIMG) $(SFSIMG)
-	$(V)$(QEMU) \
-		-machine virt \
-		-nographic \
-		-bios default \
-		-device loader,file=$(UCOREIMG),addr=0x80200000\
-		-s -S
+	$(V)$(QEMU) $(QEMUOPTS) -gdb tcp:127.0.0.1:$(GDB_PORT) -S
 
-gdb:
-	riscv64-unknown-elf-gdb \
+gdb: $(kernel)
+	$(GDB) \
     -ex 'file bin/kernel' \
     -ex 'set arch riscv:rv64' \
-    -ex 'target remote localhost:1234'
+    -ex 'target remote 127.0.0.1:$(GDB_PORT)'
 
-test: $(UCOREIMG) $(SWAPIMG) $(SFSIMG)
-	$(V)$(QEMU) \
-		-machine virt \
-		-nographic \
-		-bios default \
-		-device loader,file=$(UCOREIMG),addr=0x80200000
 spike: $(UCOREIMG) $(SWAPIMG) $(SFSIMG)
 	$(V)$(SPIKE) $(UCOREIMG)
 
@@ -202,16 +188,14 @@ TOUCH_FILES		:= kern/trap/trap.c
 
 MAKEOPTS		:= --quiet --no-print-directory
 
-GRADE_TMP	:= /tmp/lab3_grade
+GRADE_TMP ?= $(abspath ../.temp/lab3-grade)
 
 grade:
-	$(V)$(MAKE) $(MAKEOPTS) clean
 	$(V)$(RM) -rf $(GRADE_TMP)
 	$(V)$(MKDIR) $(GRADE_TMP)
-	$(V)tar -C . --exclude=.git --exclude=.vscode --exclude=vcs -cf - . | tar -C $(GRADE_TMP) -xf -
+	$(V)tar -C . --exclude=.git --exclude=.vscode --exclude=vcs --exclude=obj --exclude=bin --exclude='.qemu*' -cf - . | tar -C $(GRADE_TMP) -xf -
 	$(V)python3 tools/inject.py $(GRADE_TMP)
 	$(V)cd $(GRADE_TMP) && $(SH) tools/grade.sh
-	$(V)$(RM) -rf $(GRADE_TMP)
 
 touch:
 	$(V)$(foreach f,$(TOUCH_FILES),$(TOUCH) $(f))

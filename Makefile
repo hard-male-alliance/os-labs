@@ -6,9 +6,9 @@ UV ?= uv
 PYTHON ?= $(UV) run --locked python
 
 .DEFAULT_GOAL := all
-.PHONY: all clean qemu debug gdb compdb doctor smoke
+.PHONY: all clean qemu debug gdb grade verify compdb doctor smoke
 
-all clean qemu debug gdb:
+all clean qemu debug gdb grade:
 	$(MAKE) -C $(LAB) $(if $(filter all,$@),TARGETS,$@)
 
 # Generate indexing commands from the real build instead of duplicating flags.
@@ -21,3 +21,6 @@ doctor:
 # The lab1 kernel intentionally loops forever; the smoke check stops only its QEMU.
 smoke: all
 	$(PYTHON) scripts/check_environment.py $(LAB) --smoke
+
+verify:
+	$(PYTHON) scripts/verify_lab3.py

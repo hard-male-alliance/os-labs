@@ -60,3 +60,18 @@ environments, caches and personal IDE state are not committed.
 
 See [docs/development.md](docs/development.md) for tooling and debugging details
 and [docs/course/SUMMARY.md](docs/course/SUMMARY.md) for the course book.
+
+## Lab3 delivery
+
+On branch `lab3`, the trap entry/return path, interrupt dispatch, recoverable
+exceptions and timer shutdown are implemented. The teacher-cancelled user/kernel
+switching Challenge is excluded. See [the report](report/report.md),
+[prompt/specification record](report/prompt.md), and
+[Lab3 development and Docker workflow](docs/lab3-development.md).
+
+```sh
+make grade             # Course grader; isolated copy, retained guest logs.
+make verify            # Real normal/probe boots, encoding checks and shutdown.
+```
+
+A host-independent toolchain image is provided in `docker/Dockerfile`.

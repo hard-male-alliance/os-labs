@@ -1,0 +1,12 @@
+The target architecture is set to "riscv:rv64".
+0x0000000000001000 in ?? ()
+Breakpoint 1 at 0xffffffffc0200c06: file kern/trap/trap.c, line 153.
+
+Breakpoint 1, trap (tf=0xffffffffc0205ed0) at kern/trap/trap.c:170
+170	    trap_dispatch(tf);
+trapframe bytes=288
+trapframe=0xffffffffc0205ed0 saved-sp=0xffffffffc0205ff0 delta=288
+saved cause=0x8000000000000005 epc=0xffffffffc02000b2 status=0x8000000200006120
+handler a0=0xffffffffc0205ed0 sscratch=0
+PASS: real timer trap layout, original SP and a0 frame argument
+[Inferior 1 (process 1) detached]

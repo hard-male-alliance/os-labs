@@ -1,0 +1,4 @@
+make -C code TARGETS
+make[1]: Entering directory '/workspace/code'
+make[1]: Nothing to be done for 'TARGETS'.
+make[1]: Leaving directory '/workspace/code'

@@ -1,0 +1,3 @@
+PASS: normal boot, allocator initialization, ten timer reports and QEMU shutdown
+PASS: 16/32-bit exception EPC advance, preserved a0, disabled SIE and cleared sscratch
+PASS: repeated timer return restores SIE; shutdown still occurs after 1000 ticks

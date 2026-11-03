@@ -255,3 +255,13 @@ Additional references:
 - [CLion CMake presets](https://www.jetbrains.com/help/clion/cmake-presets.html)
 - [Zephyr's production CMake/Ninja build model](https://docs.zephyrproject.org/latest/build/cmake/index.html)
 - [Build Systems a la Carte, ICFP 2018](https://www.microsoft.com/en-us/research/publication/build-systems-la-carte/)
+
+## Lab3 branch workflow
+
+Lab3 includes its own course grader and normal/probe boot verification.
+`make grade` runs the grader in `.temp/lab3-grade` without cleaning the working
+kernel. `make verify` checks actual QEMU exception returns and timer shutdown.
+Unlike Lab1, the normal Lab3 kernel intentionally shuts down after ten reports
+of 100 ticks. Use the [Lab3 notes](lab3-development.md) for the Docker toolchain,
+boot integration fixes, GDB probe and preserved evidence. The Lab1-only smoke
+check is not the Lab3 verification command.

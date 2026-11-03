@@ -1,4 +1,4 @@
-> 来源：[中断处理程序](http://8.135.34.58/lab2026/_book/lab3/lab3_3_3_trap.html)
+> 来源：[中断处理程序](http://oslab.mobisys.top/lab2026/_book/lab3/lab3_3_3_trap.html)
 
 <span id="中断处理程序"></span>
 
@@ -23,9 +23,6 @@ int kern_init(void) {
     idt_init();  // init interrupt descriptor table
     clock_init();   // init clock interrupt
     intr_enable();  // enable irq interrupt
-    // LAB3: CAHLLENGE 1 If you try to do it, uncomment lab3_switch_test()
-    // user/kernel mode switch test
-    // lab3_switch_test();
 
     /* do nothing */
     while (1)

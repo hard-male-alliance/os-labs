@@ -372,11 +372,13 @@
     },
     {
       "title": "练习",
-      "source": "http://8.135.34.58/lab2026/_book/lab3/lab3_2_1_exercise.html",
+      "source": "http://oslab.mobisys.top/lab2026/_book/lab3/lab3_2_1_exercise.html",
       "file": "lab3/lab3_2_1_exercise.md",
-      "sha256": "a81e75ca6a8c2e2e2d385dce86402d5b0cd589249c3b72c09e3f50851e8bd912",
+      "sha256": "d655dcad659415ac650986c99e5fec464ec62a097e152ce965d9c6e3ddfe1a99",
       "code_blocks": 3,
-      "images": 0
+      "images": 0,
+      "updated_on": "2026-11-03",
+      "update_note": "根据教师调整，增加本仓库补充说明：用户态／内核态切换 Challenge（lab3_switch_test()）不再要求完成，无需为其编写实现、测试或报告；该说明不属于网站原文。"
     },
     {
       "title": "项目组成和执行流",
@@ -412,11 +414,13 @@
     },
     {
       "title": "中断处理程序",
-      "source": "http://8.135.34.58/lab2026/_book/lab3/lab3_3_3_trap.html",
+      "source": "http://oslab.mobisys.top/lab2026/_book/lab3/lab3_3_3_trap.html",
       "file": "lab3/lab3_3_3_trap.md",
-      "sha256": "2d2f578bb11a4ee8cd2f59b74aaeb1573e72bc22ff3d74ce104b9fe200831910",
+      "sha256": "24fcd38966dce81ccaf9fc3c8c8aa373a1d7df5efc2d2d2260badf723fa0c70c",
       "code_blocks": 2,
-      "images": 2
+      "images": 2,
+      "updated_on": "2026-11-03",
+      "update_note": "与当前网站同步，删除 kern_init 示例中三行用户态／内核态切换 Challenge 注释。"
     },
     {
       "title": "滴答滴答（时钟中断）",

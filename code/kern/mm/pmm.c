@@ -87,7 +87,56 @@ size_t nr_free_pages(void)
     return ret;
 }
 
-//lab2 请补充你在lab2中的代码
+//lab2 function1 2413077 2410824 2413174
+static void page_init(void) {
+    extern char end[];
+    uint64_t mem_base = get_memory_base();
+    uint64_t mem_size = get_memory_size();
+
+    const uintptr_t kernel_start = KERNBASE - PHYSICAL_MEMORY_OFFSET;
+    const uintptr_t mapped_end = KERNTOP - PHYSICAL_MEMORY_OFFSET;
+    va_pa_offset = PHYSICAL_MEMORY_OFFSET;
+    if (mem_base == 0 || mem_size == 0 || mem_size > (uint64_t)-1 - mem_base) {
+        panic("invalid physical memory range from DTB");
+    }
+    uint64_t mem_end = mem_base + mem_size;
+    if (mem_base > kernel_start || mem_end <= kernel_start) {
+        panic("DTB memory does not contain the kernel");
+    }
+    cprintf("physical memory map:\n");
+    cprintf("  memory: [0x%016lx, 0x%016lx)\n", mem_base, mem_end);
+
+    // The boot mapping is fixed; DTB describes RAM, not our mapping capacity.
+    uintptr_t managed_end = ROUNDDOWN(mem_end < mapped_end ? mem_end : mapped_end, PGSIZE);
+    uintptr_t kernel_end = PADDR(end);
+    if (kernel_end < kernel_start || kernel_end > managed_end) {
+        panic("kernel lies outside manageable physical memory");
+    }
+    uintptr_t descriptors_pa = ROUNDUP(kernel_end, PGSIZE);
+    npage = PPN(managed_end);
+    if (npage <= nbase) {
+        panic("no manageable physical pages");
+    }
+    size_t descriptors_size = (npage - nbase) * sizeof(struct Page);
+    if (descriptors_pa > managed_end || descriptors_size > managed_end - descriptors_pa) {
+        panic("physical memory cannot hold page descriptors");
+    }
+    pages = (struct Page *)(descriptors_pa + va_pa_offset);
+    for (size_t i = 0; i < npage - nbase; i++) {
+        pages[i].flags = 0;
+        pages[i].property = 0;
+        set_page_ref(&pages[i], 0);
+        list_init(&pages[i].page_link);
+        SetPageReserved(&pages[i]);
+    }
+
+    uintptr_t free_start = ROUNDUP(descriptors_pa + descriptors_size, PGSIZE);
+    cprintf("  managed: [0x%016lx, 0x%016lx), free starts at 0x%016lx\n",
+            (uintptr_t)DRAM_BASE, managed_end, free_start);
+    if (free_start < managed_end) {
+        init_memmap(pa2page(free_start), (managed_end - free_start) / PGSIZE);
+    }
+}
 
 static void enable_paging(void)
 {
@@ -167,42 +216,57 @@ void pmm_init(void)
     kmalloc_init();
 }
 
-// get_pte - get pte and return the kernel virtual address of this pte for la
-//        - if the PT contians this pte didn't exist, alloc a page for PT
-// parameter:
-//  pgdir:  the kernel virtual base address of PDT
-//  la:     the linear address need to map
-//  create: a logical value to decide if alloc a page for PT
-// return vaule: the kernel virtual address of this pte
+static struct Page *alloc_pagetable(void)
+{
+    struct Page *page = alloc_page();
+    if (page != NULL)
+    {
+        set_page_ref(page, 1);
+        memset(page2kva(page), 0, PGSIZE);
+    }
+    return page;
+}
+
+// Find a 4 KiB slot without descending through the boot superpage.
 pte_t *get_pte(pde_t *pgdir, uintptr_t la, bool create)
 {
-    pde_t *pdep1 = &pgdir[PDX1(la)];
-    if (!(*pdep1 & PTE_V))
+    pde_t *root = &pgdir[PDX1(la)];
+    struct Page *new_root_child = NULL;
+    pde_t *middle;
+    if (*root & PTE_V)
     {
-        struct Page *page;
-        if (!create || (page = alloc_page()) == NULL)
+        if (*root & (PTE_R | PTE_W | PTE_X))
+            return NULL;
+        middle = KADDR(PDE_ADDR(*root));
+    }
+    else
+    {
+        if (!create || (new_root_child = alloc_pagetable()) == NULL)
+            return NULL;
+        middle = page2kva(new_root_child);
+    }
+
+    pde_t *entry = &middle[PDX0(la)];
+    if (!(*entry & PTE_V))
+    {
+        struct Page *leaf = create ? alloc_pagetable() : NULL;
+        if (leaf == NULL)
         {
+            if (new_root_child != NULL)
+                free_page(new_root_child);
             return NULL;
         }
-        set_page_ref(page, 1);
-        uintptr_t pa = page2pa(page);
-        memset(KADDR(pa), 0, PGSIZE);
-        *pdep1 = pte_create(page2ppn(page), PTE_U | PTE_V);
+        *entry = ptd_create(page2ppn(leaf));
+        if (new_root_child != NULL)
+            *root = ptd_create(page2ppn(new_root_child));
+        flush_tlb();
     }
-    pde_t *pdep0 = &((pte_t *)KADDR(PDE_ADDR(*pdep1)))[PDX0(la)];
-    if (!(*pdep0 & PTE_V))
+    else if (*entry & (PTE_R | PTE_W | PTE_X))
     {
-        struct Page *page;
-        if (!create || (page = alloc_page()) == NULL)
-        {
-            return NULL;
-        }
-        set_page_ref(page, 1);
-        uintptr_t pa = page2pa(page);
-        memset(KADDR(pa), 0, PGSIZE);
-        *pdep0 = pte_create(page2ppn(page), PTE_U | PTE_V);
+        return NULL;
     }
-    return &((pte_t *)KADDR(PDE_ADDR(*pdep0)))[PTX(la)];
+
+    return &((pte_t *)KADDR(PDE_ADDR(*entry)))[PTX(la)];
 }
 
 // get_page - get related Page struct for linear address la using PDT pgdir
@@ -220,21 +284,45 @@ struct Page *get_page(pde_t *pgdir, uintptr_t la, pte_t **ptep_store)
     return NULL;
 }
 
-//LAB4 function1 YOUR CODE
+//LAB4 function1 2413077 2410824 2413174
+static void put_page(struct Page *page)
+{
+    if (page_ref_dec(page) == 0)
+        free_page(page);
+}
 
+int page_insert(pde_t *pgdir, struct Page *page, uintptr_t la, uint32_t perm)
+{
+    pte_t *ptep = get_pte(pgdir, la, 1);
+    if (ptep == NULL)
+        return -E_NO_MEM;
 
+    struct Page *old = (*ptep & PTE_V) ? pte2page(*ptep) : NULL;
+    if (old != page)
+        page_ref_inc(page);
 
+    *ptep = pte_create(page2ppn(page), perm);
+    tlb_invalidate(pgdir, la);
+    if (old != NULL && old != page)
+        put_page(old);
+    return 0;
+}
 
+void page_remove(pde_t *pgdir, uintptr_t la)
+{
+    pte_t *ptep = get_pte(pgdir, la, 0);
+    if (ptep == NULL || !(*ptep & PTE_V))
+        return;
 
+    struct Page *page = pte2page(*ptep);
+    *ptep = 0;
+    tlb_invalidate(pgdir, la);
+    put_page(page);
+}
 
-
-// invalidate a TLB entry, but only if the page tables being
-// edited are the ones currently in use by the processor.
 void tlb_invalidate(pde_t *pgdir, uintptr_t la)
 {
-    // flush_tlb();
-    // The flush_tlb flush the entire TLB, is there any better way?
-    asm volatile("sfence.vma %0" : : "r"(la));
+    asm volatile("sfence.vma %0, zero" : : "r"(la) : "memory");
 }
 
 static void check_alloc_page(void)
@@ -274,7 +362,7 @@ static void check_pgdir(void)
     assert((ptep = get_pte(boot_pgdir_va, PGSIZE, 0)) != NULL);
     assert(*ptep & PTE_U);
     assert(*ptep & PTE_W);
-    assert(boot_pgdir_va[0] & PTE_U);
+    assert((boot_pgdir_va[0] & (PTE_U | PTE_A | PTE_D)) == 0);
     assert(page_ref(p2) == 1);
 
     assert(page_insert(boot_pgdir_va, p1, PGSIZE, 0) == 0);
@@ -308,16 +396,14 @@ static void check_pgdir(void)
 static void check_boot_pgdir(void)
 {
     size_t nr_free_store;
-    pte_t *ptep;
-    int i;
-
     nr_free_store = nr_free_pages();
 
-    for (i = ROUNDDOWN(KERNBASE, PGSIZE); i < npage * PGSIZE; i += PGSIZE)
-    {
-        assert((ptep = get_pte(boot_pgdir_va, (uintptr_t)KADDR(i), 0)) != NULL);
-        assert(PTE_ADDR(*ptep) == i);
-    }
+    // entry.S maps the entire managed range through one Sv39 level-2 leaf.
+    pte_t direct = boot_pgdir_va[PDX1(KERNBASE)];
+    assert((direct & (PTE_V | PTE_R | PTE_W | PTE_X)) ==
+           (PTE_V | PTE_R | PTE_W | PTE_X));
+    assert(PTE_ADDR(direct) == DRAM_BASE);
+    assert(PDX1((uintptr_t)KADDR(npage * PGSIZE - 1)) == PDX1(KERNBASE));
 
     assert(boot_pgdir_va[0] == 0);
 

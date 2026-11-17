@@ -23,7 +23,10 @@ make_print() {
     echo `$make $makeopts print-$1`
 }
 
-echo `$make`
+$make $makeopts TARGETS > "$out" 2> "$err" || {
+    echo "Lab4 grading build failed; run tools/grade.sh -v for details."
+    exit 1
+}
 
 ## command tools
 awk='awk'
@@ -150,6 +153,7 @@ run_qemu() {
         brkaddr=`$grep " $brkfun\$" $sym_table | $sed -e's/ .*$//g'`
         brkaddr_phys=`echo $brkaddr | sed "s/^c0/00/g"`
         (
+            echo "file bin/kernel"
             echo "target remote localhost:$gdbport"
             echo "break *0x$brkaddr"
             if [ "$brkaddr" != "$brkaddr_phys" ]; then
@@ -316,7 +320,7 @@ osimg=$(make_print ucoreimg)
 swapimg=$(make_print swapimg)
 
 ## set default qemu-options
-qemuopts="-machine virt -nographic -bios default -device loader,file=bin/ucore.img,addr=0x80200000"
+qemuopts="-machine virt -nographic -bios default -kernel $osimg"
 
 ## set break-function, default is readline
 brkfun=readline

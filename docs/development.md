@@ -255,3 +255,18 @@ Additional references:
 - [CLion CMake presets](https://www.jetbrains.com/help/clion/cmake-presets.html)
 - [Zephyr's production CMake/Ninja build model](https://docs.zephyrproject.org/latest/build/cmake/index.html)
 - [Build Systems a la Carte, ICFP 2018](https://www.microsoft.com/en-us/research/publication/build-systems-la-carte/)
+
+## Lab4 container and grading
+
+Build the RV64 toolchain image with `docker build -t os-labs:lab4 -f
+docker/Dockerfile docker`, then run `make qemu` or `make grade` in the mounted
+repository at `/workspace`. The grader builds an injected copy under
+`.temp/lab4-grade/` and retains its `.qemu.out`; it does not clean or instrument
+the normal kernel build. `gdb-multiarch` is the fallback if the cross GDB is absent.
+
+The default QEMU firmware needs `-kernel` for its entry handoff. Lab4 carries
+forward Lab3's temporary identity mapping because writing `satp` does not move
+the current PC. The permanent kernel direct map is a level-2 Sv39 leaf, not
+a tree of 4 KiB PTEs. Dynamic mappings on this branch use 4 KiB leaves and
+keep U/A/D clear in intermediate entries; older starter assertions requiring
+a non-leaf U bit contradicted the hardware walk.

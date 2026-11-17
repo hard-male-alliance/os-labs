@@ -27,7 +27,7 @@ endif
 HOSTCC		:= gcc
 HOSTCFLAGS	:= -Wall -O2
 
-GDB		:= $(GCCPREFIX)gdb
+GDB ?= $(if $(shell command -v $(GCCPREFIX)gdb 2>/dev/null),$(GCCPREFIX)gdb,gdb-multiarch)
 
 CC		:= $(GCCPREFIX)gcc
 CFLAGS  := -mcmodel=medany -O2 -std=gnu99 -Wno-unused
@@ -173,18 +173,18 @@ qemu: $(UCOREIMG) $(SWAPIMG) $(SFSIMG)
 		-machine virt \
 		-nographic \
 		-bios default \
-		-device loader,file=$(UCOREIMG),addr=0x80200000
+		-kernel $(UCOREIMG)
 
 debug: $(UCOREIMG) $(SWAPIMG) $(SFSIMG)
 	$(V)$(QEMU) \
 		-machine virt \
 		-nographic \
 		-bios default \
-		-device loader,file=$(UCOREIMG),addr=0x80200000\
+		-kernel $(UCOREIMG)\
 		-s -S
 
 gdb:
-	riscv64-unknown-elf-gdb \
+	$(GDB) \
     -ex 'file bin/kernel' \
     -ex 'set arch riscv:rv64' \
     -ex 'target remote localhost:1234'
@@ -202,16 +202,14 @@ TOUCH_FILES		:= kern/trap/trap.c
 
 MAKEOPTS		:= --quiet --no-print-directory
 
-GRADE_TMP		:= /tmp/lab4_grade
+GRADE_TMP       := $(abspath ../.temp/lab4-grade)
 
 grade:
-	$(V)$(MAKE) $(MAKEOPTS) clean
-	$(V)$(RM) -rf $(GRADE_TMP)
-	$(V)$(MKDIR) $(GRADE_TMP)
-	$(V)tar -C . --exclude=.git --exclude=.vscode --exclude=vcs -cf - . | tar -C $(GRADE_TMP) -xf -
-	$(V)python3 tools/inject.py $(GRADE_TMP)
-	$(V)cd $(GRADE_TMP) && $(SH) tools/grade.sh
-	$(V)$(RM) -rf $(GRADE_TMP)
+	$(V)$(RM) -rf "$(GRADE_TMP)"
+	$(V)$(MKDIR) "$(GRADE_TMP)"
+	$(V)tar --exclude=./obj --exclude=./bin -cf - . | tar -C "$(GRADE_TMP)" -xf -
+	$(V)python3 tools/inject.py "$(GRADE_TMP)"
+	$(V)cd "$(GRADE_TMP)" && $(SH) tools/grade.sh
 
 touch:
 	$(V)$(foreach f,$(TOUCH_FILES),$(TOUCH) $(f))

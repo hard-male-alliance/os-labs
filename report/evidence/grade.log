@@ -1,0 +1,8 @@
+make -C code grade
+make[1]: Entering directory '/workspace/code'
+lab4 injection complete
+  -check PMM:                                OK
+  -check Process Create:                     OK
+  -check Schedule:                           OK
+Total Score: 30/30
+make[1]: Leaving directory '/workspace/code'

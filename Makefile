@@ -6,9 +6,9 @@ UV ?= uv
 PYTHON ?= $(UV) run --locked python
 
 .DEFAULT_GOAL := all
-.PHONY: all clean qemu debug gdb compdb doctor smoke
+.PHONY: all clean qemu debug gdb grade compdb doctor smoke
 
-all clean qemu debug gdb:
+all clean qemu debug gdb grade:
 	$(MAKE) -C $(LAB) $(if $(filter all,$@),TARGETS,$@)
 
 # Generate indexing commands from the real build instead of duplicating flags.

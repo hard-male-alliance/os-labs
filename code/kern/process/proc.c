@@ -11,6 +11,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
+#include <riscv.h>
 
 /* ------------- process/thread mechanism design&implementation -------------
 (an simplified Linux process/thread mechanism )
@@ -86,7 +87,7 @@ char *
 set_proc_name(struct proc_struct *proc, const char *name)
 {
     memset(proc->name, 0, sizeof(proc->name));
-    return memcpy(proc->name, name, PROC_NAME_LEN);
+    return memcpy(proc->name, name, strnlen(name, PROC_NAME_LEN));
 }
 
 // get_proc_name - get the name of proc
@@ -218,7 +219,140 @@ init_main(void *arg)
     return 0;
 }
 
-//LAB4 function2 YOUR CODE
+//LAB4 function2 2413077 2410824 2413174
+static struct proc_struct *
+alloc_proc(void)
+{
+    struct proc_struct *proc = kmalloc(sizeof(*proc));
+    if (proc != NULL)
+    {
+        memset(proc, 0, sizeof(*proc));
+        proc->state = PROC_UNINIT;
+        proc->pid = -1;
+        proc->pgdir = boot_pgdir_pa;
+    }
+    return proc;
+}
 
+static int
+copy_mm(uint32_t clone_flags, struct proc_struct *proc)
+{
+    // Lab4 has only kernel threads using the boot page table.
+    assert(current->mm == NULL);
+    return 0;
+}
 
-//LAB4 function3 YOUR CODE
+static void
+copy_thread(struct proc_struct *proc, uintptr_t stack, struct trapframe *tf)
+{
+    uintptr_t top = proc->kstack + KSTACKSIZE;
+    proc->tf = (struct trapframe *)top - 1;
+    *proc->tf = *tf;
+    proc->tf->gpr.a0 = 0;
+    proc->tf->gpr.sp = stack != 0 ? stack : top;
+    proc->context.ra = (uintptr_t)forkret;
+    proc->context.sp = (uintptr_t)proc->tf;
+}
+
+int
+do_fork(uint32_t clone_flags, uintptr_t stack, struct trapframe *tf)
+{
+    if (nr_process >= MAX_PROCESS)
+        return -E_NO_FREE_PROC;
+
+    struct proc_struct *proc = alloc_proc();
+    if (proc == NULL)
+        return -E_NO_MEM;
+
+    proc->parent = current;
+    int ret = setup_kstack(proc);
+    if (ret != 0)
+        goto free_proc;
+    ret = copy_mm(clone_flags, proc);
+    if (ret != 0)
+        goto free_stack;
+    copy_thread(proc, stack, tf);
+
+    bool intr_flag;
+    local_intr_save(intr_flag);
+    ret = proc->pid = get_pid();
+    hash_proc(proc);
+    list_add_before(&proc_list, &proc->list_link);
+    nr_process++;
+    wakeup_proc(proc);
+    local_intr_restore(intr_flag);
+    return ret;
+
+free_stack:
+    put_kstack(proc);
+free_proc:
+    kfree(proc);
+    return ret;
+}
+
+int
+kernel_thread(int (*fn)(void *), void *arg, uint32_t clone_flags)
+{
+    struct trapframe tf = {0};
+    tf.gpr.s0 = (uintptr_t)fn;
+    tf.gpr.s1 = (uintptr_t)arg;
+    tf.status = (read_csr(sstatus) | SSTATUS_SPP | SSTATUS_SPIE) & ~SSTATUS_SIE;
+    tf.epc = (uintptr_t)kernel_thread_entry;
+    return do_fork(clone_flags | CLONE_VM, 0, &tf);
+}
+
+void
+proc_init(void)
+{
+    list_init(&proc_list);
+    for (size_t i = 0; i < HASH_LIST_SIZE; i++)
+        list_init(&hash_list[i]);
+
+    idleproc = alloc_proc();
+    if (idleproc == NULL)
+        panic("cannot allocate idleproc");
+    idleproc->pid = 0;
+    idleproc->state = PROC_RUNNABLE;
+    idleproc->kstack = (uintptr_t)bootstack;
+    idleproc->need_resched = 1;
+    set_proc_name(idleproc, "idle");
+    nr_process++;
+    current = idleproc;
+
+    int pid = kernel_thread(init_main, "Hello world!!", 0);
+    if (pid < 0)
+        panic("cannot create initproc: %d", pid);
+    initproc = find_proc(pid);
+    set_proc_name(initproc, "init");
+}
+
+//LAB4 function3 2413077 2410824 2413174
+void
+proc_run(struct proc_struct *proc)
+{
+    struct proc_struct *prev = current;
+    if (prev == proc)
+        return;
+
+    bool intr_flag;
+    local_intr_save(intr_flag);
+    current = proc;
+    if (prev->pgdir != proc->pgdir)
+    {
+        write_csr(satp, ((uintptr_t)SATP_MODE_SV39 << 60) |
+                        (proc->pgdir >> RISCV_PGSHIFT));
+        flush_tlb();
+    }
+    switch_to(&prev->context, &proc->context);
+    local_intr_restore(intr_flag);
+}
+
+void
+cpu_idle(void)
+{
+    while (1)
+    {
+        if (current->need_resched)
+            schedule();
+    }
+}

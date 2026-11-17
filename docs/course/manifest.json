@@ -468,11 +468,13 @@
     },
     {
       "title": "练习",
-      "source": "http://8.135.34.58/lab2026/_book/lab4/lab4_2_1_exercises.html",
+      "source": "http://oslab.mobisys.top/lab2026/_book/lab4/lab4_2_1_exercises.html",
       "file": "lab4/lab4_2_1_exercises.md",
-      "sha256": "42a684c2815e6a3d1c43cc0c0613c478ef54b2ad594bfb4007b4597f59356938",
+      "sha256": "467dd2851262960f06eeb6ac72c6bae3bff24644bbef2a87bb100f2e6962b3d9",
       "code_blocks": 3,
-      "images": 0
+      "images": 0,
+      "updated_on": "2026-11-17",
+      "update_note": "同步当前网站的 Sv39 页表切换说明，更新调度模块可用接口，并补充 lsatp() 的 Sv32 遗留实现限制。"
     },
     {
       "title": "项目组成",

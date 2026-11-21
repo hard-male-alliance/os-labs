@@ -1,0 +1,45 @@
+add symbol table from file "obj/__user_hello.out"
+0x0000000000001000 in ?? ()
+Hardware assisted breakpoint 1 at 0x8000a2: file user/libs/syscall.c, line 13.
+
+Breakpoint 1, syscall (num=30, arg1=72, arg2=0, arg3=0, arg4=0) at user/libs/syscall.c:13
+13	    asm volatile("ecall" : "+r"(a0) : "r"(a1), "r"(a2), "r"(a3), "r"(a4) : "memory");
+
+[GUEST] Before ECALL
+=> 0x8000a2 <sys_putc+10>:	ecall
+pc             0x8000a2	0x8000a2 <sys_putc+10>
+a0             0x1e	30
+a1             0x48	72
+Hardware assisted breakpoint 2 at 0xffffffffc0200d6c: file kern/trap/trapentry.S, line 118.
+
+Temporary breakpoint 2, __alltraps () at kern/trap/trapentry.S:118
+118	    SAVE_ALL
+
+[GUEST] After ECALL
+pc             0xffffffffc0200d6c	0xffffffffc0200d6c <__alltraps>
+sepc           0x8000a2	8388770
+scause         0x8	8
+sstatus        0x200040020	8590196768
+Hardware assisted breakpoint 3 at 0xffffffffc0200e36: file kern/trap/trapentry.S, line 129.
+
+Temporary breakpoint 3, __trapret () at kern/trap/trapentry.S:129
+129	    sret
+
+[GUEST] Before SRET
+=> 0xffffffffc0200e36 <__trapret+90>:	sret
+pc             0xffffffffc0200e36	0xffffffffc0200e36 <__trapret+90>
+sepc           0x8000a6	8388774
+scause         0x8	8
+sstatus        0x200040020	8590196768
+sscratch       0xffffffffc04b9000	-1068789760
+a0             0x0	0
+Hardware assisted breakpoint 4 at 0x8000a6: file user/libs/syscall.c, line 14.
+
+Temporary breakpoint 4, sys_putc (c=72) at user/libs/syscall.c:14
+14	    return (int)a0;
+
+[GUEST] After SRET
+=> 0x8000a6 <sys_putc+14>:	sext.w	a0,a0
+pc             0x8000a6	0x8000a6 <sys_putc+14>
+a0             0x0	0
+[Inferior 1 (process 1) detached]

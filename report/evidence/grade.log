@@ -1,0 +1,44 @@
+make -C code grade
+make[1]: Entering directory 'code'
+lab5 injection complete
+badsegment:              (1.4s)
+  -check result:                             OK
+  -check output:                             OK
+divzero:                 (1.4s)
+  -check result:                             OK
+  -check output:                             OK
+softint:                 (1.4s)
+  -check result:                             OK
+  -check output:                             OK
+faultread:               (1.3s)
+  -check result:                             OK
+  -check output:                             OK
+faultreadkernel:         (1.4s)
+  -check result:                             OK
+  -check output:                             OK
+hello:                   (1.4s)
+  -check result:                             OK
+  -check output:                             OK
+testbss:                 (1.4s)
+  -check result:                             OK
+  -check output:                             OK
+pgdir:                   (1.4s)
+  -check result:                             OK
+  -check output:                             OK
+yield:                   (1.4s)
+  -check result:                             OK
+  -check output:                             OK
+badarg:                  (1.4s)
+  -check result:                             OK
+  -check output:                             OK
+exit:                    (1.4s)
+  -check result:                             OK
+  -check output:                             OK
+spin:                    (1.5s)
+  -check result:                             OK
+  -check output:                             OK
+forktest:                (1.5s)
+  -check result:                             OK
+  -check output:                             OK
+Total Score: 130/130
+make[1]: Leaving directory 'code'

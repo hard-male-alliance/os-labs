@@ -11,6 +11,7 @@
 
 /* Represents true-or-false values */
 typedef long long bool;
+enum { false = 0, true = 1 };
 
 /* Explicitly-sized versions of integer types */
 typedef char int8_t;

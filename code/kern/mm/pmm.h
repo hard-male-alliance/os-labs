@@ -45,8 +45,8 @@ int page_insert(pde_t *pgdir, struct Page *page, uintptr_t la, uint32_t perm);
 void load_esp0(uintptr_t esp0);
 void tlb_invalidate(pde_t *pgdir, uintptr_t la);
 struct Page *pgdir_alloc_page(pde_t *pgdir, uintptr_t la, uint32_t perm);
-void unmap_range(pde_t *pgdir, uintptr_t start, uintptr_t end);
-void exit_range(pde_t *pgdir, uintptr_t start, uintptr_t end);
+void free_user_pgdir(pde_t *pgdir);
+int resolve_cow(pde_t *pgdir, uintptr_t addr);
 int copy_range(pde_t *to, pde_t *from, uintptr_t start, uintptr_t end, bool share);
 
 void print_pgdir(void);
@@ -163,7 +163,7 @@ page_ref_dec(struct Page *page)
 
 static inline void flush_tlb()
 {
-    asm volatile("sfence.vma");
+    asm volatile("sfence.vma" ::: "memory");
 }
 
 // construct PTE from a page and permission bits

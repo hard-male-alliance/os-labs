@@ -76,6 +76,7 @@ typedef struct bigblock bigblock_t;
 static slob_t arena = {.next = &arena, .units = 1};
 static slob_t *slobfree = &arena;
 static bigblock_t *bigblocks;
+static size_t allocated_bytes;
 
 static void *__slob_get_free_pages(gfp_t gfp, int order)
 {
@@ -89,10 +90,10 @@ static void *__slob_get_free_pages(gfp_t gfp, int order)
 
 static inline void __slob_free_pages(unsigned long kva, int order)
 {
-	free_pages(kva2page(kva), 1 << order);
+	free_pages(kva2page((void *)kva), 1 << order);
 }
 
-static void slob_free(void *b, int size);
+static void slob_free(void *b, int size, bool release);
 
 static void *slob_alloc(size_t size, gfp_t gfp, int align)
 {
@@ -134,6 +135,7 @@ static void *slob_alloc(size_t size, gfp_t gfp, int align)
 			}
 
 			slobfree = prev;
+			allocated_bytes += units * SLOB_UNIT;
 			spin_unlock_irqrestore(&slob_lock, flags);
 			return cur;
 		}
@@ -141,21 +143,23 @@ static void *slob_alloc(size_t size, gfp_t gfp, int align)
 		{
 			spin_unlock_irqrestore(&slob_lock, flags);
 
-			if (size == PAGE_SIZE) /* trying to shrink arena? */
-				return 0;
-
 			cur = (slob_t *)__slob_get_free_page(gfp);
 			if (!cur)
 				return 0;
 
-			slob_free(cur, PAGE_SIZE);
+			slob_free(cur, PAGE_SIZE, false);
 			spin_lock_irqsave(&slob_lock, flags);
 			cur = slobfree;
 		}
 	}
 }
 
-static void slob_free(void *block, int size)
+static bool slob_same_page(slob_t *a, slob_t *b)
+{
+	return ROUNDDOWN((uintptr_t)a, PAGE_SIZE) == ROUNDDOWN((uintptr_t)b, PAGE_SIZE);
+}
+
+static void slob_free(void *block, int size, bool release)
 {
 	slob_t *cur, *b = (slob_t *)block;
 	unsigned long flags;
@@ -168,11 +172,13 @@ static void slob_free(void *block, int size)
 
 	/* Find reinsertion point */
 	spin_lock_irqsave(&slob_lock, flags);
+	if (release)
+		allocated_bytes -= b->units * SLOB_UNIT;
 	for (cur = slobfree; !(b > cur && b < cur->next); cur = cur->next)
 		if (cur >= cur->next && (b > cur || b < cur->next))
 			break;
 
-	if (b + b->units == cur->next)
+	if (slob_same_page(b, cur->next) && b + b->units == cur->next)
 	{
 		b->units += cur->next->units;
 		b->next = cur->next->next;
@@ -180,15 +186,25 @@ static void slob_free(void *block, int size)
 	else
 		b->next = cur->next;
 
-	if (cur + cur->units == b)
+	if (slob_same_page(cur, b) && cur + cur->units == b)
 	{
 		cur->units += b->units;
 		cur->next = b->next;
+		b = cur;
 	}
 	else
 		cur->next = b;
 
 	slobfree = cur;
+	// Independent arenas let a fully free page go back to the PMM.
+	if (release && b->units == PAGE_SIZE / SLOB_UNIT)
+	{
+		while (cur->next != b)
+			cur = cur->next;
+		cur->next = b->next;
+		slobfree = cur;
+		__slob_free_pages((uintptr_t)b, 0);
+	}
 
 	spin_unlock_irqrestore(&slob_lock, flags);
 }
@@ -205,16 +221,13 @@ kmalloc_init(void)
 	cprintf("kmalloc_init() succeeded!\n");
 }
 
-size_t
-slob_allocated(void)
+size_t kallocated(void)
 {
-	return 0;
-}
-
-size_t
-kallocated(void)
-{
-	return slob_allocated();
+	bool intr_flag;
+	local_intr_save(intr_flag);
+	size_t bytes = allocated_bytes;
+	local_intr_restore(intr_flag);
+	return bytes;
 }
 
 static int find_order(int size)
@@ -249,11 +262,12 @@ static void *__kmalloc(size_t size, gfp_t gfp)
 		spin_lock_irqsave(&block_lock, flags);
 		bb->next = bigblocks;
 		bigblocks = bb;
+		allocated_bytes += (size_t)PAGE_SIZE << bb->order;
 		spin_unlock_irqrestore(&block_lock, flags);
 		return bb->pages;
 	}
 
-	slob_free(bb, sizeof(bigblock_t));
+	slob_free(bb, sizeof(bigblock_t), true);
 	return 0;
 }
 
@@ -280,16 +294,17 @@ void kfree(void *block)
 			if (bb->pages == block)
 			{
 				*last = bb->next;
+				allocated_bytes -= (size_t)PAGE_SIZE << bb->order;
 				spin_unlock_irqrestore(&block_lock, flags);
 				__slob_free_pages((unsigned long)block, bb->order);
-				slob_free(bb, sizeof(bigblock_t));
+				slob_free(bb, sizeof(bigblock_t), true);
 				return;
 			}
 		}
 		spin_unlock_irqrestore(&block_lock, flags);
 	}
 
-	slob_free((slob_t *)block - 1, 0);
+	slob_free((slob_t *)block - 1, 0, true);
 	return;
 }
 

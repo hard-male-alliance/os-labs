@@ -8,6 +8,7 @@
 #include <assert.h>
 #include <console.h>
 #include <vmm.h>
+#include <pmm.h>
 #include <kdebug.h>
 #include <unistd.h>
 #include <syscall.h>
@@ -17,15 +18,6 @@
 #include <sbi.h>
 
 #define TICK_NUM 100
-
-static void print_ticks()
-{
-    cprintf("%d ticks\n", TICK_NUM);
-#ifdef DEBUG_GRADE
-    cprintf("End of Test.\n");
-    panic("EOT: kernel seems ok.");
-#endif
-}
 
 /* idt_init - initialize IDT to each of the entry points in kern/trap/vectors.S */
 void idt_init(void)
@@ -93,12 +85,46 @@ void print_regs(struct pushregs *gpr)
     cprintf("  t6       0x%08x\n", gpr->t6);
 }
 
-extern struct mm_struct *check_mm_struct;
+//lab3 function1 2413077 2410824 2413174
+static void interrupt_handler(struct trapframe *tf)
+{
+    uintptr_t irq = tf->cause & ~((uintptr_t)1 << (sizeof(uintptr_t) * 8 - 1));
+    if (irq == IRQ_S_TIMER)
+    {
+        clock_set_next_event();
+        if (++ticks % TICK_NUM == 0)
+            cprintf("%d ticks\n", TICK_NUM);
+        if (current != NULL)
+            current->need_resched = true;
+        return;
+    }
+    print_trapframe(tf);
+    panic("unexpected interrupt");
+}
 
-//lab3 请补充你在lab3中的代码
-
-//lab5 function1 YOUR CODE update exception_handler
-
+//lab5 function1 2413077 2410824 2413174
+void exception_handler(struct trapframe *tf)
+{
+    if (tf->cause == CAUSE_USER_ECALL)
+    {
+        tf->epc += 4;
+        syscall();
+        return;
+    }
+    if (!trap_in_kernel(tf))
+    {
+        int ret = -E_FAULT;
+        if (tf->cause == CAUSE_STORE_PAGE_FAULT)
+            ret = resolve_cow(current->mm->pgdir, tf->tval);
+        if (ret == 0)
+            return;
+        cprintf("user fault: pid=%d, cause=%lu, epc=%p, address=%p\n",
+                current->pid, tf->cause, (void *)tf->epc, (void *)tf->tval);
+        do_exit(ret);
+    }
+    print_trapframe(tf);
+    panic("unexpected supervisor exception");
+}
 
 static inline void trap_dispatch(struct trapframe *tf)
 {
@@ -114,39 +140,24 @@ static inline void trap_dispatch(struct trapframe *tf)
     }
 }
 
-/* *
- * trap - handles or dispatches an exception/interrupt. if and when trap() returns,
- * the code in kern/trap/trapentry.S restores the old CPU state saved in the
- * trapframe and then uses the iret instruction to return from the exception.
- * */
+/* Restore the previous frame for nested S-mode traps before scheduling. */
 void trap(struct trapframe *tf)
 {
-    // dispatch based on what type of trap occurred
-    //    cputs("some trap");
     if (current == NULL)
     {
         trap_dispatch(tf);
+        return;
     }
-    else
-    {
-        struct trapframe *otf = current->tf;
-        current->tf = tf;
 
-        bool in_kernel = trap_in_kernel(tf);
+    struct trapframe *previous = current->tf;
+    current->tf = tf;
+    trap_dispatch(tf);
+    current->tf = previous;
 
-        trap_dispatch(tf);
-
-        current->tf = otf;
-        if (!in_kernel)
-        {
-            if (current->flags & PF_EXITING)
-            {
-                do_exit(-E_KILLED);
-            }
-            if (current->need_resched)
-            {
-                schedule();
-            }
-        }
-    }
+    if (trap_in_kernel(tf))
+        return;
+    if (current->need_resched)
+        schedule();
+    if (current->flags & PF_EXITING)
+        do_exit(-E_KILLED);
 }

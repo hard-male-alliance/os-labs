@@ -12,6 +12,7 @@
 #include <stdlib.h>
 #include <assert.h>
 #include <unistd.h>
+#include <kmonitor.h>
 
 /* ------------- process/thread mechanism design&implementation -------------
 (an simplified Linux process/thread mechanism )
@@ -79,20 +80,29 @@ struct proc_struct *current = NULL;
 static int nr_process = 0;
 
 void kernel_thread_entry(void);
-void forkrets(struct trapframe *tf);
+void forkrets(struct trapframe *tf) __attribute__((noreturn));
 void switch_to(struct context *from, struct context *to);
 
-//lab4 请补充你在lab4中的代码
-
-//lab5 function2 YOUR CODE update alloc_proc
-
+//lab5 function2 2413077 2410824 2413174
+static struct proc_struct *alloc_proc(void)
+{
+    struct proc_struct *proc = kmalloc(sizeof(*proc));
+    if (proc != NULL)
+    {
+        memset(proc, 0, sizeof(*proc));
+        proc->state = PROC_UNINIT;
+        proc->pid = -1;
+        proc->pgdir = boot_pgdir_pa;
+    }
+    return proc;
+}
 
 // set_proc_name - set the name of proc
 char *
 set_proc_name(struct proc_struct *proc, const char *name)
 {
     memset(proc->name, 0, sizeof(proc->name));
-    return memcpy(proc->name, name, PROC_NAME_LEN);
+    return memcpy(proc->name, name, strnlen(name, PROC_NAME_LEN));
 }
 
 // get_proc_name - get the name of proc
@@ -104,17 +114,20 @@ get_proc_name(struct proc_struct *proc)
     return memcpy(name, proc->name, PROC_NAME_LEN);
 }
 
-// set_links - set the relation links of process
-static void
-set_links(struct proc_struct *proc)
+static void link_child(struct proc_struct *parent, struct proc_struct *child)
 {
-    list_add(&proc_list, &(proc->list_link));
-    proc->yptr = NULL;
-    if ((proc->optr = proc->parent->cptr) != NULL)
-    {
-        proc->optr->yptr = proc;
-    }
-    proc->parent->cptr = proc;
+    child->parent = parent;
+    child->yptr = NULL;
+    child->optr = parent->cptr;
+    if (child->optr != NULL)
+        child->optr->yptr = child;
+    parent->cptr = child;
+}
+
+static void set_links(struct proc_struct *proc)
+{
+    list_add_before(&proc_list, &proc->list_link);
+    link_child(current, proc);
     nr_process++;
 }
 
@@ -228,9 +241,6 @@ find_proc(int pid)
     return NULL;
 }
 
-//lab5 function2 YOUR CODE update kernel_thread
-
-
 // setup_kstack - alloc pages with size KSTACKPAGE as process kernel stack
 static int
 setup_kstack(struct proc_struct *proc)
@@ -274,41 +284,471 @@ put_pgdir(struct mm_struct *mm)
     free_page(kva2page(mm->pgdir));
 }
 
-//lab5 function3 YOUR CODE update copy_mm
+static struct mm_struct *new_mm(void)
+{
+    struct mm_struct *mm = mm_create();
+    if (mm != NULL && setup_pgdir(mm) != 0)
+    {
+        mm_destroy(mm);
+        return NULL;
+    }
+    return mm;
+}
 
+static void destroy_mm(struct mm_struct *mm)
+{
+    exit_mmap(mm);
+    put_pgdir(mm);
+    mm_destroy(mm);
+}
 
+static void use_mm(struct mm_struct *mm)
+{
+    struct mm_struct *old = current->mm;
+    current->mm = mm;
+    current->pgdir = mm != NULL ? PADDR(mm->pgdir) : boot_pgdir_pa;
+    lsatp(current->pgdir);
+    flush_tlb();
+    if (old != NULL && mm_count_dec(old) == 0)
+        destroy_mm(old);
+}
 
-//lab5 function2 YOUR CODE
+//lab5 function3 2413077 2410824 2413174
+static int copy_mm(uint32_t clone_flags, struct proc_struct *proc)
+{
+    struct mm_struct *src = current->mm, *mm = src;
+    if (src == NULL)
+        return 0;
+    if (!(clone_flags & CLONE_VM))
+    {
+        mm = new_mm();
+        if (mm == NULL)
+            return -E_NO_MEM;
+        lock_mm(src);
+        int ret = dup_mmap(mm, src);
+        unlock_mm(src);
+        if (ret != 0)
+        {
+            destroy_mm(mm);
+            return ret;
+        }
+    }
+    mm_count_inc(mm);
+    proc->mm = mm;
+    proc->pgdir = PADDR(mm->pgdir);
+    return 0;
+}
 
+static void copy_thread(struct proc_struct *proc, uintptr_t stack, struct trapframe *tf)
+{
+    proc->tf = (struct trapframe *)(proc->kstack + KSTACKSIZE) - 1;
+    *proc->tf = *tf;
+    proc->tf->gpr.a0 = 0;
+    // Kernel threads leave the top frame free for a later kernel_execve.
+    proc->tf->gpr.sp = trap_in_kernel(tf) ? (uintptr_t)proc->tf : stack;
+    proc->context.ra = (uintptr_t)forkret;
+    proc->context.sp = (uintptr_t)proc->tf;
+}
 
-//lab5 function3 YOUR CODE
+//lab5 function3 2413077 2410824 2413174
+int do_fork(uint32_t clone_flags, uintptr_t stack, struct trapframe *tf)
+{
+    if (nr_process >= MAX_PROCESS)
+        return -E_NO_FREE_PROC;
+    struct proc_struct *proc = alloc_proc();
+    if (proc == NULL)
+        return -E_NO_MEM;
 
+    int ret = setup_kstack(proc);
+    if (ret != 0)
+        goto free_proc;
+    ret = copy_mm(clone_flags, proc);
+    if (ret != 0)
+        goto free_stack;
+    copy_thread(proc, stack, tf);
 
-//lab5 function4 YOUR CODE
+    bool intr_flag;
+    local_intr_save(intr_flag);
+    ret = proc->pid = get_pid();
+    hash_proc(proc);
+    set_links(proc);
+    wakeup_proc(proc);
+    local_intr_restore(intr_flag);
+    return ret;
 
+free_stack:
+    put_kstack(proc);
+free_proc:
+    kfree(proc);
+    return ret;
+}
 
-#define __KERNEL_EXECVE(name, binary, size) ({           \
-    cprintf("kernel_execve: pid = %d, name = \"%s\".\n", \
-            current->pid, name);                         \
-    kernel_execve(name, binary, (size_t)(size));         \
-})
+//lab5 function2 2413077 2410824 2413174
+int kernel_thread(int (*fn)(void *), void *arg, uint32_t clone_flags)
+{
+    struct trapframe tf = {0};
+    tf.gpr.s0 = (uintptr_t)fn;
+    tf.gpr.s1 = (uintptr_t)arg;
+    tf.status = (read_csr(sstatus) | SSTATUS_SPP | SSTATUS_SPIE) & ~SSTATUS_SIE;
+    tf.epc = (uintptr_t)kernel_thread_entry;
+    return do_fork(clone_flags | CLONE_VM, 0, &tf);
+}
 
-#define KERNEL_EXECVE(x) ({                                    \
-    extern unsigned char _binary_obj___user_##x##_out_start[], \
-        _binary_obj___user_##x##_out_size[];                   \
-    __KERNEL_EXECVE(#x, _binary_obj___user_##x##_out_start,    \
-                    _binary_obj___user_##x##_out_size);        \
-})
+static void wake_waiting_parent(struct proc_struct *parent)
+{
+    if (parent->wait_state == WT_CHILD)
+        wakeup_proc(parent);
+}
 
-#define __KERNEL_EXECVE2(x, xstart, xsize) ({   \
-    extern unsigned char xstart[], xsize[];     \
-    __KERNEL_EXECVE(#x, xstart, (size_t)xsize); \
-})
+//lab5 function4 2413077 2410824 2413174
+int do_exit(int error_code)
+{
+    if (current == idleproc || current == initproc)
+        panic("cannot exit idle or init");
 
-#define KERNEL_EXECVE2(x, xstart, xsize) __KERNEL_EXECVE2(x, xstart, xsize)
+    bool intr_flag;
+    local_intr_save(intr_flag);
+    if (current->mm != NULL)
+        use_mm(NULL);
+    current->exit_code = error_code;
+    current->state = PROC_ZOMBIE;
+    wake_waiting_parent(current->parent);
 
+    while (current->cptr != NULL)
+    {
+        struct proc_struct *child = current->cptr;
+        current->cptr = child->optr;
+        link_child(initproc, child);
+        if (child->state == PROC_ZOMBIE)
+            wake_waiting_parent(initproc);
+    }
+    schedule();
+    panic("scheduled a zombie");
+}
 
-//lab5 function2 YOUR CODE
+int do_yield(void)
+{
+    current->need_resched = true;
+    return 0;
+}
 
+int do_kill(int pid)
+{
+    bool intr_flag;
+    local_intr_save(intr_flag);
+    struct proc_struct *proc = find_proc(pid);
+    int ret = -E_INVAL;
+    if (proc != NULL && proc != initproc)
+    {
+        ret = -E_KILLED;
+        if (!(proc->flags & PF_EXITING) && proc->state != PROC_ZOMBIE)
+        {
+            proc->flags |= PF_EXITING;
+            if (proc->wait_state & WT_INTERRUPTED)
+                wakeup_proc(proc);
+            ret = 0;
+        }
+    }
+    local_intr_restore(intr_flag);
+    return ret;
+}
 
+static struct proc_struct *wait_target(int pid, bool *has_child)
+{
+    for (struct proc_struct *child = current->cptr; child != NULL; child = child->optr)
+    {
+        if (pid != 0 && pid != child->pid)
+            continue;
+        *has_child = true;
+        if (child->state == PROC_ZOMBIE)
+            return child;
+    }
+    return NULL;
+}
 
+//lab5 function2 2413077 2410824 2413174
+int do_wait(int pid, int *code_store)
+{
+    if (code_store != NULL &&
+        !user_mem_check(current->mm, (uintptr_t)code_store, sizeof(*code_store), true))
+        return -E_INVAL;
+
+    bool intr_flag;
+    local_intr_save(intr_flag);
+    struct proc_struct *child;
+    for (;;)
+    {
+        bool has_child = false;
+        child = wait_target(pid, &has_child);
+        if (child != NULL)
+            break;
+        if (!has_child)
+        {
+            local_intr_restore(intr_flag);
+            return -E_BAD_PROC;
+        }
+        current->state = PROC_SLEEPING;
+        current->wait_state = WT_CHILD;
+        schedule();
+        if (current->flags & PF_EXITING)
+            do_exit(-E_KILLED);
+    }
+
+    if (code_store != NULL &&
+        !copy_to_user(current->mm, code_store, &child->exit_code, sizeof(*code_store)))
+    {
+        local_intr_restore(intr_flag);
+        return -E_FAULT;
+    }
+    unhash_proc(child);
+    remove_links(child);
+    local_intr_restore(intr_flag);
+    put_kstack(child);
+    kfree(child);
+    return 0;
+}
+
+static int load_segment(struct mm_struct *mm, const unsigned char *binary,
+                        size_t size, const struct proghdr *ph)
+{
+    uintptr_t start = ph->p_va, end = start + ph->p_memsz;
+    if (ph->p_filesz > ph->p_memsz || ph->p_offset > size ||
+        ph->p_filesz > size - ph->p_offset || !USER_ACCESS(start, end) ||
+        end > USTACKTOP - USTACKSIZE)
+        return -E_INVAL_ELF;
+
+    unsigned flags = 0, perm = PTE_U;
+    if (ph->p_flags & ELF_PF_W)
+    {
+        flags |= VM_WRITE | VM_READ;
+        perm |= PTE_W | PTE_R;
+    }
+    if (ph->p_flags & ELF_PF_R)
+    {
+        flags |= VM_READ;
+        perm |= PTE_R;
+    }
+    if (ph->p_flags & ELF_PF_X)
+    {
+        flags |= VM_EXEC;
+        perm |= PTE_X;
+    }
+    if (flags == 0)
+        return -E_INVAL_ELF;
+
+    int ret = mm_map(mm, start, ph->p_memsz, flags, NULL);
+    if (ret != 0)
+        return ret;
+
+    uintptr_t file_end = start + ph->p_filesz;
+    for (uintptr_t va = ROUNDDOWN(start, PGSIZE); va < end; va += PGSIZE)
+    {
+        struct Page *page = pgdir_alloc_page(mm->pgdir, va, perm);
+        if (page == NULL)
+            return -E_NO_MEM;
+        unsigned char *dst = page2kva(page);
+        memset(dst, 0, PGSIZE);
+        uintptr_t lo = va > start ? va : start;
+        uintptr_t hi = va + PGSIZE < file_end ? va + PGSIZE : file_end;
+        if (lo < hi)
+            memcpy(dst + (lo - va), binary + ph->p_offset + (lo - start), hi - lo);
+    }
+    return 0;
+}
+
+static int load_stack(struct mm_struct *mm)
+{
+    // The guard page isn't a VMA, so both CPU accesses and kernel copies reject it.
+    uintptr_t start = USTACKTOP - USTACKSIZE + PGSIZE;
+    int ret = mm_map(mm, start, USTACKTOP - start, VM_READ | VM_WRITE | VM_STACK, NULL);
+    if (ret != 0)
+        return ret;
+    for (uintptr_t va = start; va < USTACKTOP; va += PGSIZE)
+    {
+        struct Page *page = pgdir_alloc_page(mm->pgdir, va, PTE_U | PTE_R | PTE_W);
+        if (page == NULL)
+            return -E_NO_MEM;
+        memset(page2kva(page), 0, PGSIZE);
+    }
+    return 0;
+}
+
+static int load_segments(struct mm_struct *mm, const unsigned char *binary,
+                         size_t size, const struct elfhdr *elf)
+{
+    bool executable_entry = false;
+    for (size_t i = 0; i < elf->e_phnum; i++)
+    {
+        struct proghdr ph;
+        memcpy(&ph, binary + elf->e_phoff + i * sizeof(ph), sizeof(ph));
+        if (ph.p_type != ELF_PT_LOAD || (ph.p_memsz == 0 && ph.p_filesz == 0))
+            continue;
+        int ret = load_segment(mm, binary, size, &ph);
+        if (ret != 0)
+            return ret;
+        if ((ph.p_flags & ELF_PF_X) && ph.p_va <= elf->e_entry &&
+            elf->e_entry - ph.p_va < ph.p_memsz)
+            executable_entry = true;
+    }
+
+    if (!executable_entry)
+        return -E_INVAL_ELF;
+    return load_stack(mm);
+}
+
+//lab5 function2 2413077 2410824 2413174
+static int load_icode(const unsigned char *binary, size_t size)
+{
+    struct elfhdr elf;
+    if (size < sizeof(elf))
+        return -E_INVAL_ELF;
+    memcpy(&elf, binary, sizeof(elf));
+    if (elf.e_magic != ELF_MAGIC || elf.e_elf[0] != 2 || elf.e_elf[1] != 1 ||
+        elf.e_type != 2 || elf.e_machine != 243 || elf.e_phentsize != sizeof(struct proghdr) ||
+        elf.e_phoff > size || elf.e_phnum > (size - elf.e_phoff) / sizeof(struct proghdr))
+        return -E_INVAL_ELF;
+
+    struct mm_struct *mm = new_mm();
+    if (mm == NULL)
+        return -E_NO_MEM;
+    int ret = load_segments(mm, binary, size, &elf);
+    if (ret != 0)
+    {
+        destroy_mm(mm);
+        return ret;
+    }
+
+    mm_count_inc(mm);
+    use_mm(mm);
+    asm volatile(".option push\n.option arch, +zifencei\nfence.i\n.option pop" ::: "memory");
+    struct trapframe *tf = current->tf;
+    memset(tf, 0, sizeof(*tf));
+    tf->gpr.sp = USTACKTOP;
+    tf->epc = elf.e_entry;
+    tf->status = SSTATUS_SPIE | SSTATUS_SUM;
+    return 0;
+}
+
+int do_execve(const char *name, size_t len, unsigned char *binary, size_t size)
+{
+    char local_name[PROC_NAME_LEN + 1] = {0};
+    if (len > PROC_NAME_LEN)
+        len = PROC_NAME_LEN;
+    if ((len != 0 && !copy_from_user(current->mm, local_name, name, len, false)) ||
+        !user_mem_check(current->mm, (uintptr_t)binary, size, false))
+        return -E_INVAL;
+
+    int ret = load_icode(binary, size);
+    if (ret == 0)
+        set_proc_name(current, local_name);
+    return ret;
+}
+
+static int kernel_execve(const char *name, unsigned char *binary, size_t size)
+{
+    bool intr_flag;
+    local_intr_save(intr_flag);
+    current->tf = (struct trapframe *)(current->kstack + KSTACKSIZE) - 1;
+    int ret = do_execve(name, strlen(name), binary, size);
+    if (ret == 0)
+        forkrets(current->tf);
+    local_intr_restore(intr_flag);
+    return ret;
+}
+
+#ifndef TEST
+#define TEST hello
+#define TESTSTART _binary_obj___user_hello_out_start
+#define TESTSIZE _binary_obj___user_hello_out_size
+#endif
+
+#define PROGRAM_NAME(x) #x
+#define PROGRAM(x) PROGRAM_NAME(x)
+
+static int user_main(void *arg)
+{
+    extern unsigned char TESTSTART[], TESTSIZE[];
+    const char *name = PROGRAM(TEST);
+    cprintf("kernel_execve: pid = %d, name = \"%s\".\n", current->pid, name);
+    int ret = kernel_execve(name, TESTSTART, (size_t)TESTSIZE);
+    cprintf("kernel_execve failed: %e\n", ret);
+    return ret;
+}
+
+//lab5 function2 2413077 2410824 2413174
+static int init_main(void *arg)
+{
+    size_t free_pages = nr_free_pages(), allocated = kallocated();
+    int pid = kernel_thread(user_main, NULL, 0);
+    if (pid < 0)
+        panic("cannot start user program: %e", pid);
+    int status;
+    assert(do_wait(pid, &status) == 0);
+    cprintf("user program exited with status %d\n", status);
+    while (do_wait(0, NULL) == 0)
+        ;
+    assert(current->cptr == NULL && nr_process == 2);
+    cprintf("all user-mode processes have quit.\n");
+    assert(nr_free_pages() == free_pages && kallocated() == allocated);
+    cprintf("init check memory pass.\n");
+#ifdef DEBUG_GRADE
+    kmonitor(NULL);
+#endif
+    for (;;)
+        asm volatile("wfi");
+}
+
+void proc_init(void)
+{
+    list_init(&proc_list);
+    for (size_t i = 0; i < HASH_LIST_SIZE; i++)
+        list_init(&hash_list[i]);
+
+    idleproc = alloc_proc();
+    if (idleproc == NULL)
+        panic("cannot allocate idleproc");
+    idleproc->pid = 0;
+    idleproc->state = PROC_RUNNABLE;
+    idleproc->kstack = (uintptr_t)bootstack;
+    idleproc->need_resched = true;
+    set_proc_name(idleproc, "idle");
+    nr_process++;
+    current = idleproc;
+
+    int pid = kernel_thread(init_main, NULL, 0);
+    if (pid < 0)
+        panic("cannot create initproc: %e", pid);
+    initproc = find_proc(pid);
+    set_proc_name(initproc, "init");
+}
+
+//LAB4 function3 2413077 2410824 2413174
+void
+proc_run(struct proc_struct *proc)
+{
+    struct proc_struct *prev = current;
+    if (prev == proc)
+        return;
+
+    bool intr_flag;
+    local_intr_save(intr_flag);
+    current = proc;
+    if (prev->pgdir != proc->pgdir)
+    {
+        write_csr(satp, ((uintptr_t)SATP_MODE_SV39 << 60) |
+                        (proc->pgdir >> RISCV_PGSHIFT));
+        flush_tlb();
+    }
+    switch_to(&prev->context, &proc->context);
+    local_intr_restore(intr_flag);
+}
+
+void
+cpu_idle(void)
+{
+    while (1)
+    {
+        if (current->need_resched)
+            schedule();
+    }
+}

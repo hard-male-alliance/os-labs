@@ -22,11 +22,9 @@ makeopts="--quiet --no-print-directory -j"
 make_print() {
     echo `$make $makeopts print-$1`
 }
-echo `$make`
 
 ## command tools
 awk='awk'
-bc='bc'
 date='date'
 grep='grep'
 rm='rm -f'
@@ -47,7 +45,7 @@ qemu="$(make_print qemu)"
 qemu_out="$(make_print GRADE_QEMU_OUT)"
 
 if $qemu -nographic -help | grep -q '^-gdb'; then
-    qemugdb="-gdb tcp::$gdbport"
+    qemugdb="-gdb tcp:127.0.0.1:$gdbport"
 else
     qemugdb="-s -p $gdbport"
 fi
@@ -90,7 +88,7 @@ show_final() {
 
 show_time() {
     t1=$(get_time)
-    time=`echo "scale=1; ($t1-$t0)/1" | $sed 's/.N/.0/g' | $bc 2> /dev/null`
+    time=$($awk -v start="$t0" -v end="$t1" 'BEGIN { printf "%.1f", end - start }')
     echo "(${time}s)"
 }
 
@@ -155,7 +153,8 @@ run_qemu() {
 
         $gdb -batch -nx -x $gdb_in > /dev/null 2>&1
 
-        kill $pid > /dev/null 2>&1
+        kill "$pid" > /dev/null 2>&1
+        wait "$pid" 2>/dev/null
     fi
 }
 
@@ -312,7 +311,7 @@ osimg=$(make_print ucoreimg)
 swapimg=$(make_print swapimg)
 
 ## set default qemu-options
-qemuopts="-machine virt -nographic -bios default -device loader,file=bin/ucore.img,addr=0x80200000"
+qemuopts="-machine virt -nographic -bios default -kernel $osimg"
 
 ## set break-function, default is readline
 brkfun=readline

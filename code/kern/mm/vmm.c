@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include <error.h>
 #include <pmm.h>
+#include <proc.h>
 #include <riscv.h>
 #include <kmalloc.h>
 
@@ -170,56 +171,77 @@ void mm_destroy(struct mm_struct *mm)
 int mm_map(struct mm_struct *mm, uintptr_t addr, size_t len, uint32_t vm_flags,
            struct vma_struct **vma_store)
 {
-    uintptr_t start = ROUNDDOWN(addr, PGSIZE), end = ROUNDUP(addr + len, PGSIZE);
-    if (!USER_ACCESS(start, end))
-    {
+    if (!USER_ACCESS(addr, addr + len))
         return -E_INVAL;
-    }
-
-    assert(mm != NULL);
-
-    int ret = -E_INVAL;
-
-    struct vma_struct *vma;
-    if ((vma = find_vma(mm, start)) != NULL && end > vma->vm_start)
+    uintptr_t start = ROUNDDOWN(addr, PGSIZE), end = ROUNDUP(addr + len, PGSIZE);
+    list_entry_t *list = &mm->mmap_list;
+    for (list_entry_t *le = list_next(list); le != list; le = list_next(le))
     {
-        goto out;
+        struct vma_struct *vma = le2vma(le, list_link);
+        if (vma->vm_start >= end)
+            break;
+        if (vma->vm_end > start)
+            return -E_INVAL;
     }
-    ret = -E_NO_MEM;
 
-    if ((vma = vma_create(start, end, vm_flags)) == NULL)
-    {
-        goto out;
-    }
+    struct vma_struct *vma = vma_create(start, end, vm_flags);
+    if (vma == NULL)
+        return -E_NO_MEM;
     insert_vma_struct(mm, vma);
     if (vma_store != NULL)
-    {
         *vma_store = vma;
-    }
-    ret = 0;
+    return 0;
+}
 
-out:
+//lab5 function3 2413077 2410824 2413174
+int dup_mmap(struct mm_struct *to, struct mm_struct *from)
+{
+    int ret = 0;
+    list_entry_t *list = &from->mmap_list;
+    for (list_entry_t *le = list_next(list); le != list; le = list_next(le))
+    {
+        struct vma_struct *vma = le2vma(le, list_link);
+        struct vma_struct *copy = vma_create(vma->vm_start, vma->vm_end, vma->vm_flags);
+        if (copy == NULL)
+        {
+            ret = -E_NO_MEM;
+            break;
+        }
+        copy->vm_mm = to;
+        list_add_before(&to->mmap_list, &copy->list_link);
+        to->map_count++;
+        ret = copy_range(to->pgdir, from->pgdir, vma->vm_start, vma->vm_end, false);
+        if (ret != 0)
+            break;
+    }
+    // The parent may have been write-protected even if the child was never published.
+    flush_tlb();
     return ret;
 }
 
-//lab5 function3 YOUR CODE 
-
-
-
 void exit_mmap(struct mm_struct *mm)
 {
-    assert(mm != NULL && mm_count(mm) == 0);
-    pde_t *pgdir = mm->pgdir;
-    list_entry_t *list = &(mm->mmap_list), *le = list;
-    while ((le = list_next(le)) != list)
+    assert(mm_count(mm) == 0);
+    free_user_pgdir(mm->pgdir);
+}
+
+void print_pgdir(void)
+{
+    struct mm_struct *mm = current->mm;
+    cprintf("page table root: %p\n", mm != NULL ? mm->pgdir : boot_pgdir_va);
+    if (mm == NULL)
+        return;
+
+    list_entry_t *list = &mm->mmap_list;
+    for (list_entry_t *le = list_next(list); le != list; le = list_next(le))
     {
         struct vma_struct *vma = le2vma(le, list_link);
-        unmap_range(pgdir, vma->vm_start, vma->vm_end);
-    }
-    while ((le = list_next(le)) != list)
-    {
-        struct vma_struct *vma = le2vma(le, list_link);
-        exit_range(pgdir, vma->vm_start, vma->vm_end);
+        pte_t *pte = get_pte(mm->pgdir, vma->vm_start, false);
+        unsigned perm = pte != NULL ? (unsigned)*pte : 0;
+        cprintf("  [%p, %p) %c%c%c (first PTE %#x)\n",
+                (void *)vma->vm_start, (void *)vma->vm_end,
+                perm & PTE_R ? 'r' : '-', perm & PTE_W ? 'w' : '-',
+                perm & PTE_X ? 'x' : '-', perm & 0x3ff);
     }
 }
 
@@ -235,12 +257,24 @@ bool copy_from_user(struct mm_struct *mm, void *dst, const void *src, size_t len
 
 bool copy_to_user(struct mm_struct *mm, void *dst, const void *src, size_t len)
 {
-    if (!user_mem_check(mm, (uintptr_t)dst, len, 1))
+    uintptr_t addr = (uintptr_t)dst;
+    if (!user_mem_check(mm, addr, len, true))
+        return false;
+
+    if (mm != NULL)
     {
-        return 0;
+        uintptr_t end = addr + len;
+        for (uintptr_t va = ROUNDDOWN(addr, PGSIZE); va < end; va += PGSIZE)
+        {
+            pte_t *pte = get_pte(mm->pgdir, va, false);
+            if (pte == NULL || !(*pte & PTE_V))
+                return false;
+            if (!(*pte & PTE_W) && resolve_cow(mm->pgdir, va) != 0)
+                return false;
+        }
     }
     memcpy(dst, src, len);
-    return 1;
+    return true;
 }
 
 // vmm_init - initialize virtual memory management
@@ -347,13 +381,6 @@ bool user_mem_check(struct mm_struct *mm, uintptr_t addr, size_t len, bool write
             if (!(vma->vm_flags & ((write) ? VM_WRITE : VM_READ)))
             {
                 return 0;
-            }
-            if (write && (vma->vm_flags & VM_STACK))
-            {
-                if (start < vma->vm_start + PGSIZE)
-                { // check stack start & size
-                    return 0;
-                }
             }
             start = vma->vm_end;
         }

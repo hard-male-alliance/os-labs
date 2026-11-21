@@ -2,6 +2,7 @@
 #include <syscall.h>
 #include <stdio.h>
 #include <ulib.h>
+#include <string.h>
 
 void
 exit(int error_code) {
@@ -23,6 +24,11 @@ wait(void) {
 int
 waitpid(int pid, int *store) {
     return sys_wait(pid, store);
+}
+
+int
+exec(const char *name, const unsigned char *binary, size_t size) {
+    return sys_exec(name, strlen(name), binary, size);
 }
 
 void

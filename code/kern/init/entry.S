@@ -7,10 +7,11 @@ kern_entry:
     # a0: hartid
     # a1: dtb physical address
     # save hartid and dtb address
-    la t0, boot_hartid
+    lla t0, boot_hartid
     sd a0, 0(t0)
-    la t0, boot_dtb
+    lla t0, boot_dtb
     sd a1, 0(t0)
+
     # t0 := 三级页表的虚拟地址
     lui     t0, %hi(boot_page_table_sv39)
     # t1 := 0xffffffff40000000 即虚实映射偏移量
@@ -28,6 +29,14 @@ kern_entry:
     csrw    satp, t0
     # 使用 sfence.vma 指令刷新 TLB
     sfence.vma
+    # Continue through the temporary identity mapping until PC is in the higher half.
+    lui     t0, %hi(.Lhigher_half)
+    addi    t0, t0, %lo(.Lhigher_half)
+    jr      t0
+.Lhigher_half:
+    lui     t0, %hi(boot_page_table_sv39)
+    sd      zero, 16(t0)
+    sfence.vma
     # 从此，我们给内核搭建出了一个完美的虚拟内存空间！
     #nop # 可能映射的位置有些bug。。插入一个nop
     
@@ -35,7 +44,13 @@ kern_entry:
     lui sp, %hi(bootstacktop)
 
     # 我们在虚拟内存空间中：随意跳转到虚拟地址！
-    # 跳转到 kern_init
+    # 1. 使用临时寄存器 t1 计算栈顶的精确地址
+    lui t1, %hi(bootstacktop)
+    addi t1, t1, %lo(bootstacktop)
+    # 2. 将精确地址一次性地、安全地传给 sp
+    mv sp, t1
+    # 现在栈指针已经完美设置，可以安全地调用任何C函数了
+    # 然后跳转到 kern_init (不再返回)
     lui t0, %hi(kern_init)
     addi t0, t0, %lo(kern_init)
     jr t0
@@ -49,17 +64,19 @@ bootstack:
     .global bootstacktop
 bootstacktop:
 
-.section .data
-    # 由于我们要把这个页表放到一个页里面，因此必须 12 位对齐
+    # a page table for Sv39
     .align PGSHIFT
     .global boot_page_table_sv39
 # 分配 4KiB 内存给预设的三级页表
 boot_page_table_sv39:
     # 0xffffffff_c0000000 map to 0x80000000 (1G)
-    # 前 511 个页表项均设置为 0 ，因此 V=0 ，意味着是空的(unmapped)
-    .zero 8 * 511
+    # VPN[2]=2 identity-maps the physical boot PC until .Lhigher_half removes it.
+    .zero 8 * 2
+    .quad (0x80000 << 10) | 0xcf
+    .zero 8 * 508
     # 设置最后一个页表项，PPN=0x80000，标志位 VRWXAD 均为 1
     .quad (0x80000 << 10) | 0xcf # VRWXAD
+
     .global boot_hartid
 boot_hartid:
     .quad 0
